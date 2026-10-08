@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:categorical-chart-model:1.0.0",
+  "title": "Categorical ChartModel 1.0.0",
+  "oneOf": [
+    {"$ref": "#/$defs/seriesModel"},
+    {"$ref": "#/$defs/compositionModel"}
+  ],
+  "$defs": {
+    "measure": {
+      "type": "object",
+      "required": ["mode", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["count", "sum", "average", "max", "min"]},
+        "role": {"type": ["string", "null"], "maxLength": 64}
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": ["input_rows", "analyzed_rows", "excluded_rows"],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "analyzed_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    },
+    "seriesItem": {
+      "type": "object",
+      "required": ["label", "values", "row_counts", "is_other"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "values": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"type": "number"}
+        },
+        "row_counts": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "is_other": {"type": "boolean"}
+      }
+    },
+    "compositionItem": {
+      "type": "object",
+      "required": [
+        "label",
+        "value",
+        "row_count",
+        "share",
+        "share_basis",
+        "is_other"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "value": {"type": "number"},
+        "row_count": {"type": "integer", "minimum": 0},
+        "share": {"type": "number", "minimum": 0, "maximum": 1},
+        "share_basis": {"enum": ["value", "row_count"]},
+        "is_other": {"type": "boolean"}
+      }
+    },
+    "seriesModel": {
+      "type": "object",
+      "required": [
+        "chart_model_contract_version",
+        "chart_type",
+        "mark",
+        "analysis_result_sha256",
+        "title",
+        "measure",
+        "x",
+        "series",
+        "population",
+        "warnings"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "chart_model_contract_version": {"const": "1.0.0"},
+        "chart_type": {"enum": ["series.line", "series.stacked-bar"]},
+        "mark": {"enum": ["series-line-svg.v1", "series-stacked-bar-svg.v1"]},
+        "analysis_result_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "title": {"type": "string", "minLength": 1, "maxLength": 256},
+        "measure": {"$ref": "#/$defs/measure"},
+        "x": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"type": "string", "minLength": 1, "maxLength": 128}
+        },
+        "series": {
+          "type": "array",
+          "maxItems": 101,
+          "items": {"$ref": "#/$defs/seriesItem"}
+        },
+        "population": {"$ref": "#/$defs/population"},
+        "warnings": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {"type": "string", "maxLength": 4096}
+        }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "required": ["chart_type", "mark"],
+              "properties": {
+                "chart_type": {"const": "series.line"},
+                "mark": {"const": "series-line-svg.v1"}
+              }
+            },
+            {
+              "required": ["chart_type", "mark"],
+              "properties": {
+                "chart_type": {"const": "series.stacked-bar"},
+                "mark": {"const": "series-stacked-bar-svg.v1"}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "compositionModel": {
+      "type": "object",
+      "required": [
+        "chart_model_contract_version",
+        "chart_type",
+        "mark",
+        "analysis_result_sha256",
+        "title",
+        "measure",
+        "items",
+        "population",
+        "warnings"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "chart_model_contract_version": {"const": "1.0.0"},
+        "chart_type": {"enum": ["composition.bar", "composition.pie"]},
+        "mark": {"enum": ["composition-bar-svg.v1", "composition-pie-svg.v1"]},
+        "analysis_result_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "title": {"type": "string", "minLength": 1, "maxLength": 256},
+        "measure": {"$ref": "#/$defs/measure"},
+        "items": {
+          "type": "array",
+          "maxItems": 101,
+          "items": {"$ref": "#/$defs/compositionItem"}
+        },
+        "population": {"$ref": "#/$defs/population"},
+        "warnings": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {"type": "string", "maxLength": 4096}
+        }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "required": ["chart_type", "mark"],
+              "properties": {
+                "chart_type": {"const": "composition.bar"},
+                "mark": {"const": "composition-bar-svg.v1"}
+              }
+            },
+            {
+              "required": ["chart_type", "mark"],
+              "properties": {
+                "chart_type": {"const": "composition.pie"},
+                "mark": {"const": "composition-pie-svg.v1"}
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

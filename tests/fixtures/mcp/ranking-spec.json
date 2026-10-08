@@ -1,0 +1,11 @@
+{
+  "analysis_type": "ranking",
+  "dimension": "出願人",
+  "measure": {
+    "mode": "count",
+    "column": null
+  },
+  "top_n": 10,
+  "include_other": true,
+  "multi_value_mode": "all"
+}

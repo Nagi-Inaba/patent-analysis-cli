@@ -1,0 +1,27 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "matrix.v1",
+  "normalization": {
+    "profiles": []
+  },
+  "parameters": {
+    "include_axis_other": true,
+    "measure": "count",
+    "x_limit": 2,
+    "x_role": "applicant",
+    "y_classification_level": "subclass",
+    "y_limit": 2,
+    "y_role": "classification"
+  },
+  "population": {
+    "family_mode": "records",
+    "filters": [],
+    "selection_sets": []
+  },
+  "resolution": {
+    "bindings": {
+      "applicant": "applicant",
+      "classification": "classification"
+    }
+  }
+}

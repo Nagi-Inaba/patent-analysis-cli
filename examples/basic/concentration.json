@@ -1,0 +1,22 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "analysis_id": "concentration.v1",
+  "resolution": {
+    "bindings": {
+      "group": "group",
+      "year": "year"
+    }
+  },
+  "parameters": {
+    "date_role": "year",
+    "category_role": "group"
+  }
+}

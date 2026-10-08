@@ -1,0 +1,419 @@
+{
+  "contract_version": "1.0.0",
+  "valid": [
+    {
+      "name": "inspect_schema",
+      "plan": {
+        "intent": "inspect schema",
+        "operations": [
+          {
+            "type": "inspect_schema",
+            "params": {
+              "dataset_id": "dataset-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query_rows",
+      "plan": {
+        "intent": "query rows",
+        "operations": [
+          {
+            "type": "query_rows",
+            "params": {
+              "dataset_id": "dataset-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "aggregate_dataset",
+      "plan": {
+        "intent": "aggregate dataset",
+        "operations": [
+          {
+            "type": "aggregate_dataset",
+            "params": {
+              "dataset_id": "dataset-1",
+              "group_by": ["applicant"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "create_selection_set_manual_values",
+      "plan": {
+        "intent": "create manual selection set",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "applicant",
+              "mode": "manual",
+              "values": ["A", "B", "C"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "apply_selection_set",
+      "plan": {
+        "intent": "apply selection set",
+        "operations": [
+          {
+            "type": "apply_selection_set",
+            "params": {
+              "selection_set_id": "selection-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "set_filter",
+      "plan": {
+        "intent": "set filter",
+        "operations": [
+          {
+            "type": "set_filter",
+            "params": {
+              "dimension": "applicant",
+              "operator": "equals",
+              "value": "A"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "clear_filter",
+      "plan": {
+        "intent": "clear filter",
+        "operations": [
+          {
+            "type": "clear_filter",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "name": "create_analysis",
+      "plan": {
+        "intent": "create analysis",
+        "operations": [
+          {
+            "type": "create_analysis",
+            "params": {
+              "analysis_type": "ranking",
+              "x": "applicant"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "set_render_mode",
+      "plan": {
+        "intent": "set render mode",
+        "operations": [
+          {
+            "type": "set_render_mode",
+            "params": {
+              "mark": "bar"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rerender_chart",
+      "plan": {
+        "intent": "rerender chart",
+        "operations": [
+          {
+            "type": "rerender_chart",
+            "params": {
+              "chart_id": "chart-1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "drilldown_from_chart_element",
+      "plan": {
+        "intent": "drilldown from chart element",
+        "operations": [
+          {
+            "type": "drilldown_from_chart_element",
+            "params": {
+              "chart_id": "chart-1",
+              "dimension": "applicant",
+              "value": "A"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "save_snapshot",
+      "plan": {
+        "intent": "save snapshot",
+        "operations": [
+          {
+            "type": "save_snapshot",
+            "params": {
+              "chart_id": "chart-1",
+              "title": "Top applicants"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "add_analysis_note",
+      "plan": {
+        "intent": "add analysis note",
+        "operations": [
+          {
+            "type": "add_analysis_note",
+            "params": {
+              "body": "rm -rf should be treated as ordinary text."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "draft_report_section",
+      "plan": {
+        "intent": "draft report section",
+        "operations": [
+          {
+            "type": "draft_report_section",
+            "params": {
+              "section_type": "overview"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "export_report_draft",
+      "plan": {
+        "intent": "export report draft",
+        "operations": [
+          {
+            "type": "export_report_draft",
+            "params": {
+              "draft_id": "draft-1",
+              "format": "markdown"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "create_selection_set_top_n_values_null",
+      "plan": {
+        "intent": "selection set top_n null fields",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "year",
+              "mode": "top_n",
+              "n": 3,
+              "values": null,
+              "record_tokens": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "create_selection_set_manual_tokens_with_values_null",
+      "plan": {
+        "intent": "manual token source with explicit null values",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "publication_number",
+              "mode": "manual",
+              "values": null,
+              "record_tokens": ["record-1"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "invalid_schema": [
+    {
+      "name": "manual_selection_set_null_sources",
+      "plan": {
+        "intent": "manual requires exactly one source",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "applicant",
+              "mode": "manual",
+              "values": null,
+              "record_tokens": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query_rows_limit_is_string",
+      "plan": {
+        "intent": "string limit must fail",
+        "operations": [
+          {
+            "type": "query_rows",
+            "params": {
+              "dataset_id": "dataset-1",
+              "limit": "100"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "extra_sql_param_is_rejected_by_schema",
+      "plan": {
+        "intent": "extra sql param",
+        "operations": [
+          {
+            "type": "query_rows",
+            "params": {
+              "dataset_id": "dataset-1",
+              "sql": "select * from patents"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "non_manual_record_tokens_array_rejected",
+      "plan": {
+        "intent": "non manual values array rejected",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "applicant",
+              "mode": "top_n",
+              "n": 3,
+              "record_tokens": ["record-1"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "record_tokens_and_values_both_set_for_manual",
+      "plan": {
+        "intent": "manual has both sources",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "applicant",
+              "mode": "manual",
+              "values": ["A"],
+              "record_tokens": ["r1"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "invalid_semantic": [
+    {
+      "name": "multiple_create_analysis",
+      "plan": {
+        "intent": "invalid multiple analysis",
+        "operations": [
+          {
+            "type": "create_analysis",
+            "params": {
+              "analysis_type": "ranking",
+              "x": "applicant"
+            }
+          },
+          {
+            "type": "create_analysis",
+            "params": {
+              "analysis_type": "timeline",
+              "x": "year"
+            }
+          }
+        ]
+      },
+      "error_code": "contract.invalid"
+    },
+    {
+      "name": "incompatible_render_mark_for_analysis",
+      "plan": {
+        "intent": "incompatible render mark",
+        "operations": [
+          {
+            "type": "create_analysis",
+            "params": {
+              "analysis_type": "ranking",
+              "x": "applicant"
+            }
+          },
+          {
+            "type": "set_render_mode",
+            "params": {
+              "mark": "scatter"
+            }
+          }
+        ]
+      },
+      "error_code": "operation.incompatible_render"
+    },
+    {
+      "name": "unknown_operation",
+      "plan": {
+        "intent": "unknown operation",
+        "operations": [
+          {
+            "type": "run_anything",
+            "params": {}
+          }
+        ]
+      },
+      "error_code": "operation.unknown"
+    },
+    {
+      "name": "manual_selection_set_allows_only_one_source",
+      "plan": {
+        "intent": "manual with both sources",
+        "operations": [
+          {
+            "type": "create_selection_set",
+            "params": {
+              "dimension": "applicant",
+              "mode": "manual",
+              "values": ["A"],
+              "record_tokens": ["r1"]
+            }
+          }
+        ]
+      },
+      "error_code": "contract.invalid"
+    }
+  ]
+}

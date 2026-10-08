@@ -1,0 +1,13 @@
+{
+  "analysis_id": "matrix.v1",
+  "blank_axis_rows": 1,
+  "x_labels": [
+    "A社",
+    "B社",
+    "その他（上位外）"
+  ],
+  "y_labels": [
+    "G06F",
+    "H04L"
+  ]
+}

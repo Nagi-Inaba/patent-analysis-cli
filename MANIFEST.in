@@ -1,0 +1,18 @@
+include LICENSE README.md CHANGELOG.md SECURITY.md CONTRIBUTING.md
+include docs/analysis-catalog.md docs/mcp.md docs/release.md
+include docs/family-population.md docs/contracts.md docs/architecture.md docs/ranking-analysis-v1.md
+include docs/advanced-json-slices.md docs/advanced-rendering.md
+include docs/table-export.md
+include docs/inventor-tracking.md docs/images/inventor-tracking.svg
+include docs/performance.md docs/performance-sample.json
+recursive-include examples *.csv *.json
+recursive-include tests *.py *.csv *.json
+recursive-include requirements *.lock
+
+graft renderer
+prune renderer/node_modules
+prune renderer/dist
+prune renderer/coverage
+
+include scripts/verify_installed_release.py
+include scripts/benchmark_csv.py

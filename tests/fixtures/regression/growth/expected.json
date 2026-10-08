@@ -1,0 +1,61 @@
+[
+  [
+    {
+      "growth_rate": null,
+      "growth_state": "new",
+      "label": "B",
+      "values": [
+        0,
+        2
+      ]
+    },
+    {
+      "growth_rate": 1.5,
+      "growth_state": "measured",
+      "label": "A",
+      "values": [
+        2,
+        5
+      ]
+    },
+    {
+      "growth_rate": -1,
+      "growth_state": "measured",
+      "label": "C",
+      "values": [
+        2,
+        0
+      ]
+    }
+  ],
+  [
+    {
+      "growth_rate": null,
+      "growth_state": "new",
+      "label": "C",
+      "values": [
+        0,
+        1
+      ]
+    },
+    {
+      "growth_rate": 0,
+      "growth_state": "measured",
+      "label": "B",
+      "values": [
+        1,
+        1
+      ]
+    },
+    {
+      "growth_rate": -1,
+      "growth_state": "measured",
+      "label": "A",
+      "values": [
+        1,
+        0
+      ]
+    }
+  ],
+  []
+]

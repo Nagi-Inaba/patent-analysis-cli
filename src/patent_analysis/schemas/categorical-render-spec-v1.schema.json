@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:categorical-render-spec:1.0.0",
+  "title": "Categorical RenderSpec 1.0.0",
+  "type": "object",
+  "required": [
+    "render_spec_contract_version",
+    "renderer_kind",
+    "locale",
+    "timezone",
+    "width",
+    "height",
+    "font_family",
+    "animation",
+    "axis_label_max_graphemes",
+    "echarts_version",
+    "render_profile_id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "render_spec_contract_version": {"const": "1.0.0"},
+    "renderer_kind": {
+      "enum": [
+        "series.line.svg",
+        "series.stacked-bar.svg",
+        "composition.bar.svg",
+        "composition.pie.svg"
+      ]
+    },
+    "locale": {"const": "ja-JP"},
+    "timezone": {"const": "UTC"},
+    "width": {"const": 1200},
+    "height": {"const": 675},
+    "font_family": {
+      "const": "Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"
+    },
+    "animation": {"const": false},
+    "axis_label_max_graphemes": {"const": 28},
+    "echarts_version": {"const": "6.1.0"},
+    "render_profile_id": {
+      "const": "categorical-svg-ja-jp-node22-echarts6.v1"
+    }
+  }
+}

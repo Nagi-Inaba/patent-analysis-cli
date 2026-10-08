@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:normalization:1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "roles",
+    "multi_value_policy",
+    "classification_levels"
+  ],
+  "properties": {
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      }
+    },
+    "multi_value_policy": {
+      "enum": [
+        "all",
+        "first"
+      ]
+    },
+    "classification_levels": {
+      "type": "object",
+      "maxProperties": 64,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      },
+      "additionalProperties": {
+        "enum": [
+          "full",
+          "class",
+          "subclass",
+          "main_group",
+          "subgroup"
+        ]
+      }
+    }
+  }
+}

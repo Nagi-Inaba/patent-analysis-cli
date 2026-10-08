@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:renderer-request:1.0.0",
+  "title": "RendererRequest 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "chart_model_b64",
+    "chart_model_sha256",
+    "render_spec_b64",
+    "render_spec_sha256"
+  ],
+  "properties": {
+    "protocol_version": {"const": "1.0.0"},
+    "chart_model_b64": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 2796204,
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?$"
+    },
+    "chart_model_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "render_spec_b64": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 21848,
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?$"
+    },
+    "render_spec_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

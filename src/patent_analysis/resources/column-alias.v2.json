@@ -1,0 +1,3415 @@
+{
+  "catalog_version": "2.0.0",
+  "sources": {
+    "jplatpat": {
+      "label": "J-PlatPat",
+      "evidence_ref": "https://www.inpit.go.jp/content/100888003.pdf",
+      "support_status": "active",
+      "export_model": "optional",
+      "evidence_level": "exact_header",
+      "presets": [
+        {
+          "id": "patent-utility-base",
+          "headers": [
+            "文献番号",
+            "出願番号",
+            "出願日",
+            "公知日",
+            "発明の名称",
+            "出願人/権利者",
+            "FI",
+            "公開番号",
+            "公告番号",
+            "登録番号",
+            "審判番号",
+            "その他",
+            "ステージ",
+            "イベント詳細",
+            "文献URL"
+          ],
+          "optional_headers": [
+            "要約"
+          ]
+        }
+      ]
+    },
+    "orbit": {
+      "label": "Orbit Intelligence",
+      "evidence_ref": "Existing Orbit fixtures and local UTF-16 CSV QA",
+      "support_status": "active",
+      "export_model": "selectable",
+      "evidence_level": "existing_fixture"
+    },
+    "espacenet": {
+      "label": "Espacenet",
+      "evidence_ref": "https://link.epo.org/web/espacenet_resourcebook_v3.0_en.pdf",
+      "support_status": "active",
+      "export_model": "selectable",
+      "evidence_level": "documented_field"
+    },
+    "generic": {
+      "label": "Generic patent CSV",
+      "evidence_ref": "Existing workbench regression fixtures",
+      "support_status": "active",
+      "export_model": "dynamic",
+      "evidence_level": "existing_fixture"
+    },
+    "lens": {
+      "label": "Lens",
+      "evidence_ref": "https://support.lens.org/knowledge-base/export-results/ and public lens-export.csv sample",
+      "support_status": "active",
+      "export_model": "selectable",
+      "evidence_level": "exact_header",
+      "presets": [
+        {
+          "id": "public-sample-37",
+          "headers": [
+            "#",
+            "Jurisdiction",
+            "Kind",
+            "Display Key",
+            "Lens ID",
+            "Publication Date",
+            "Publication Year",
+            "Application Number",
+            "Application Date",
+            "Priority Numbers",
+            "Earliest Priority Date",
+            "Title",
+            "Abstract",
+            "Applicants",
+            "Inventors",
+            "Owners",
+            "URL",
+            "Document Type",
+            "Has Full Text",
+            "Cites Patent Count",
+            "Cited by Patent Count",
+            "Simple Family Size",
+            "Simple Family Members",
+            "Simple Family Member Jurisdictions",
+            "Extended Family Size",
+            "Extended Family Members",
+            "Extended Family Member Jurisdictions",
+            "Sequence Count",
+            "CPC Classifications",
+            "IPCR Classifications",
+            "US Classifications",
+            "NPL Citation Count",
+            "NPL Resolved Citation Count",
+            "NPL Resolved Lens ID(s)",
+            "NPL Resolved External ID(s)",
+            "NPL Citations",
+            "Legal Status"
+          ]
+        }
+      ]
+    },
+    "google_patents": {
+      "label": "Google Patents",
+      "evidence_ref": "https://support.google.com/faqs/answer/7049588?hl=en and public CSV header documentation",
+      "support_status": "active",
+      "export_model": "fixed",
+      "evidence_level": "exact_header",
+      "presets": [
+        {
+          "id": "search-results-10",
+          "headers": [
+            "id",
+            "title",
+            "assignee",
+            "inventor/author",
+            "priority date",
+            "filing/creation date",
+            "publication date",
+            "grant date",
+            "result link",
+            "representative figure link"
+          ]
+        }
+      ],
+      "header_detection": {
+        "preamble_prefix": "search URL:",
+        "preamble_host": "patents.google.com",
+        "header_signature": [
+          "id",
+          "title",
+          "assignee",
+          "inventor/author",
+          "priority date",
+          "filing/creation date",
+          "publication date",
+          "grant date",
+          "result link",
+          "representative figure link"
+        ]
+      }
+    },
+    "jpnet": {
+      "label": "JP-NET",
+      "evidence_ref": "https://www.jpds.co.jp/patent_retrieval/output_functions/",
+      "support_status": "active",
+      "export_model": "selectable",
+      "evidence_level": "exact_header",
+      "presets": [
+        {
+          "id": "official-excel-screen-13",
+          "headers": [
+            "No",
+            "公報番号",
+            "出願番号",
+            "国際分類",
+            "出願人",
+            "発明者",
+            "公報情報",
+            "代表図",
+            "出願情報",
+            "登録情報",
+            "発明(考案)の名称",
+            "IPC",
+            "要約"
+          ]
+        }
+      ]
+    },
+    "nlpatent": {
+      "label": "NLPatent",
+      "evidence_ref": "https://support.nlpatent.com/article/6-exporting-your-prior-art",
+      "support_status": "active",
+      "export_model": "selectable",
+      "evidence_level": "exact_header",
+      "presets": [
+        {
+          "id": "documented-columns-16",
+          "headers": [
+            "Document Number",
+            "Title",
+            "Publication Date",
+            "Priority Date",
+            "CPC Symbols",
+            "Inventors",
+            "Applicants",
+            "Current Assignees",
+            "Abstract",
+            "Notes",
+            "Relevance Analysis",
+            "Claims",
+            "Independent Claims",
+            "Legal Status",
+            "Ask NLPatent Answer",
+            "Saved Sections"
+          ]
+        }
+      ]
+    },
+    "patentfield": {
+      "label": "Patentfield",
+      "evidence_ref": "https://support.patentfield.com/portal/ja/kb/articles/エクセルダウンロード項目一覧",
+      "support_status": "active",
+      "export_model": "selectable",
+      "evidence_level": "documented_field"
+    },
+    "patsnap": {
+      "label": "Patsnap Eureka",
+      "evidence_ref": "https://help.patsnap.com/hc/en-us/articles/7841522381213-Eureka-Search-Results",
+      "support_status": "staged",
+      "export_model": "selectable",
+      "evidence_level": "documented_field"
+    },
+    "totalpatentone": {
+      "label": "TotalPatent One",
+      "evidence_ref": "https://www.totalpatentone.com/assets/pdf/TPO%20User%20Manual%20EN.pdf",
+      "support_status": "staged",
+      "export_model": "selectable",
+      "evidence_level": "documented_field"
+    },
+    "patentscope": {
+      "label": "PATENTSCOPE",
+      "evidence_ref": "https://www.wipo.int/en/web/patentscope/faqs_patentscope",
+      "support_status": "staged",
+      "export_model": "fixed",
+      "evidence_level": "documented_field"
+    },
+    "shareresearch": {
+      "label": "Shareresearch",
+      "evidence_ref": "https://www.srpv2.com/SR-C/Help/guidetour/guidetour_Chap1.pdf",
+      "support_status": "staged",
+      "export_model": "selectable",
+      "evidence_level": "ui_label_only"
+    },
+    "derwent": {
+      "label": "Derwent Innovation",
+      "evidence_ref": "https://clarivate.com/intellectual-property/training-support/derwent/research-guides/ensure-freedom-to-operate-for-a-new-invention/",
+      "support_status": "staged",
+      "export_model": "selectable",
+      "evidence_level": "ui_label_only"
+    },
+    "patentsight": {
+      "label": "PatentSight+",
+      "evidence_ref": "https://support.lexisnexisip.com/hc/en-us/articles/20134275408275-Export-Options",
+      "support_status": "dynamic",
+      "export_model": "dynamic",
+      "evidence_level": "dynamic_profile"
+    },
+    "cyberpatent": {
+      "label": "CyberPatent Desk",
+      "evidence_ref": "https://www.patent.ne.jp/service/patent/search.html",
+      "support_status": "staged",
+      "export_model": "dynamic",
+      "evidence_level": "ui_label_only"
+    },
+    "patentsquare": {
+      "label": "PatentSQUARE",
+      "evidence_ref": "https://www.panasonic.com/jp/business/its/patentsquare.html",
+      "support_status": "dynamic",
+      "export_model": "dynamic",
+      "evidence_level": "dynamic_profile"
+    }
+  },
+  "entries": [
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "文献番号",
+      "role": "publication_id",
+      "normalized_name": "document_number",
+      "display_label": "文献番号",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "generic",
+        "jplatpat",
+        "jpnet",
+        "patentfield"
+      ],
+      "header": "出願番号",
+      "role": "application_id",
+      "normalized_name": "application_number",
+      "display_label": "出願番号",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jplatpat": "exact_header",
+        "jpnet": "exact_header",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "generic",
+        "jplatpat",
+        "patentfield"
+      ],
+      "header": "出願日",
+      "role": "date",
+      "normalized_name": "application_date",
+      "display_label": "出願日",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jplatpat": "exact_header",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "公知日",
+      "role": "date",
+      "normalized_name": "public_knowledge_date",
+      "display_label": "公知日",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "jplatpat"
+      ],
+      "header": "発明の名称",
+      "role": "title",
+      "normalized_name": "title",
+      "display_label": "発明の名称",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "出願人/権利者",
+      "role": "applicant",
+      "normalized_name": "applicant",
+      "display_label": "出願人・権利者",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "jplatpat",
+        "orbit",
+        "patentfield",
+        "totalpatentone"
+      ],
+      "header": "FI",
+      "role": "fi",
+      "normalized_name": "fi",
+      "display_label": "FI",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jplatpat": "exact_header",
+        "orbit": "existing_fixture",
+        "patentfield": "documented_field",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "generic",
+        "jplatpat",
+        "patentfield"
+      ],
+      "header": "公開番号",
+      "role": "publication_id",
+      "normalized_name": "publication_number",
+      "display_label": "公開番号",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jplatpat": "exact_header",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "公告番号",
+      "role": "publication_id",
+      "normalized_name": "examined_publication_number",
+      "display_label": "公告番号",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "jplatpat",
+        "patentfield"
+      ],
+      "header": "登録番号",
+      "role": "registration_id",
+      "normalized_name": "registration_number",
+      "display_label": "登録番号",
+      "evidence_by_source": {
+        "jplatpat": "exact_header",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "審判番号",
+      "role": "trial_id",
+      "normalized_name": "trial_number",
+      "display_label": "審判番号",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "その他",
+      "role": "other",
+      "normalized_name": "other",
+      "display_label": "その他",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "ステージ",
+      "role": "legal_status",
+      "normalized_name": "legal_status",
+      "display_label": "ステージ",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "イベント詳細",
+      "role": "legal_event",
+      "normalized_name": "legal_event",
+      "display_label": "イベント詳細",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jplatpat"
+      ],
+      "header": "文献URL",
+      "role": "document_url",
+      "normalized_name": "document_url",
+      "display_label": "文献URL",
+      "evidence_by_source": {
+        "jplatpat": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "jpnet"
+      ],
+      "header": "出願人",
+      "role": "applicant",
+      "normalized_name": "applicant",
+      "display_label": "出願人",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "出願人識別番号",
+      "role": "applicant_id",
+      "normalized_name": "applicant_id",
+      "display_label": "出願人識別番号",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "申請人識別番号",
+      "role": "applicant_id",
+      "normalized_name": "applicant_id",
+      "display_label": "申請人識別番号",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "generic",
+        "jpnet"
+      ],
+      "header": "発明者",
+      "role": "inventor",
+      "normalized_name": "inventor",
+      "display_label": "発明者",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "jpnet",
+        "patentfield",
+        "patentscope"
+      ],
+      "header": "IPC",
+      "role": "ipc",
+      "normalized_name": "ipc",
+      "display_label": "IPC",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jpnet": "exact_header",
+        "patentfield": "documented_field",
+        "patentscope": "documented_field"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "Main IPC",
+      "role": "main_ipc",
+      "normalized_name": "main_ipc",
+      "display_label": "Main IPC",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "generic",
+        "patentfield",
+        "totalpatentone"
+      ],
+      "header": "CPC",
+      "role": "cpc",
+      "normalized_name": "cpc",
+      "display_label": "CPC",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "patentfield": "documented_field",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "F-term",
+      "role": "f_term",
+      "normalized_name": "f_term",
+      "display_label": "F-term",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "generic",
+        "patentfield"
+      ],
+      "header": "Fターム",
+      "role": "f_term",
+      "normalized_name": "f_term",
+      "display_label": "Fターム",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "優先権番号",
+      "role": "priority_id",
+      "normalized_name": "priority_number",
+      "display_label": "優先権番号",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "generic",
+        "patentfield"
+      ],
+      "header": "優先日",
+      "role": "date",
+      "normalized_name": "priority_date",
+      "display_label": "優先日",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "patentfield"
+      ],
+      "header": "公開日",
+      "role": "date",
+      "normalized_name": "publication_date",
+      "display_label": "公開日",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "patentfield"
+      ],
+      "header": "登録日",
+      "role": "date",
+      "normalized_name": "registration_date",
+      "display_label": "登録日",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic",
+        "jplatpat",
+        "jpnet",
+        "patentfield"
+      ],
+      "header": "要約",
+      "role": "abstract",
+      "normalized_name": "abstract",
+      "display_label": "要約",
+      "evidence_by_source": {
+        "generic": "existing_fixture",
+        "jplatpat": "exact_header",
+        "jpnet": "exact_header",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "抄録",
+      "role": "abstract",
+      "normalized_name": "abstract",
+      "display_label": "抄録",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "被引用件数",
+      "role": "citation_count",
+      "normalized_name": "citation_count",
+      "display_label": "被引用件数",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "generic"
+      ],
+      "header": "ファミリーID",
+      "role": "family_id",
+      "normalized_name": "family_id",
+      "display_label": "ファミリーID",
+      "evidence_by_source": {
+        "generic": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "nlpatent",
+        "orbit"
+      ],
+      "header": "Current assignees",
+      "role": "applicant",
+      "normalized_name": "current_assignees",
+      "display_label": "現在の権利者",
+      "evidence_by_source": {
+        "nlpatent": "exact_header",
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit",
+        "totalpatentone"
+      ],
+      "header": "Current assignee",
+      "role": "applicant",
+      "normalized_name": "current_assignee",
+      "display_label": "現在の権利者",
+      "evidence_by_source": {
+        "orbit": "existing_fixture",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "nlpatent",
+        "orbit",
+        "patentscope"
+      ],
+      "header": "Applicants",
+      "role": "applicant",
+      "normalized_name": "applicants",
+      "display_label": "出願人",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "nlpatent": "exact_header",
+        "orbit": "existing_fixture",
+        "patentscope": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Applicant",
+      "role": "applicant",
+      "normalized_name": "applicant",
+      "display_label": "出願人",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Original assignees",
+      "role": "applicant",
+      "normalized_name": "original_assignees",
+      "display_label": "元の権利者",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Original assignee",
+      "role": "applicant",
+      "normalized_name": "original_assignee",
+      "display_label": "元の権利者",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "IPC - International classification",
+      "role": "ipc",
+      "normalized_name": "ipc",
+      "display_label": "IPC",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "CPC - Cooperative classification",
+      "role": "cpc",
+      "normalized_name": "cpc",
+      "display_label": "CPC",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Earliest application date",
+      "role": "date",
+      "normalized_name": "earliest_application_date",
+      "display_label": "最先の出願日",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "orbit",
+        "patentscope",
+        "patsnap"
+      ],
+      "header": "Application date",
+      "role": "date",
+      "normalized_name": "application_date",
+      "display_label": "出願日",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "orbit": "existing_fixture",
+        "patentscope": "documented_field",
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents",
+        "nlpatent",
+        "orbit"
+      ],
+      "header": "Priority date",
+      "role": "date",
+      "normalized_name": "priority_date",
+      "display_label": "優先日",
+      "evidence_by_source": {
+        "google_patents": "exact_header",
+        "nlpatent": "exact_header",
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Standardized priority numbers",
+      "role": "priority_id",
+      "normalized_name": "standardized_priority_numbers",
+      "display_label": "標準化優先権番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Standardized publication numbers",
+      "role": "publication_id",
+      "normalized_name": "standardized_publication_numbers",
+      "display_label": "標準化公開番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Standardized application numbers",
+      "role": "application_id",
+      "normalized_name": "standardized_application_numbers",
+      "display_label": "標準化出願番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Simple family id",
+      "role": "family_id",
+      "normalized_name": "simple_family_id",
+      "display_label": "シンプルファミリーID",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "Extended family id",
+      "role": "family_id",
+      "normalized_name": "extended_family_id",
+      "display_label": "拡張ファミリーID",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "FAN",
+      "role": "family_id",
+      "normalized_name": "family_id",
+      "display_label": "ファミリーID",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "TI",
+      "role": "title",
+      "normalized_name": "title",
+      "display_label": "発明の名称",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "ETI",
+      "role": "title",
+      "normalized_name": "english_title",
+      "display_label": "英文名称",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "APID",
+      "role": "application_id",
+      "normalized_name": "application_id",
+      "display_label": "出願ID",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "AP",
+      "role": "application_id",
+      "normalized_name": "application_number",
+      "display_label": "出願番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "APD",
+      "role": "date",
+      "normalized_name": "application_date",
+      "display_label": "出願日",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "EAPD",
+      "role": "date",
+      "normalized_name": "earliest_application_date",
+      "display_label": "最先の出願日",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "XPN",
+      "role": "publication_id",
+      "normalized_name": "representative_publication_number",
+      "display_label": "代表公報番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "PN",
+      "role": "publication_id",
+      "normalized_name": "publication_number",
+      "display_label": "公報番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "AB",
+      "role": "abstract",
+      "normalized_name": "abstract",
+      "display_label": "要約",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "EAB",
+      "role": "abstract",
+      "normalized_name": "english_abstract",
+      "display_label": "英文要約",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "CLMS",
+      "role": "claims",
+      "normalized_name": "claims",
+      "display_label": "請求項",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "OCLM",
+      "role": "claims",
+      "normalized_name": "original_claims",
+      "display_label": "原請求項",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "PCL",
+      "role": "claims",
+      "normalized_name": "representative_claim",
+      "display_label": "代表請求項",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "PA",
+      "role": "applicant",
+      "normalized_name": "applicant",
+      "display_label": "出願人",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "NPA",
+      "role": "applicant",
+      "normalized_name": "normalized_applicant",
+      "display_label": "正規化出願人",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "IN",
+      "role": "inventor",
+      "normalized_name": "inventor",
+      "display_label": "発明者",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "IC",
+      "role": "ipc",
+      "normalized_name": "ipc",
+      "display_label": "IPC",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "XPR",
+      "role": "priority_id",
+      "normalized_name": "priority_number",
+      "display_label": "優先権番号",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": true,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "orbit"
+      ],
+      "header": "FTM",
+      "role": "f_term",
+      "normalized_name": "f_term",
+      "display_label": "F-term",
+      "evidence_by_source": {
+        "orbit": "existing_fixture"
+      },
+      "identifier_like": false,
+      "allow_numeric_suffix": true
+    },
+    {
+      "sources": [
+        "espacenet",
+        "google_patents",
+        "lens",
+        "nlpatent",
+        "orbit",
+        "patentscope",
+        "patsnap"
+      ],
+      "header": "Title",
+      "role": "title",
+      "normalized_name": "title",
+      "display_label": "発明の名称",
+      "evidence_by_source": {
+        "espacenet": "documented_field",
+        "google_patents": "exact_header",
+        "lens": "exact_header",
+        "nlpatent": "exact_header",
+        "orbit": "existing_fixture",
+        "patentscope": "documented_field",
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet",
+        "patentscope",
+        "patsnap"
+      ],
+      "header": "Publication number",
+      "role": "publication_id",
+      "normalized_name": "publication_number",
+      "display_label": "公開番号",
+      "evidence_by_source": {
+        "espacenet": "documented_field",
+        "patentscope": "documented_field",
+        "patsnap": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet",
+        "google_patents",
+        "lens",
+        "nlpatent",
+        "orbit",
+        "patentscope"
+      ],
+      "header": "Publication date",
+      "role": "date",
+      "normalized_name": "publication_date",
+      "display_label": "公開日",
+      "evidence_by_source": {
+        "espacenet": "documented_field",
+        "google_patents": "exact_header",
+        "lens": "exact_header",
+        "nlpatent": "exact_header",
+        "orbit": "existing_fixture",
+        "patentscope": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Inventor(s)",
+      "role": "inventor",
+      "normalized_name": "inventors",
+      "display_label": "発明者",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Applicant(s)",
+      "role": "applicant",
+      "normalized_name": "applicants",
+      "display_label": "出願人",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "International classification (IPC)",
+      "role": "ipc",
+      "normalized_name": "ipc",
+      "display_label": "IPC",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Cooperative Patent Classification (CPC)",
+      "role": "cpc",
+      "normalized_name": "cpc",
+      "display_label": "CPC",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet",
+        "lens",
+        "patentscope",
+        "totalpatentone"
+      ],
+      "header": "Application number",
+      "role": "application_id",
+      "normalized_name": "application_number",
+      "display_label": "出願番号",
+      "evidence_by_source": {
+        "espacenet": "documented_field",
+        "lens": "exact_header",
+        "patentscope": "documented_field",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Date of application",
+      "role": "date",
+      "normalized_name": "application_date",
+      "display_label": "出願日",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Priority number(s)",
+      "role": "priority_id",
+      "normalized_name": "priority_numbers",
+      "display_label": "優先権番号",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Patents cited in the search report",
+      "role": "citation_reference",
+      "normalized_name": "patents_cited_search_report",
+      "display_label": "調査報告引用特許",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Literature cited in the search report",
+      "role": "citation_reference",
+      "normalized_name": "literature_cited_search_report",
+      "display_label": "調査報告引用文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Patents cited during examination",
+      "role": "citation_reference",
+      "normalized_name": "patents_cited_examination",
+      "display_label": "審査中引用特許",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Literature cited during examination",
+      "role": "citation_reference",
+      "normalized_name": "literature_cited_examination",
+      "display_label": "審査中引用文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Other patent citations",
+      "role": "citation_reference",
+      "normalized_name": "other_patent_citations",
+      "display_label": "その他引用特許",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Other literature citations",
+      "role": "citation_reference",
+      "normalized_name": "other_literature_citations",
+      "display_label": "その他引用文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Patents used in opposition",
+      "role": "citation_reference",
+      "normalized_name": "patents_used_opposition",
+      "display_label": "異議で使用された特許",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Literature used in opposition",
+      "role": "citation_reference",
+      "normalized_name": "literature_used_opposition",
+      "display_label": "異議で使用された文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Patents cited by the applicant",
+      "role": "citation_reference",
+      "normalized_name": "patents_cited_applicant",
+      "display_label": "出願人引用特許",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Literature cited by the applicant",
+      "role": "citation_reference",
+      "normalized_name": "literature_cited_applicant",
+      "display_label": "出願人引用文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "International search citation",
+      "role": "citation_reference",
+      "normalized_name": "international_search_citation",
+      "display_label": "国際調査引用",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "International search NPL citation",
+      "role": "citation_reference",
+      "normalized_name": "international_search_npl_citation",
+      "display_label": "国際調査非特許文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Supplementary international search citation",
+      "role": "citation_reference",
+      "normalized_name": "supplementary_international_search_citation",
+      "display_label": "補充国際調査引用",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "espacenet"
+      ],
+      "header": "Supplementary international search NPL citation",
+      "role": "citation_reference",
+      "normalized_name": "supplementary_international_search_npl_citation",
+      "display_label": "補充国際調査非特許文献",
+      "evidence_by_source": {
+        "espacenet": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "#",
+      "role": "other",
+      "normalized_name": "record_index",
+      "display_label": "#",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Jurisdiction",
+      "role": "other",
+      "normalized_name": "jurisdiction",
+      "display_label": "Jurisdiction",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Kind",
+      "role": "other",
+      "normalized_name": "kind_code",
+      "display_label": "Kind",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Display Key",
+      "role": "publication_id",
+      "normalized_name": "display_key",
+      "display_label": "Display Key",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Lens ID",
+      "role": "other",
+      "normalized_name": "lens_id",
+      "display_label": "Lens ID",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Publication Year",
+      "role": "date",
+      "normalized_name": "publication_year",
+      "display_label": "Publication Year",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Priority Numbers",
+      "role": "priority_id",
+      "normalized_name": "priority_numbers",
+      "display_label": "Priority Numbers",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Earliest Priority Date",
+      "role": "date",
+      "normalized_name": "earliest_priority_date",
+      "display_label": "Earliest Priority Date",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "nlpatent",
+        "patsnap",
+        "totalpatentone"
+      ],
+      "header": "Abstract",
+      "role": "abstract",
+      "normalized_name": "abstract",
+      "display_label": "Abstract",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "nlpatent": "exact_header",
+        "patsnap": "documented_field",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "nlpatent",
+        "patentscope"
+      ],
+      "header": "Inventors",
+      "role": "inventor",
+      "normalized_name": "inventors",
+      "display_label": "Inventors",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "nlpatent": "exact_header",
+        "patentscope": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Owners",
+      "role": "applicant",
+      "normalized_name": "owners",
+      "display_label": "Owners",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "patentfield"
+      ],
+      "header": "URL",
+      "role": "document_url",
+      "normalized_name": "document_url",
+      "display_label": "URL",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Document Type",
+      "role": "other",
+      "normalized_name": "document_type",
+      "display_label": "Document Type",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Has Full Text",
+      "role": "other",
+      "normalized_name": "has_full_text",
+      "display_label": "Has Full Text",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Cites Patent Count",
+      "role": "citation_count",
+      "normalized_name": "cites_patent_count",
+      "display_label": "Cites Patent Count",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Cited by Patent Count",
+      "role": "citation_count",
+      "normalized_name": "cited_by_patent_count",
+      "display_label": "Cited by Patent Count",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Simple Family Size",
+      "role": "other",
+      "normalized_name": "simple_family_size",
+      "display_label": "Simple Family Size",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Simple Family Members",
+      "role": "family_id",
+      "normalized_name": "simple_family_members",
+      "display_label": "Simple Family Members",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Simple Family Member Jurisdictions",
+      "role": "other",
+      "normalized_name": "simple_family_member_jurisdictions",
+      "display_label": "Simple Family Member Jurisdictions",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Extended Family Size",
+      "role": "other",
+      "normalized_name": "extended_family_size",
+      "display_label": "Extended Family Size",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "totalpatentone"
+      ],
+      "header": "Extended Family Members",
+      "role": "family_id",
+      "normalized_name": "extended_family_members",
+      "display_label": "Extended Family Members",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Extended Family Member Jurisdictions",
+      "role": "other",
+      "normalized_name": "extended_family_member_jurisdictions",
+      "display_label": "Extended Family Member Jurisdictions",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "Sequence Count",
+      "role": "other",
+      "normalized_name": "sequence_count",
+      "display_label": "Sequence Count",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "CPC Classifications",
+      "role": "cpc",
+      "normalized_name": "cpc",
+      "display_label": "CPC Classifications",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "IPCR Classifications",
+      "role": "ipc",
+      "normalized_name": "ipcr",
+      "display_label": "IPCR Classifications",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "US Classifications",
+      "role": "other",
+      "normalized_name": "us_classifications",
+      "display_label": "US Classifications",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "NPL Citation Count",
+      "role": "citation_count",
+      "normalized_name": "npl_citation_count",
+      "display_label": "NPL Citation Count",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "NPL Resolved Citation Count",
+      "role": "citation_count",
+      "normalized_name": "npl_resolved_citation_count",
+      "display_label": "NPL Resolved Citation Count",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "NPL Resolved Lens ID(s)",
+      "role": "citation_reference",
+      "normalized_name": "npl_resolved_lens_ids",
+      "display_label": "NPL Resolved Lens ID(s)",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "NPL Resolved External ID(s)",
+      "role": "citation_reference",
+      "normalized_name": "npl_resolved_external_ids",
+      "display_label": "NPL Resolved External ID(s)",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "lens"
+      ],
+      "header": "NPL Citations",
+      "role": "citation_reference",
+      "normalized_name": "npl_citations",
+      "display_label": "NPL Citations",
+      "evidence_by_source": {
+        "lens": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "lens",
+        "nlpatent"
+      ],
+      "header": "Legal Status",
+      "role": "legal_status",
+      "normalized_name": "legal_status",
+      "display_label": "Legal Status",
+      "evidence_by_source": {
+        "lens": "exact_header",
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "id",
+      "role": "publication_id",
+      "normalized_name": "publication_id",
+      "display_label": "id",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "assignee",
+      "role": "applicant",
+      "normalized_name": "assignee",
+      "display_label": "assignee",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "inventor/author",
+      "role": "inventor",
+      "normalized_name": "inventor_author",
+      "display_label": "inventor/author",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "filing/creation date",
+      "role": "date",
+      "normalized_name": "filing_creation_date",
+      "display_label": "filing/creation date",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "grant date",
+      "role": "date",
+      "normalized_name": "grant_date",
+      "display_label": "grant date",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "result link",
+      "role": "document_url",
+      "normalized_name": "result_link",
+      "display_label": "result link",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "google_patents"
+      ],
+      "header": "representative figure link",
+      "role": "other",
+      "normalized_name": "representative_figure_link",
+      "display_label": "representative figure link",
+      "evidence_by_source": {
+        "google_patents": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "No",
+      "role": "other",
+      "normalized_name": "record_number",
+      "display_label": "No",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "公報番号",
+      "role": "publication_id",
+      "normalized_name": "publication_number",
+      "display_label": "公報番号",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "国際分類",
+      "role": "ipc",
+      "normalized_name": "international_classification",
+      "display_label": "国際分類",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "公報情報",
+      "role": "other",
+      "normalized_name": "publication_information",
+      "display_label": "公報情報",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "代表図",
+      "role": "other",
+      "normalized_name": "representative_figure",
+      "display_label": "代表図",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "出願情報",
+      "role": "other",
+      "normalized_name": "application_information",
+      "display_label": "出願情報",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "登録情報",
+      "role": "other",
+      "normalized_name": "registration_information",
+      "display_label": "登録情報",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "jpnet"
+      ],
+      "header": "発明(考案)の名称",
+      "role": "title",
+      "normalized_name": "title",
+      "display_label": "発明(考案)の名称",
+      "evidence_by_source": {
+        "jpnet": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent"
+      ],
+      "header": "Document Number",
+      "role": "publication_id",
+      "normalized_name": "document_number",
+      "display_label": "Document Number",
+      "evidence_by_source": {
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "nlpatent"
+      ],
+      "header": "CPC Symbols",
+      "role": "cpc",
+      "normalized_name": "cpc",
+      "display_label": "CPC Symbols",
+      "evidence_by_source": {
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent"
+      ],
+      "header": "Notes",
+      "role": "other",
+      "normalized_name": "notes",
+      "display_label": "Notes",
+      "evidence_by_source": {
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent"
+      ],
+      "header": "Relevance Analysis",
+      "role": "other",
+      "normalized_name": "relevance_analysis",
+      "display_label": "Relevance Analysis",
+      "evidence_by_source": {
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent",
+        "totalpatentone"
+      ],
+      "header": "Claims",
+      "role": "claims",
+      "normalized_name": "claims",
+      "display_label": "Claims",
+      "evidence_by_source": {
+        "nlpatent": "exact_header",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent",
+        "totalpatentone"
+      ],
+      "header": "Independent Claims",
+      "role": "claims",
+      "normalized_name": "independent_claims",
+      "display_label": "Independent Claims",
+      "evidence_by_source": {
+        "nlpatent": "exact_header",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent"
+      ],
+      "header": "Ask NLPatent Answer",
+      "role": "other",
+      "normalized_name": "ask_nlpatent_answer",
+      "display_label": "Ask NLPatent Answer",
+      "evidence_by_source": {
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "nlpatent"
+      ],
+      "header": "Saved Sections",
+      "role": "other",
+      "normalized_name": "saved_sections",
+      "display_label": "Saved Sections",
+      "evidence_by_source": {
+        "nlpatent": "exact_header"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "名称",
+      "role": "title",
+      "normalized_name": "title",
+      "display_label": "名称",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願番号(オリジナル)",
+      "role": "application_id",
+      "normalized_name": "application_number_original",
+      "display_label": "出願番号(オリジナル)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願番号(DOCDB形式)",
+      "role": "application_id",
+      "normalized_name": "application_number_docdb",
+      "display_label": "出願番号(DOCDB形式)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願年",
+      "role": "date",
+      "normalized_name": "application_year",
+      "display_label": "出願年",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願月",
+      "role": "date",
+      "normalized_name": "application_month",
+      "display_label": "出願月",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "公開番号(オリジナル)",
+      "role": "publication_id",
+      "normalized_name": "publication_number_original",
+      "display_label": "公開番号(オリジナル)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "公開年",
+      "role": "date",
+      "normalized_name": "publication_year",
+      "display_label": "公開年",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "公開月",
+      "role": "date",
+      "normalized_name": "publication_month",
+      "display_label": "公開月",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "登録番号(オリジナル)",
+      "role": "registration_id",
+      "normalized_name": "registration_number_original",
+      "display_label": "登録番号(オリジナル)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "登録発行日",
+      "role": "date",
+      "normalized_name": "registration_issue_date",
+      "display_label": "登録発行日",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "PCT公開番号",
+      "role": "publication_id",
+      "normalized_name": "pct_publication_number",
+      "display_label": "PCT公開番号",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "PCT公開日",
+      "role": "date",
+      "normalized_name": "pct_publication_date",
+      "display_label": "PCT公開日",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "PCT出願番号",
+      "role": "application_id",
+      "normalized_name": "pct_application_number",
+      "display_label": "PCT出願番号",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "IPCセクション",
+      "role": "ipc",
+      "normalized_name": "ipc_section",
+      "display_label": "IPCセクション",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "IPCクラス",
+      "role": "ipc",
+      "normalized_name": "ipc_class",
+      "display_label": "IPCクラス",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "IPCサブクラス",
+      "role": "ipc",
+      "normalized_name": "ipc_subclass",
+      "display_label": "IPCサブクラス",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "IPCメイングループ",
+      "role": "ipc",
+      "normalized_name": "ipc_main_group",
+      "display_label": "IPCメイングループ",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "筆頭IPC",
+      "role": "main_ipc",
+      "normalized_name": "main_ipc",
+      "display_label": "筆頭IPC",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "優先権主張番号",
+      "role": "priority_id",
+      "normalized_name": "priority_number",
+      "display_label": "優先権主張番号",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "優先国",
+      "role": "other",
+      "normalized_name": "priority_country",
+      "display_label": "優先国",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "原出願番号",
+      "role": "application_id",
+      "normalized_name": "parent_application_number",
+      "display_label": "原出願番号",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "原出願日",
+      "role": "date",
+      "normalized_name": "parent_application_date",
+      "display_label": "原出願日",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "被引用件数 (JP・US)",
+      "role": "citation_count",
+      "normalized_name": "cited_by_count_jp_us",
+      "display_label": "被引用件数 (JP・US)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "引用件数",
+      "role": "citation_count",
+      "normalized_name": "citation_count",
+      "display_label": "引用件数",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "FIサブクラス",
+      "role": "fi",
+      "normalized_name": "fi_subclass",
+      "display_label": "FIサブクラス",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "FIメイングループ",
+      "role": "fi",
+      "normalized_name": "fi_main_group",
+      "display_label": "FIメイングループ",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "FIファセット",
+      "role": "fi",
+      "normalized_name": "fi_facet",
+      "display_label": "FIファセット",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "テーマコード",
+      "role": "f_term",
+      "normalized_name": "theme_code",
+      "display_label": "テーマコード",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "発明者 (JP:最新)",
+      "role": "inventor",
+      "normalized_name": "inventor_jp_latest",
+      "display_label": "発明者 (JP:最新)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 (JP:名寄せ)",
+      "role": "applicant",
+      "normalized_name": "applicant_jp_normalized",
+      "display_label": "出願人 (JP:名寄せ)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 識別番号 (JP:最新)",
+      "role": "applicant_id",
+      "normalized_name": "applicant_id_jp_latest",
+      "display_label": "出願人 識別番号 (JP:最新)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 (JP:最新)",
+      "role": "applicant",
+      "normalized_name": "applicant_jp_latest",
+      "display_label": "出願人 (JP:最新)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 (JP:出願)",
+      "role": "applicant",
+      "normalized_name": "applicant_jp_application",
+      "display_label": "出願人 (JP:出願)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 (JP:付与)",
+      "role": "applicant",
+      "normalized_name": "applicant_jp_grant",
+      "display_label": "出願人 (JP:付与)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "権利者 (JP:最新)",
+      "role": "applicant",
+      "normalized_name": "owner_jp_latest",
+      "display_label": "権利者 (JP:最新)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "名称 (EN) (Patent Abstract of Japan)",
+      "role": "title",
+      "normalized_name": "title_en_paj",
+      "display_label": "名称 (EN) (Patent Abstract of Japan)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "要約 (EN) (Patent Abstract of Japan)",
+      "role": "abstract",
+      "normalized_name": "abstract_en_paj",
+      "display_label": "要約 (EN) (Patent Abstract of Japan)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 (EN) (Patent Abstract of Japan)",
+      "role": "applicant",
+      "normalized_name": "applicant_en_paj",
+      "display_label": "出願人 (EN) (Patent Abstract of Japan)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "発明者 (EN) (Patent Abstract of Japan)",
+      "role": "inventor",
+      "normalized_name": "inventor_en_paj",
+      "display_label": "発明者 (EN) (Patent Abstract of Japan)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "出願人 (DOCDB)",
+      "role": "applicant",
+      "normalized_name": "applicant_docdb",
+      "display_label": "出願人 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "発明者 (DOCDB)",
+      "role": "inventor",
+      "normalized_name": "inventor_docdb",
+      "display_label": "発明者 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "優先権主張番号 (DOCDB)",
+      "role": "priority_id",
+      "normalized_name": "priority_number_docdb",
+      "display_label": "優先権主張番号 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "優先日 (DOCDB)",
+      "role": "date",
+      "normalized_name": "priority_date_docdb",
+      "display_label": "優先日 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "パテントファミリー 出願番号",
+      "role": "family_id",
+      "normalized_name": "family_application_numbers",
+      "display_label": "パテントファミリー 出願番号",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "公開番号 (DOCDB)",
+      "role": "publication_id",
+      "normalized_name": "publication_number_docdb",
+      "display_label": "公開番号 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "公開日 (DOCDB)",
+      "role": "date",
+      "normalized_name": "publication_date_docdb",
+      "display_label": "公開日 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "被引用件数 (DOCDB)",
+      "role": "citation_count",
+      "normalized_name": "cited_by_count_docdb",
+      "display_label": "被引用件数 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentfield"
+      ],
+      "header": "引用件数 (DOCDB)",
+      "role": "citation_count",
+      "normalized_name": "citation_count_docdb",
+      "display_label": "引用件数 (DOCDB)",
+      "evidence_by_source": {
+        "patentfield": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Abstract Thumbnail",
+      "role": "other",
+      "normalized_name": "abstract_thumbnail",
+      "display_label": "Abstract Thumbnail",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Title (Translated)",
+      "role": "title",
+      "normalized_name": "title_translated",
+      "display_label": "Title (Translated)",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Owner",
+      "role": "applicant",
+      "normalized_name": "owner",
+      "display_label": "Owner",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap",
+        "totalpatentone"
+      ],
+      "header": "Inventor",
+      "role": "inventor",
+      "normalized_name": "inventor",
+      "display_label": "Inventor",
+      "evidence_by_source": {
+        "patsnap": "documented_field",
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Publication (Announcement) Date",
+      "role": "date",
+      "normalized_name": "publication_announcement_date",
+      "display_label": "Publication (Announcement) Date",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Simple Legal Status",
+      "role": "legal_status",
+      "normalized_name": "simple_legal_status",
+      "display_label": "Simple Legal Status",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Patent Type",
+      "role": "other",
+      "normalized_name": "patent_type",
+      "display_label": "Patent Type",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Abstract (Translated)",
+      "role": "abstract",
+      "normalized_name": "abstract_translated",
+      "display_label": "Abstract (Translated)",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Summary of Tech Effects",
+      "role": "other",
+      "normalized_name": "summary_of_tech_effects",
+      "display_label": "Summary of Tech Effects",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Key Technical Effects",
+      "role": "other",
+      "normalized_name": "key_technical_effects",
+      "display_label": "Key Technical Effects",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patsnap"
+      ],
+      "header": "Technical Means",
+      "role": "other",
+      "normalized_name": "technical_means",
+      "display_label": "Technical Means",
+      "evidence_by_source": {
+        "patsnap": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "All Assignees",
+      "role": "applicant",
+      "normalized_name": "all_assignees",
+      "display_label": "All Assignees",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Annotation",
+      "role": "other",
+      "normalized_name": "annotation",
+      "display_label": "Annotation",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Application/Filing Date",
+      "role": "date",
+      "normalized_name": "application_filing_date",
+      "display_label": "Application/Filing Date",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Attorney/Registered Agent",
+      "role": "other",
+      "normalized_name": "attorney_registered_agent",
+      "display_label": "Attorney/Registered Agent",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Authority",
+      "role": "other",
+      "normalized_name": "authority",
+      "display_label": "Authority",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Backward citations count",
+      "role": "citation_count",
+      "normalized_name": "backward_citations_count",
+      "display_label": "Backward citations count",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Backward Patent Citations",
+      "role": "citation_reference",
+      "normalized_name": "backward_patent_citations",
+      "display_label": "Backward Patent Citations",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Complete Family Members",
+      "role": "family_id",
+      "normalized_name": "complete_family_members",
+      "display_label": "Complete Family Members",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "CPC (Main)",
+      "role": "cpc",
+      "normalized_name": "main_cpc",
+      "display_label": "CPC (Main)",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Current Assignee (Standardized)",
+      "role": "applicant",
+      "normalized_name": "current_assignee_standardized",
+      "display_label": "Current Assignee (Standardized)",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Description",
+      "role": "other",
+      "normalized_name": "description",
+      "display_label": "Description",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Designated States",
+      "role": "other",
+      "normalized_name": "designated_states",
+      "display_label": "Designated States",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Domestic Family Members",
+      "role": "family_id",
+      "normalized_name": "domestic_family_members",
+      "display_label": "Domestic Family Members",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Family ID",
+      "role": "family_id",
+      "normalized_name": "family_id",
+      "display_label": "Family ID",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "FI (Main)",
+      "role": "fi",
+      "normalized_name": "main_fi",
+      "display_label": "FI (Main)",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "First Claim",
+      "role": "claims",
+      "normalized_name": "first_claim",
+      "display_label": "First Claim",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Forward citations count",
+      "role": "citation_count",
+      "normalized_name": "forward_citations_count",
+      "display_label": "Forward citations count",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Forward Patent Citations",
+      "role": "citation_reference",
+      "normalized_name": "forward_patent_citations",
+      "display_label": "Forward Patent Citations",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": true
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "F TERMS",
+      "role": "f_term",
+      "normalized_name": "f_terms",
+      "display_label": "F TERMS",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "ECLA",
+      "role": "other",
+      "normalized_name": "ecla",
+      "display_label": "ECLA",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "ECLA (Main)",
+      "role": "other",
+      "normalized_name": "main_ecla",
+      "display_label": "ECLA (Main)",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "Examiner",
+      "role": "other",
+      "normalized_name": "examiner",
+      "display_label": "Examiner",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "totalpatentone"
+      ],
+      "header": "ICO",
+      "role": "other",
+      "normalized_name": "ico",
+      "display_label": "ICO",
+      "evidence_by_source": {
+        "totalpatentone": "documented_field"
+      },
+      "identifier_like": false
+    },
+    {
+      "sources": [
+        "patentscope"
+      ],
+      "header": "Application Id",
+      "role": "application_id",
+      "normalized_name": "application_id",
+      "display_label": "Application Id",
+      "evidence_by_source": {
+        "patentscope": "documented_field"
+      },
+      "identifier_like": true
+    }
+  ]
+}

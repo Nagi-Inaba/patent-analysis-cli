@@ -1,0 +1,25 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "new-entrants.v1",
+  "resolution": {
+    "bindings": {
+      "year": "year",
+      "group": "group",
+      "item": "item"
+    }
+  },
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "parameters": {
+    "date_role": "year",
+    "applicant_role": "group",
+    "classification_role": "item",
+    "as_of_year": 2022
+  }
+}

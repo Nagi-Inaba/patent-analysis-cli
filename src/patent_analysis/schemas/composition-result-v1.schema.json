@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:composition-result:1.0.0",
+  "title": "composition.v1 data",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "measure",
+    "items",
+    "population",
+    "contributions",
+    "limits"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis_id": {"const": "composition.v1"},
+    "algorithm_version": {"const": "1.0.0"},
+    "measure": {"$ref": "#/$defs/measure"},
+    "items": {
+      "type": "array",
+      "maxItems": 101,
+      "items": {"$ref": "#/$defs/item"}
+    },
+    "population": {"$ref": "#/$defs/population"},
+    "contributions": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500000
+    },
+    "limits": {
+      "type": "object",
+      "required": ["max_top_n", "max_expanded_contributions"],
+      "additionalProperties": false,
+      "properties": {
+        "max_top_n": {"const": 100},
+        "max_expanded_contributions": {"const": 500000}
+      }
+    }
+  },
+  "$defs": {
+    "measure": {
+      "type": "object",
+      "required": ["mode", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["count", "sum", "average", "max", "min"]},
+        "role": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mode": {"const": "count"}}},
+          "then": {"properties": {"role": {"type": "null"}}}
+        },
+        {
+          "if": {"properties": {"mode": {"enum": ["sum", "average", "max", "min"]}}},
+          "then": {"properties": {"role": {"type": "string", "minLength": 1}}}
+        }
+      ]
+    },
+    "item": {
+      "type": "object",
+      "required": [
+        "label",
+        "value",
+        "row_count",
+        "share",
+        "share_basis",
+        "is_other"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string", "minLength": 1},
+        "value": {"type": "number"},
+        "row_count": {"type": "integer", "minimum": 0},
+        "share": {"type": "number", "minimum": 0, "maximum": 1},
+        "share_basis": {"enum": ["value", "row_count"]},
+        "is_other": {"type": "boolean"}
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": [
+        "input_rows",
+        "visible_rows",
+        "blank_role_rows",
+        "excluded_rows"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "visible_rows": {"type": "integer", "minimum": 0},
+        "blank_role_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

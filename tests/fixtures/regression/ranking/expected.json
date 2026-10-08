@@ -1,0 +1,43 @@
+{
+  "analysis_type": "ranking",
+  "dimension": "applicant",
+  "measure": {
+    "mode": "count",
+    "column": null
+  },
+  "population": {
+    "input_rows": 9,
+    "analyzed_rows": 9
+  },
+  "rows": [
+    {
+      "row_kind": "dimension_value",
+      "label": "その他",
+      "value": 3,
+      "count": 3,
+      "share": 0.3333333333333333
+    },
+    {
+      "row_kind": "dimension_value",
+      "label": "A社",
+      "value": 2,
+      "count": 2,
+      "share": 0.2222222222222222
+    },
+    {
+      "row_kind": "dimension_value",
+      "label": "Ａ社",
+      "value": 2,
+      "count": 2,
+      "share": 0.2222222222222222
+    },
+    {
+      "row_kind": "remainder",
+      "label": "その他",
+      "value": 2,
+      "count": 2,
+      "share": 0.2222222222222222
+    }
+  ],
+  "warnings": []
+}

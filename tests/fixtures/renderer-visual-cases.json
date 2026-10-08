@@ -1,0 +1,148 @@
+{
+  "cases": [
+    {
+      "id": "positive",
+      "dimension_source": "applicant",
+      "dimension_display": "出願人",
+      "measure_mode": "count",
+      "measure_column": null,
+      "rows": [
+        {"row_kind": "dimension_value", "source_label": "甲社", "display_label": "甲社", "value": 5, "count": 5, "share": 0.625},
+        {"row_kind": "dimension_value", "source_label": "乙社", "display_label": "乙社", "value": 3, "count": 3, "share": 0.375}
+      ]
+    },
+    {
+      "id": "mixed-signed",
+      "dimension_source": "technology",
+      "dimension_display": "技術分類",
+      "measure_mode": "sum",
+      "measure_column": "スコア",
+      "rows": [
+        {"row_kind": "dimension_value", "source_label": "正値", "display_label": "正値", "value": 12.5, "count": 1, "share": 0.3333333333333333},
+        {"row_kind": "dimension_value", "source_label": "零", "display_label": "零", "value": 0, "count": 1, "share": 0.3333333333333333},
+        {"row_kind": "dimension_value", "source_label": "負値", "display_label": "負値", "value": -7.25, "count": 1, "share": 0.3333333333333333}
+      ]
+    },
+    {
+      "id": "two-other-labels",
+      "dimension_source": "category",
+      "dimension_display": "分類",
+      "measure_mode": "average",
+      "measure_column": "評価値",
+      "rows": [
+        {"row_kind": "dimension_value", "source_label": "その他", "display_label": "その他", "value": 1.0, "count": 1, "share": 0.5},
+        {"row_kind": "remainder", "source_label": "その他", "display_label": "その他", "value": -1, "count": 1, "share": 0.5}
+      ]
+    },
+    {
+      "id": "long-japanese",
+      "dimension_source": "long-label",
+      "dimension_display": "長い分類",
+      "measure_mode": "max",
+      "measure_column": "指数",
+      "rows": [
+        {"row_kind": "dimension_value", "source_label": "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほ", "display_label": "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほ", "value": 42, "count": 1, "share": 1}
+      ]
+    },
+    {
+      "id": "empty",
+      "dimension_source": "applicant",
+      "dimension_display": "出願人",
+      "measure_mode": "count",
+      "measure_column": null,
+      "rows": []
+    },
+    {
+      "id": "max-rows-generated",
+      "dimension_source": "classification",
+      "dimension_display": "分類",
+      "measure_mode": "count",
+      "measure_column": null,
+      "generated_row_count": 101
+    },
+    {
+      "id": "large-signed-values",
+      "dimension_source": "score",
+      "dimension_display": "指標",
+      "measure_mode": "min",
+      "measure_column": "値",
+      "rows": [
+        {"row_kind": "dimension_value", "source_label": "大正", "display_label": "大正", "value": 999999999.25, "count": 1, "share": 0.5},
+        {"row_kind": "dimension_value", "source_label": "大負", "display_label": "大負", "value": -999999999.5, "count": 1, "share": 0.5}
+      ]
+    }
+  ],
+  "semantic_cases": [
+    {"id": "valid-base", "operation": "none", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-unicode-graphemes", "operation": "unicode_graphemes", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-two-other", "operation": "two_other", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-title-256", "operation": "title_250", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-truncated-title-256", "operation": "title_251", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-description-256", "operation": "description_256", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-measure-column-256", "operation": "measure_column_256", "python_valid": true, "renderer_valid": true},
+    {"id": "valid-display-budget-20000", "operation": "display_budget_20000", "python_valid": true, "renderer_valid": true},
+    {"id": "python-valid-renderer-invalid-nfd-dimension-title", "operation": "nfd_dimension_title", "python_valid": true, "renderer_valid": false},
+    {"id": "python-valid-renderer-invalid-nfd-row", "operation": "nfd_row", "python_valid": true, "renderer_valid": false},
+    {"id": "python-valid-renderer-invalid-nfd-warning", "operation": "nfd_warning", "python_valid": true, "renderer_valid": false},
+    {"id": "invalid-title-mismatch", "operation": "title_mismatch", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-newline", "operation": "unsafe_newline", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-c1", "operation": "unsafe_c1", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-bidi-override", "operation": "unsafe_bidi", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-noncharacter", "operation": "unsafe_noncharacter", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-plane-noncharacter", "operation": "unsafe_plane_noncharacter", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-dimension-source-257", "operation": "dimension_source_257", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-dimension-description-257", "operation": "dimension_description_257", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-measure-column-257", "operation": "measure_column_257", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-row-display-257", "operation": "row_display_257", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-row-description-257", "operation": "row_description_257", "python_valid": false, "renderer_valid": false},
+    {"id": "invalid-display-budget-20001", "operation": "display_budget_20001", "python_valid": false, "renderer_valid": false}
+  ],
+  "numeric_cases": [
+    {"id": "integer-zero", "lexeme": "0", "python_accepts": true, "renderer_accepts": true},
+    {"id": "integer-positive", "lexeme": "1", "python_accepts": true, "renderer_accepts": true},
+    {"id": "integer-negative", "lexeme": "-1", "python_accepts": true, "renderer_accepts": true},
+    {"id": "max-safe-integer", "lexeme": "9007199254740991", "python_accepts": true, "renderer_accepts": true},
+    {"id": "min-safe-integer", "lexeme": "-9007199254740991", "python_accepts": true, "renderer_accepts": true},
+    {"id": "max-safe-plus-one", "lexeme": "9007199254740992", "python_accepts": true, "renderer_accepts": false},
+    {"id": "min-safe-minus-one", "lexeme": "-9007199254740992", "python_accepts": true, "renderer_accepts": false},
+    {"id": "unsafe-alias-integer", "lexeme": "9007199254740993", "python_accepts": true, "renderer_accepts": false},
+    {"id": "unsafe-alias-negative-integer", "lexeme": "-9007199254740993", "python_accepts": true, "renderer_accepts": false},
+    {"id": "larger-python-integer", "lexeme": "123456789012345678901234567890", "python_accepts": true, "renderer_accepts": false},
+    {"id": "float-zero", "lexeme": "0.0", "python_accepts": true, "renderer_accepts": true},
+    {"id": "float-one", "lexeme": "1.0", "python_accepts": true, "renderer_accepts": true},
+    {"id": "float-five", "lexeme": "5.0", "python_accepts": true, "renderer_accepts": true},
+    {"id": "fixed-threshold", "lexeme": "0.0001", "python_accepts": true, "renderer_accepts": true},
+    {"id": "scientific-threshold", "lexeme": "1e-05", "python_accepts": true, "renderer_accepts": true},
+    {"id": "scientific-small", "lexeme": "1e-06", "python_accepts": true, "renderer_accepts": true},
+    {"id": "fixed-large-threshold", "lexeme": "1000000000000000.0", "python_accepts": true, "renderer_accepts": true},
+    {"id": "scientific-large-threshold", "lexeme": "1e+16", "python_accepts": true, "renderer_accepts": true},
+    {"id": "large-exact-float", "lexeme": "9007199254740992.0", "python_accepts": true, "renderer_accepts": true},
+    {"id": "very-large-float", "lexeme": "1e+100", "python_accepts": true, "renderer_accepts": true},
+    {"id": "shortest-roundtrip", "lexeme": "1.2345678901234567", "python_accepts": true, "renderer_accepts": true},
+    {"id": "minimum-subnormal", "lexeme": "5e-324", "python_accepts": true, "renderer_accepts": true},
+    {"id": "minimum-normal", "lexeme": "2.2250738585072014e-308", "python_accepts": true, "renderer_accepts": true},
+    {"id": "maximum-finite", "lexeme": "1.7976931348623157e+308", "python_accepts": true, "renderer_accepts": true},
+    {"id": "representative-share", "lexeme": "0.6666666666666666", "python_accepts": true, "renderer_accepts": true},
+    {"id": "representative-negative", "lexeme": "-7.25", "python_accepts": true, "renderer_accepts": true},
+    {"id": "representative-large", "lexeme": "999999999.25", "python_accepts": true, "renderer_accepts": true},
+    {"id": "negative-integer-zero", "lexeme": "-0", "python_accepts": false, "renderer_accepts": false},
+    {"id": "negative-float-zero", "lexeme": "-0.0", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-fraction", "lexeme": "5.00", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-fraction-tail", "lexeme": "1.2300", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-exponent-zero", "lexeme": "1e01", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-exponent-plus-zero", "lexeme": "1e+01", "python_accepts": false, "renderer_accepts": false},
+    {"id": "unnecessary-exponent", "lexeme": "1e1", "python_accepts": false, "renderer_accepts": false},
+    {"id": "unnecessary-float-exponent", "lexeme": "1.0e+00", "python_accepts": false, "renderer_accepts": false},
+    {"id": "wrong-small-threshold", "lexeme": "0.000001", "python_accepts": false, "renderer_accepts": false},
+    {"id": "unpadded-negative-exponent", "lexeme": "1e-5", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-positive-exponent-zero", "lexeme": "1e+016", "python_accepts": false, "renderer_accepts": false},
+    {"id": "uppercase-exponent", "lexeme": "1E+16", "python_accepts": false, "renderer_accepts": false},
+    {"id": "leading-plus", "lexeme": "+1", "python_accepts": false, "renderer_accepts": false},
+    {"id": "leading-integer-zero", "lexeme": "01", "python_accepts": false, "renderer_accepts": false},
+    {"id": "rounded-large-float", "lexeme": "9007199254740993.0", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-subnormal", "lexeme": "4.9406564584124654e-324", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-min-normal", "lexeme": "2.22507385850720140e-308", "python_accepts": false, "renderer_accepts": false},
+    {"id": "redundant-max-finite", "lexeme": "1.79769313486231570e+308", "python_accepts": false, "renderer_accepts": false},
+    {"id": "overflow-float", "lexeme": "1e+309", "python_accepts": false, "renderer_accepts": false}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "analysis_type": "ranking",
+  "dimension": "group",
+  "measure": {
+    "mode": "count",
+    "column": null
+  },
+  "top_n": 20,
+  "include_other": true,
+  "multi_value_mode": "all"
+}

@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:growth-result:1.0.0",
+  "$comment": "Label strings additionally require canonical UTF-8 JSON encoding of at most 4096 bytes; oversized labels are rejected, not truncated.",
+  "title": "growth.v1 data",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "measure",
+    "start_year",
+    "end_year",
+    "x",
+    "series",
+    "population",
+    "contributions",
+    "limits"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis_id": {"const": "growth.v1"},
+    "algorithm_version": {"const": "1.0.0"},
+    "measure": {
+      "type": "object",
+      "required": ["mode", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"const": "count"},
+        "role": {"type": "null"}
+      }
+    },
+    "start_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+    "end_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+    "x": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"type": "string", "pattern": "^(?:18|19|20|21)[0-9]{2}$"}
+    },
+    "series": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {"$ref": "#/$defs/seriesItem"}
+    },
+    "population": {"$ref": "#/$defs/population"},
+    "contributions": {"type": "integer", "minimum": 0, "maximum": 1000000},
+    "limits": {
+      "type": "object",
+      "required": ["max_top_n", "max_expanded_contributions", "max_distinct_buckets"],
+      "additionalProperties": false,
+      "properties": {
+        "max_top_n": {"const": 20},
+        "max_expanded_contributions": {"const": 1000000},
+        "max_distinct_buckets": {"const": 100000}
+      }
+    }
+  },
+  "$defs": {
+    "seriesItem": {
+      "type": "object",
+      "required": [
+        "label",
+        "values",
+        "row_counts",
+        "is_other",
+        "growth_rate",
+        "growth_state"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "values": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "row_counts": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "is_other": {"const": false},
+        "growth_rate": {"type": ["number", "null"]},
+        "growth_state": {"enum": ["measured", "new"]}
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": [
+        "input_rows",
+        "visible_rows",
+        "invalid_year_rows",
+        "outside_endpoint_rows",
+        "blank_series_rows",
+        "excluded_rows"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "visible_rows": {"type": "integer", "minimum": 0},
+        "invalid_year_rows": {"type": "integer", "minimum": 0},
+        "outside_endpoint_rows": {"type": "integer", "minimum": 0},
+        "blank_series_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

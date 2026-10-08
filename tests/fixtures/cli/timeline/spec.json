@@ -1,0 +1,25 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "timeline.v1",
+  "resolution": {
+    "bindings": {
+      "filing_date": "出願日",
+      "applicant": "出願人"
+    }
+  },
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "parameters": {
+    "date_role": "filing_date",
+    "series_role": "applicant",
+    "top_n": 10,
+    "include_other": true,
+    "measure": "count"
+  }
+}

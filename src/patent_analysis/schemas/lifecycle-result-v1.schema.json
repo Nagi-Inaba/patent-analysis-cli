@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:lifecycle-result:1.0.0",
+  "$comment": "Label strings additionally require canonical UTF-8 JSON encoding of at most 4096 bytes; oversized labels are rejected, not truncated.",
+  "title": "lifecycle.v1 data",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "window",
+    "points",
+    "population",
+    "contributions",
+    "limits"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis_id": {"const": "lifecycle.v1"},
+    "algorithm_version": {"const": "1.0.0"},
+    "window": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/window"}
+      ]
+    },
+    "points": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {"$ref": "#/$defs/point"}
+    },
+    "population": {"$ref": "#/$defs/population"},
+    "contributions": {"type": "integer", "minimum": 0, "maximum": 1000000},
+    "limits": {
+      "type": "object",
+      "required": [
+        "max_top_n",
+        "max_output_points",
+        "max_distinct_buckets",
+        "max_expanded_contributions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "max_top_n": {"const": 20},
+        "max_output_points": {"const": 20},
+        "max_distinct_buckets": {"const": 100000},
+        "max_expanded_contributions": {"const": 1000000}
+      }
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "required": ["start_year", "end_year", "years"],
+      "additionalProperties": false,
+      "properties": {
+        "start_year": {"type": "integer", "minimum": 1796, "maximum": 2199},
+        "end_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "years": {"const": 5}
+      }
+    },
+    "point": {
+      "type": "object",
+      "required": ["label", "x", "y", "size", "stage"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "x": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "y": {"type": "number"},
+        "size": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "stage": {"enum": ["growth", "stable", "slowing", "decline"]}
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": [
+        "input_rows",
+        "visible_rows",
+        "invalid_year_rows",
+        "blank_category_rows",
+        "excluded_rows"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "visible_rows": {"type": "integer", "minimum": 0},
+        "invalid_year_rows": {"type": "integer", "minimum": 0},
+        "blank_category_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "patent-analysis-renderer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.19.0",
+    "npm": "10.9.3"
+  },
+  "packageManager": "npm@10.9.3",
+  "scripts": {
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "build": "node scripts/build-bundle.mjs",
+    "verify-lock": "node scripts/verify-lock.mjs",
+    "build:matrix": "node scripts/build-matrix-bundle.mjs",
+    "validators:matrix": "node scripts/generate-matrix-standalone-validators.mjs",
+    "build:categorical": "node scripts/build-categorical-bundle.mjs",
+    "validators:categorical": "node scripts/generate-categorical-standalone-validators.mjs",
+    "validators:points": "node scripts/generate-points-standalone-validators.mjs",
+    "build:points": "node scripts/build-points-bundle.mjs"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "0.9.12",
+    "ajv": "8.20.0",
+    "echarts": "6.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.1",
+    "eslint": "10.8.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.67.0",
+    "vite": "8.2.1",
+    "vitest": "4.1.11"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "archive_sha256": "ac4cfb9fb4598e874883ea0e661126fa27e4742e56a8891f6c8e61d5f74077e6",
+  "manifest_sha256": "5d000212f8b9706cdd5802f1f2fcf22d021f665bcca8603a2246f2b171a3f1e6",
+  "bootstrap_sha256": "2d3727ef2e1da69e54ddc4ae391be09261139303f824dae1d8133c2b7dd851f4",
+  "bundle_sha256": "4ca2f16a88138586f7d616411a20279e5cf3f20529391c9b0bee0067e4af0dd8",
+  "build_digest": "c677be360231603fe8aa3743b95d178ec62923542ac482468a15828d41992ad6",
+  "advanced-chart-model-v1.schema.json": "4480f8e142406798d94e0e01b0d6cfa9cfbecf79329d7316712ca3a3a8e085a8",
+  "advanced-render-spec-v1.schema.json": "4e1925007c75045fe01bb7ce27e140859c2b9f8534e2a198efc9a93ec7b17788",
+  "advanced-renderer-response.schema.json": "c457d43440f01c861f876ae921ac830d31b113a1183c17b6a184506f86a8d3a8",
+  "candidate_pin_version": "1.0.0",
+  "render_profile_id": "advanced-svg-ja-jp-node22-echarts6.v1"
+}

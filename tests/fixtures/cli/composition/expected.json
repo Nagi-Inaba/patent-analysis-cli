@@ -1,0 +1,19 @@
+{
+  "analysis_id": "composition.v1",
+  "items": [
+    {
+      "label": "A社",
+      "value": 2,
+      "row_count": 2,
+      "share": 0.6666666666666666,
+      "share_basis": "value"
+    },
+    {
+      "label": "B社",
+      "value": 1,
+      "row_count": 1,
+      "share": 0.3333333333333333,
+      "share_basis": "value"
+    }
+  ]
+}

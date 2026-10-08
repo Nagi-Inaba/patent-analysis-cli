@@ -1,0 +1,26 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "matrix-composition.v1",
+  "resolution": {
+    "bindings": {
+      "x": "x",
+      "y": "y",
+      "item": "item"
+    }
+  },
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "parameters": {
+    "x_role": "x",
+    "y_role": "y",
+    "category_role": "item",
+    "x_value": "X",
+    "y_value": "Y"
+  }
+}

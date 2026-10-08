@@ -1,0 +1,11 @@
+year,group,item,x,y,cites
+2020,A,P;Q,X,Y,12
+2021,A,P,X,Y,3
+2022,A;B,Q,X,Y,4
+2023,B,Q;R,Z,Y,8
+2024,New,P;R,Z,Y,cited by: 5
+2024,New,P,X,Y,6
+2018,Old,R,Z,Y,0
+2024,Old,P,Z,Y,7
+2024,C,R,Z,W,-1
+2024,,Q,X,Y,2

@@ -1,0 +1,13 @@
+year,inventor,applicant
+2020,A|B,OrgX
+2020,C,OrgY
+2021,A,OrgY
+2021,B,OrgX
+2021,C|D,OrgZ|OrgW
+2022,A|B,OrgY
+2022,C,
+2023,A,OrgZ
+2023,D,OrgW
+invalid,E,OrgU
+2021,,OrgU
+2020,A|A,OrgX

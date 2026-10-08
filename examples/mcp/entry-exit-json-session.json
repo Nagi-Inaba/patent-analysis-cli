@@ -1,0 +1,77 @@
+{
+  "requests": [
+    {
+      "name": "patent_analysis.capabilities",
+      "arguments": {}
+    },
+    {
+      "name": "patent_analysis.schema",
+      "arguments": {
+        "schema_name": "entry-exit-parameters-v1.schema.json"
+      }
+    },
+    {
+      "name": "patent_analysis.inspect",
+      "arguments": {
+        "input_root_id": "input",
+        "path": "patents.csv"
+      }
+    },
+    {
+      "name": "patent_analysis.validate_spec",
+      "arguments": {
+        "spec": {
+          "analysis_contract_version": "2.0.0",
+          "analysis_id": "entry-exit.v1",
+          "resolution": {
+            "bindings": {
+              "year": "year",
+              "group": "group"
+            }
+          },
+          "normalization": {
+            "profiles": []
+          },
+          "population": {
+            "filters": [],
+            "selection_sets": [],
+            "family_mode": "records"
+          },
+          "parameters": {
+            "date_role": "year",
+            "category_role": "group"
+          }
+        }
+      }
+    },
+    {
+      "name": "patent_analysis.analyze",
+      "arguments": {
+        "input_root_id": "input",
+        "path": "patents.csv",
+        "spec": {
+          "analysis_contract_version": "2.0.0",
+          "analysis_id": "entry-exit.v1",
+          "resolution": {
+            "bindings": {
+              "year": "year",
+              "group": "group"
+            }
+          },
+          "normalization": {
+            "profiles": []
+          },
+          "population": {
+            "filters": [],
+            "selection_sets": [],
+            "family_mode": "records"
+          },
+          "parameters": {
+            "date_role": "year",
+            "category_role": "group"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+applicant,classification,year
+A社,G06F 3/01;H04L 9/00,2020
+B社,G06F 3/01,2021
+A社;C社,H04L 9/00,2022
+,G06F 3/01,2023

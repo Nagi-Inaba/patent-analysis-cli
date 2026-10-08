@@ -1,0 +1,44 @@
+{
+  "failure_pairs": [
+    ["protocol.invalid", "Renderer protocol is invalid"],
+    ["payload.too_large", "Renderer payload is too large"],
+    ["digest.mismatch", "Renderer payload digest does not match"],
+    ["schema.invalid", "Renderer input was rejected"],
+    ["runtime.mismatch", "Renderer runtime does not match"],
+    ["render.failed", "Renderer failed"]
+  ],
+  "frame_boundaries": [
+    {"bundle_length": 4194304, "request_length": 1, "valid": true},
+    {"bundle_length": 4194305, "request_length": 1, "valid": false},
+    {"bundle_length": 1, "request_length": 3145728, "valid": true},
+    {"bundle_length": 1, "request_length": 3145729, "valid": false},
+    {"bundle_length": 4194304, "request_length": 3145708, "valid": true},
+    {"bundle_length": 4194304, "request_length": 3145709, "valid": false}
+  ],
+  "stdout_boundaries": [12582912, 12582913],
+  "svg_boundaries": [8388608, 8388609],
+  "lexical_boundaries": {
+    "depth": [64, 65],
+    "tokens": [250000, 250001],
+    "numeric_lexeme_bytes": [128, 129],
+    "decoded_non_payload_code_points": [2000000, 2000001]
+  },
+  "bad_pad_bits": ["AB==", "AAB=", "eB=="],
+  "truncated_with_lf": "{\"protocol_version\":\"1.0.0\"\n",
+  "invalid_response_mutations": [
+    "bom",
+    "leading_whitespace",
+    "missing_lf",
+    "crlf",
+    "trailing_lf",
+    "trailing_data",
+    "duplicate_key",
+    "nan",
+    "infinity",
+    "alternate_order",
+    "alternate_spacing",
+    "alternate_escape",
+    "multiple_objects",
+    "unknown_field"
+  ]
+}

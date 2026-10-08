@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:renderer-response:1.0.0",
+  "title": "RendererResponse 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": {"const": "1.0.0"},
+    "ok": {"type": "boolean"},
+    "runtime": {"$ref": "#/$defs/runtime"},
+    "svg_b64": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 11184812,
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?$"
+    },
+    "error": {"$ref": "#/$defs/error"}
+  },
+  "$defs": {
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_version", "echarts_version", "renderer_build_digest", "render_profile_id"],
+      "properties": {
+        "node_version": {"const": "22.19.0"},
+        "echarts_version": {"const": "6.1.0"},
+        "renderer_build_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "render_profile_id": {"const": "ranking-svg-ja-jp-node22-echarts6.v1"}
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "enum": ["protocol.invalid", "payload.too_large", "digest.mismatch", "schema.invalid", "runtime.mismatch", "render.failed"]
+        },
+        "message": {
+          "enum": ["Renderer protocol is invalid", "Renderer payload is too large", "Renderer payload digest does not match", "Renderer input was rejected", "Renderer runtime does not match", "Renderer failed"]
+        }
+      },
+      "oneOf": [
+        {"properties": {"code": {"const": "protocol.invalid"}, "message": {"const": "Renderer protocol is invalid"}}},
+        {"properties": {"code": {"const": "payload.too_large"}, "message": {"const": "Renderer payload is too large"}}},
+        {"properties": {"code": {"const": "digest.mismatch"}, "message": {"const": "Renderer payload digest does not match"}}},
+        {"properties": {"code": {"const": "schema.invalid"}, "message": {"const": "Renderer input was rejected"}}},
+        {"properties": {"code": {"const": "runtime.mismatch"}, "message": {"const": "Renderer runtime does not match"}}},
+        {"properties": {"code": {"const": "render.failed"}, "message": {"const": "Renderer failed"}}}
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "required": ["protocol_version", "ok", "runtime", "svg_b64"],
+      "properties": {
+        "ok": {"const": true}
+      },
+      "not": {"required": ["error"]}
+    },
+    {
+      "required": ["protocol_version", "ok", "runtime", "error"],
+      "properties": {
+        "ok": {"const": false}
+      },
+      "not": {"required": ["svg_b64"]}
+    }
+  ]
+}

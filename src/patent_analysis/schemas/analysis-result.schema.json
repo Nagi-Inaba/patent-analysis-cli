@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:analysis-result:1.0.0",
+  "title": "AnalysisResult",
+  "type": "object",
+  "required": [
+    "analysis_type",
+    "dimension",
+    "measure",
+    "population",
+    "rows",
+    "warnings"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_type": {
+      "type": "string",
+      "const": "ranking"
+    },
+    "dimension": {
+      "type": "string",
+      "minLength": 1
+    },
+    "measure": {
+      "$ref": "#/$defs/measure"
+    },
+    "population": {
+      "$ref": "#/$defs/population"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rankingRow"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "measure": {
+      "type": "object",
+      "required": ["mode", "column"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["count", "sum", "average", "max", "min"]
+        },
+        "column": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "count"
+          }
+        },
+        "required": ["mode"]
+      },
+      "then": {
+        "properties": {
+          "column": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "column": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": ["input_rows", "analyzed_rows"],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "analyzed_rows": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "rankingRow": {
+      "type": "object",
+      "required": ["row_kind", "label", "value", "count", "share"],
+      "additionalProperties": false,
+      "properties": {
+        "row_kind": {
+          "type": "string",
+          "enum": ["dimension_value", "remainder"]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "number"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "share": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

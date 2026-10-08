@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:growth-parameters:1.0.0",
+  "title": "growth.v1 AnalysisSpec",
+  "type": "object",
+  "required": [
+    "analysis_contract_version",
+    "analysis_id",
+    "resolution",
+    "normalization",
+    "population",
+    "parameters"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_contract_version": {"const": "2.0.0"},
+    "analysis_id": {"const": "growth.v1"},
+    "resolution": {"type": "object"},
+    "normalization": {
+      "type": "object",
+      "required": ["profiles"],
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {"type": "array", "maxItems": 0}
+      }
+    },
+    "population": {"type": "object"},
+    "parameters": {"$ref": "#/$defs/parameters"}
+  },
+  "$defs": {
+    "parameters": {
+      "type": "object",
+      "required": ["date_role", "series_role", "start_year", "end_year"],
+      "additionalProperties": false,
+      "properties": {
+        "date_role": {"type": "string", "minLength": 1, "maxLength": 64},
+        "series_role": {"type": "string", "minLength": 1, "maxLength": 64},
+        "start_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "end_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "top_n": {"type": "integer", "minimum": 1, "maximum": 20, "default": 20}
+      }
+    }
+  }
+}

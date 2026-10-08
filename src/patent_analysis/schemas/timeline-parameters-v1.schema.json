@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:timeline-parameters:1.0.0",
+  "title": "timeline.v1 AnalysisSpec",
+  "type": "object",
+  "required": [
+    "analysis_contract_version",
+    "analysis_id",
+    "resolution",
+    "normalization",
+    "population",
+    "parameters"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_contract_version": {"const": "2.0.0"},
+    "analysis_id": {"const": "timeline.v1"},
+    "resolution": {"type": "object"},
+    "normalization": {
+      "type": "object",
+      "required": ["profiles"],
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {"type": "array", "maxItems": 0}
+      }
+    },
+    "population": {"type": "object"},
+    "parameters": {"$ref": "#/$defs/parameters"}
+  },
+  "$defs": {
+    "parameters": {
+      "type": "object",
+      "required": ["date_role", "series_role"],
+      "additionalProperties": false,
+      "properties": {
+        "date_role": {"type": "string", "minLength": 1, "maxLength": 64},
+        "series_role": {"type": "string", "minLength": 1, "maxLength": 64},
+        "start_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "end_year": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "top_n": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+        "include_other": {"type": "boolean", "default": true},
+        "measure": {
+          "enum": ["count", "sum", "average", "max", "min"],
+          "default": "count"
+        },
+        "measure_role": {"type": "string", "minLength": 1, "maxLength": 64}
+      },
+      "dependentRequired": {
+        "start_year": ["end_year"],
+        "end_year": ["start_year"]
+      },
+      "dependentSchemas": {
+        "measure_role": {
+          "required": ["measure"],
+          "properties": {
+            "measure": {"enum": ["sum", "average", "max", "min"]}
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["measure"],
+            "properties": {
+              "measure": {"enum": ["sum", "average", "max", "min"]}
+            }
+          },
+          "then": {"required": ["measure_role"]}
+        }
+      ]
+    }
+  }
+}

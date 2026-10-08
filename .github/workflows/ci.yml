@@ -1,0 +1,280 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "22.19.0"
+          cache: npm
+          cache-dependency-path: renderer/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --require-hashes -r requirements/mcp-2.0.0.lock
+          python -m pip install -e ".[dev]" build
+
+      - name: Install renderer dependencies
+        working-directory: renderer
+        run: npm ci
+
+      - name: Generate advanced validators
+        working-directory: renderer
+        run: node scripts/generate-advanced-standalone-validators.mjs
+
+      - name: Require committed advanced activation and verified resources
+        run: >-
+          python -c "from patent_analysis.advanced_renderer_resources import
+          load_verified_advanced_renderer_resources;
+          load_verified_advanced_renderer_resources()"
+
+      # The full suite already includes native Windows SVG and numeric parity tests.
+      - name: Verify Python
+        run: python -m pytest -q -p no:cacheprovider --junitxml="${{ runner.temp }}/pytest-results.xml"
+
+      - name: Require executed Windows tests
+        if: runner.os == 'Windows'
+        shell: python
+        run: |
+          import os
+          from collections import Counter
+          from pathlib import Path
+          from xml.etree import ElementTree
+          from patent_analysis.advanced_presentation import ADVANCED_PRESENTATIONS
+          report = ElementTree.parse(Path(os.environ["RUNNER_TEMP"]) / "pytest-results.xml")
+          assert list(report.iter("testcase")), "No Python tests executed"
+          assert not list(report.iter("skipped")), "Windows tests must execute, not skip"
+          api_case = "test_real_advanced_api_and_cli_render_same_svg_and_reuse"
+          mcp_case = "test_real_mcp_advanced_analysis_handle_renders_the_same_public_result"
+          expected = Counter(
+              f"{api_case}[{explicit}-{analysis_id}]"
+              for analysis_id in ADVANCED_PRESENTATIONS for explicit in (False, True)
+          )
+          expected.update(f"{mcp_case}[{analysis_id}]" for analysis_id in ADVANCED_PRESENTATIONS)
+          actual = Counter(
+              case.get("name") for case in report.iter("testcase")
+              if case.get("classname") == "tests.test_advanced_svg_end_to_end"
+          )
+          assert actual == expected, "Every advanced API/CLI/MCP SVG case must execute exactly once"
+
+      - name: Verify Ruff
+        run: python -m ruff check --no-cache src tests scripts
+
+      - name: Verify renderer lock
+        working-directory: renderer
+        run: npm run verify-lock
+
+      - name: Typecheck renderer
+        working-directory: renderer
+        run: npm run typecheck
+
+      - name: Lint renderer
+        working-directory: renderer
+        run: npm run lint
+
+      - name: Test renderer
+        working-directory: renderer
+        run: npm exec -- vitest run
+
+      - name: Build ranking renderer
+        working-directory: renderer
+        run: npm run build
+
+      - name: Generate Matrix validators
+        working-directory: renderer
+        run: npm run validators:matrix
+
+      - name: Build Matrix renderer
+        working-directory: renderer
+        run: npm run build:matrix
+
+      - name: Generate categorical validators
+        working-directory: renderer
+        run: npm run validators:categorical
+
+      - name: Build categorical renderer
+        working-directory: renderer
+        run: npm run build:categorical
+
+      - name: Generate points validators
+        working-directory: renderer
+        run: npm run validators:points
+
+      - name: Build points renderer
+        working-directory: renderer
+        run: npm run build:points
+
+      - name: Reproduce advanced renderer and candidate pins
+        working-directory: renderer
+        run: |
+          node scripts/build-advanced-bundle.mjs
+          node scripts/build-advanced-bundle.mjs --stage-only
+
+      - name: Verify generated resources are byte-stable
+        run: git diff --exit-code
+
+      - name: Build wheel and sdist
+        run: python -m build
+
+      - name: Verify distribution contents and clean installed entrypoints
+        shell: python
+        run: |
+          import hashlib, json, os, shutil, subprocess, sys, tarfile, tempfile, venv
+          from pathlib import Path
+          from zipfile import ZipFile
+          root = Path.cwd().resolve()
+          wheel, = (root / "dist").glob("*.whl")
+          sdist, = (root / "dist").glob("*.tar.gz")
+          def sha(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          tracked = subprocess.check_output(["git", "ls-files", "src"], text=True).splitlines()
+          sources = [Path(p) for p in tracked if Path(p).suffix in {".py", ".json", ".js", ".gz", ".txt"}]
+          with ZipFile(wheel) as archive:
+              for path in sources:
+                  assert archive.read(path.relative_to("src").as_posix()) == path.read_bytes(), path
+              assert not any(p.startswith(("tests/", "node_modules/")) for p in archive.namelist())
+          with tarfile.open(sdist) as archive:
+              members = {
+                  member.name.partition("/")[2]: member
+                  for member in archive.getmembers()
+                  if member.name.partition("/")[2]
+              }
+              for name in ("LICENSE", "README.md", "scripts/verify_installed_release.py",
+                           "docs/analysis-catalog.md", "docs/mcp.md", "docs/release.md",
+                           "src/patent_analysis/renderer/THIRD_PARTY_NOTICES.txt"):
+                  assert name in members, name
+              for name in subprocess.check_output(
+                  ["git", "ls-files", "tests", "renderer", "requirements"], text=True
+              ).splitlines():
+                  path = root / name
+                  if path.is_file():
+                      stored = archive.extractfile(members[name])
+                      assert stored is not None and stored.read() == path.read_bytes(), name
+              for p in (root / "examples").rglob("*"):
+                  if p.is_file() and p.suffix in {".csv", ".json"}:
+                      assert p.relative_to(root).as_posix() in members, p
+          report_dir = root / "dist" / "verification"
+          report_dir.mkdir()
+          env = os.environ.copy()
+          env.pop("PYTHONPATH", None)
+          env.pop("PYTHONHOME", None)
+          def run(args, cwd):
+              subprocess.run([str(a) for a in args], check=True, cwd=cwd, env=env, timeout=300)
+          with tempfile.TemporaryDirectory(prefix="installed-release-") as temp:
+              temp = Path(temp).resolve()
+              wheels = temp / "wheels"
+              wheels.mkdir()
+              run([sys.executable, "-m", "pip", "download", "--only-binary=:all:", "--dest", wheels, str(wheel) + "[mcp]"], temp)
+              dependency_hashes = {p.name: sha(p) for p in wheels.glob("*.whl")}
+              target = temp / "venv"
+              venv.EnvBuilder(with_pip=True).create(target)
+              python = target / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+              run([python, "-m", "pip", "install", "--no-index", "--find-links", wheels, wheel], temp)
+              run([python, "-m", "pip", "check"], temp)
+              verifier = root / "scripts" / "verify_installed_release.py"
+              run([python, "-I", verifier, "--examples", root / "examples", "--report", report_dir / "core.json"], temp)
+              run([python, "-m", "pip", "install", "--no-index", "--find-links", wheels, str(wheel) + "[mcp]"], temp)
+              run([python, "-m", "pip", "check"], temp)
+              run([python, "-I", verifier, "--examples", root / "examples", "--report", report_dir / "mcp.json", "--mcp"], temp)
+              installed = json.loads(subprocess.check_output(
+                  [python, "-m", "pip", "list", "--format=json"], cwd=temp, env=env, text=True
+              ))
+              dependencies = sorted(
+                  f"{item['name']}=={item['version']}" for item in installed
+                  if item['name'].lower() not in {"patent-analysis-cli", "pip"}
+              )
+              (report_dir / "dependencies.txt").write_text("\n".join(dependencies) + "\n", encoding="utf-8")
+          core = json.loads((report_dir / "core.json").read_text(encoding="utf-8"))
+          mcp = json.loads((report_dir / "mcp.json").read_text(encoding="utf-8"))
+          for aid, rendered in mcp["svg"].items():
+              assert core["svg"][aid]["svg_sha256"] == rendered["svg_sha256"], aid
+          evidence = {
+              "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "python": sys.version,
+              "node": subprocess.check_output([shutil.which("node"), "--version"], text=True).strip(),
+              "npm": subprocess.check_output(
+                  [str(Path(os.environ["SystemRoot"]) / "System32/cmd.exe"), "/d", "/c", "npm.cmd", "--version"]
+                  if sys.platform == "win32" else [shutil.which("npm"), "--version"], text=True
+              ).strip(),
+              "distributions_sha256": {p.name: sha(p) for p in (wheel, sdist)},
+              "dependency_wheels_sha256": dependency_hashes,
+          }
+          (report_dir / "distribution.json").write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
+
+      - name: Audit exact installed candidate dependencies and renderer lock
+        shell: python
+        run: |
+          import json, os, shutil, subprocess, sys
+          from pathlib import Path
+          reports = Path("dist/verification")
+          subprocess.run([sys.executable, "-m", "pip", "install", "pip-audit==2.10.1"], check=True)
+          for source, output in (
+              (Path("requirements/mcp-2.0.0.lock"), reports / "python-lock-audit.json"),
+              (reports / "dependencies.txt", reports / "python-audit.json"),
+          ):
+              subprocess.run([
+                  sys.executable, "-m", "pip_audit", "--no-deps", "--disable-pip",
+                  "-r", str(source), "--format", "json", "--output", str(output),
+              ], check=True, timeout=180)
+          npm = [str(Path(os.environ["SystemRoot"]) / "System32/cmd.exe"), "/d", "/c", "npm.cmd"] if sys.platform == "win32" else [shutil.which("npm")]
+          result = subprocess.run([*npm, "audit", "--json"], cwd="renderer", capture_output=True, timeout=180)
+          report = json.loads(result.stdout)
+          (reports / "npm-audit.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+          assert result.returncode == 0, "npm dependency audit failed; inspect npm-audit.json"
+
+      - name: Scan Git history and built distributions for secrets
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --location --output "$RUNNER_TEMP/gitleaks.tar.gz" \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" git . --log-opts=HEAD --redact --no-banner --no-color \
+            --report-format json --report-path dist/verification/secrets-history.json
+          "$RUNNER_TEMP/gitleaks" dir dist --max-archive-depth=3 --redact --no-banner --no-color \
+            --report-format json --report-path dist/verification/secrets-distributions.json
+
+      - name: Retain distribution candidates and verification records
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-candidate-${{ runner.os }}
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/verification/*.json
+            dist/verification/dependencies.txt
+          if-no-files-found: error
+          retention-days: 7

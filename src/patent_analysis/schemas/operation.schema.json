@@ -1,0 +1,551 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:operation-plan:1.0.0",
+  "title": "OperationPlan",
+  "type": "object",
+  "required": ["intent", "operations"],
+  "additionalProperties": false,
+  "properties": {
+    "intent": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/operation" }
+    }
+  },
+  "$defs": {
+    "operation": {
+      "oneOf": [
+        { "$ref": "#/$defs/inspectSchemaOperation" },
+        { "$ref": "#/$defs/queryRowsOperation" },
+        { "$ref": "#/$defs/aggregateDatasetOperation" },
+        { "$ref": "#/$defs/createSelectionSetOperation" },
+        { "$ref": "#/$defs/applySelectionSetOperation" },
+        { "$ref": "#/$defs/setFilterOperation" },
+        { "$ref": "#/$defs/clearFilterOperation" },
+        { "$ref": "#/$defs/createAnalysisOperation" },
+        { "$ref": "#/$defs/setRenderModeOperation" },
+        { "$ref": "#/$defs/rerenderChartOperation" },
+        { "$ref": "#/$defs/drilldownFromChartElementOperation" },
+        { "$ref": "#/$defs/saveSnapshotOperation" },
+        { "$ref": "#/$defs/addAnalysisNoteOperation" },
+        { "$ref": "#/$defs/draftReportSectionOperation" },
+        { "$ref": "#/$defs/exportReportDraftOperation" }
+      ]
+    },
+    "operationBase": {
+      "type": "object",
+      "required": ["type", "params"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "maxLength": 300 },
+        "params": { "type": "object" }
+      }
+    },
+    "filterClause": {
+      "type": "object",
+      "required": ["dimension", "operator"],
+      "additionalProperties": false,
+      "properties": {
+        "dimension": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "operator": {
+          "type": "string",
+          "enum": ["equals", "in", "not_in", "between", "contains"]
+        },
+        "value": {
+          "type": ["string", "number", "integer", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "values": {
+          "type": ["array", "null"],
+          "maxItems": 100,
+          "items": {
+            "type": ["string", "number", "integer"],
+            "minLength": 1,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "inspectSchemaOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "inspect_schema" },
+            "params": { "$ref": "#/$defs/inspectSchemaParams" }
+          }
+        }
+      ]
+    },
+    "inspectSchemaParams": {
+      "type": "object",
+      "required": ["dataset_id"],
+      "additionalProperties": false,
+      "properties": {
+        "dataset_id": { "type": "string", "minLength": 1, "maxLength": 300 }
+      }
+    },
+    "queryRowsOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "query_rows" },
+            "params": { "$ref": "#/$defs/queryRowsParams" }
+          }
+        }
+      ]
+    },
+    "queryRowsParams": {
+      "type": "object",
+      "required": ["dataset_id"],
+      "additionalProperties": false,
+      "properties": {
+        "dataset_id": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "columns": {
+          "type": ["array", "null"],
+          "maxItems": 100,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+        },
+        "filters": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/filterClause" },
+          "default": []
+        },
+        "limit": { "type": "integer", "minimum": 1, "maximum": 500, "default": 100 }
+      }
+    },
+    "aggregateDatasetOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "aggregate_dataset" },
+            "params": { "$ref": "#/$defs/aggregateDatasetParams" }
+          }
+        }
+      ]
+    },
+    "aggregateDatasetParams": {
+      "type": "object",
+      "required": ["dataset_id", "group_by"],
+      "additionalProperties": false,
+      "properties": {
+        "dataset_id": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "group_by": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+        },
+        "metric": {
+          "type": "string",
+          "enum": ["count", "sum", "mean", "median"],
+          "default": "count"
+        },
+        "measure": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "filters": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/filterClause" },
+          "default": []
+        }
+      }
+    },
+    "createSelectionSetOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "create_selection_set" },
+            "params": { "$ref": "#/$defs/createSelectionSetParams" }
+          }
+        }
+      ]
+    },
+    "createSelectionSetParams": {
+      "type": "object",
+      "required": ["dimension", "mode"],
+      "additionalProperties": false,
+      "properties": {
+        "dimension": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "mode": { "type": "string", "enum": ["all", "top_n", "manual", "year_bins"] },
+        "n": { "type": ["integer", "null"], "minimum": 1, "maximum": 100 },
+        "values": {
+          "type": ["array", "null"],
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+        },
+        "record_tokens": {
+          "type": ["array", "null"],
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+        },
+        "include_other": { "type": "boolean", "default": false },
+        "source_date_field": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "bin_size": { "type": ["integer", "null"], "minimum": 1, "maximum": 50 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "manual" } }, "required": ["mode"] },
+          "then": {
+            "oneOf": [
+              {
+                "required": ["values"],
+                "properties": {
+                  "values": { "type": "array" },
+                  "record_tokens": { "type": "null" }
+                }
+              },
+              {
+                "required": ["record_tokens"],
+                "properties": {
+                  "record_tokens": { "type": "array" },
+                  "values": { "type": "null" }
+                }
+              }
+            ]
+          },
+          "else": {
+            "properties": {
+              "record_tokens": { "type": "null" }
+            }
+          }
+        }
+      ]
+    },
+    "applySelectionSetOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "apply_selection_set" },
+            "params": { "$ref": "#/$defs/applySelectionSetParams" }
+          }
+        }
+      ]
+    },
+    "applySelectionSetParams": {
+      "type": "object",
+      "required": ["selection_set_id"],
+      "additionalProperties": false,
+      "properties": {
+        "selection_set_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "setFilterOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "set_filter" },
+            "params": { "$ref": "#/$defs/setFilterParams" }
+          }
+        }
+      ]
+    },
+    "setFilterParams": {
+      "type": "object",
+      "required": ["dimension", "operator"],
+      "additionalProperties": false,
+      "properties": {
+        "dimension": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "operator": {
+          "type": "string",
+          "enum": ["equals", "in", "not_in", "between", "contains"]
+        },
+        "value": {
+          "type": ["string", "number", "integer", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "values": {
+          "type": ["array", "null"],
+          "maxItems": 100,
+          "items": {
+            "type": ["string", "number", "integer"],
+            "minLength": 1,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "clearFilterOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "clear_filter" },
+            "params": { "$ref": "#/$defs/clearFilterParams" }
+          }
+        }
+      ]
+    },
+    "clearFilterParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "filter_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "createAnalysisOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "create_analysis" },
+            "params": { "$ref": "#/$defs/createAnalysisParams" }
+          }
+        }
+      ]
+    },
+    "createAnalysisParams": {
+      "type": "object",
+      "required": ["analysis_type"],
+      "additionalProperties": false,
+      "properties": {
+        "analysis_type": {
+          "type": "string",
+          "enum": [
+            "matrix",
+            "compara",
+            "ranking",
+            "timeline",
+            "composition",
+            "growth",
+            "entry_exit",
+            "concentration",
+            "cooccurrence",
+            "citation",
+            "network",
+            "lifecycle"
+          ]
+        },
+        "x": { "type": ["string", "null"], "minLength": 1, "maxLength": 300 },
+        "y": { "type": ["string", "null"], "minLength": 1, "maxLength": 300 },
+        "measure": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "selection_set_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "group_column": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "group_a": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "group_b": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "filters": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/filterClause" },
+          "default": []
+        }
+      }
+    },
+    "setRenderModeOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "set_render_mode" },
+            "params": { "$ref": "#/$defs/setRenderModeParams" }
+          }
+        }
+      ]
+    },
+    "setRenderModeParams": {
+      "type": "object",
+      "required": ["mark"],
+      "additionalProperties": false,
+      "properties": {
+        "mark": {
+          "type": "string",
+          "enum": ["bar", "line", "area", "heatmap", "bubble", "scatter", "network", "matrix_pie_glyph", "pie", "donut", "treemap", "quadrant"]
+        },
+        "chart_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "rerenderChartOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "rerender_chart" },
+            "params": { "$ref": "#/$defs/chartIdParams" }
+          }
+        }
+      ]
+    },
+    "chartIdParams": {
+      "type": "object",
+      "required": ["chart_id"],
+      "additionalProperties": false,
+      "properties": {
+        "chart_id": { "type": "string", "minLength": 1, "maxLength": 300 }
+      }
+    },
+    "drilldownFromChartElementOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "drilldown_from_chart_element" },
+            "params": { "$ref": "#/$defs/drilldownFromChartElementParams" }
+          }
+        }
+      ]
+    },
+    "drilldownFromChartElementParams": {
+      "type": "object",
+      "required": ["chart_id", "dimension", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "chart_id": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "dimension": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "value": {
+          "type": ["string", "number", "integer"],
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "saveSnapshotOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "save_snapshot" },
+            "params": { "$ref": "#/$defs/saveSnapshotParams" }
+          }
+        }
+      ]
+    },
+    "saveSnapshotParams": {
+      "type": "object",
+      "required": ["chart_id"],
+      "additionalProperties": false,
+      "properties": {
+        "chart_id": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "title": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "addAnalysisNoteOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "add_analysis_note" },
+            "params": { "$ref": "#/$defs/addAnalysisNoteParams" }
+          }
+        }
+      ]
+    },
+    "addAnalysisNoteParams": {
+      "type": "object",
+      "required": ["body"],
+      "additionalProperties": false,
+      "properties": {
+        "body": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "snapshot_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "draftReportSectionOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "draft_report_section" },
+            "params": { "$ref": "#/$defs/draftReportSectionParams" }
+          }
+        }
+      ]
+    },
+    "draftReportSectionParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "snapshot_ids": {
+          "type": "array",
+          "maxItems": 100,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "default": []
+        },
+        "section_type": {
+          "type": "string",
+          "enum": ["overview", "finding", "method", "appendix"],
+          "default": "finding"
+        }
+      }
+    },
+    "exportReportDraftOperation": {
+      "allOf": [
+        { "$ref": "#/$defs/operationBase" },
+        {
+          "properties": {
+            "type": { "const": "export_report_draft" },
+            "params": { "$ref": "#/$defs/exportReportDraftParams" }
+          }
+        }
+      ]
+    },
+    "exportReportDraftParams": {
+      "type": "object",
+      "required": ["draft_id"],
+      "additionalProperties": false,
+      "properties": {
+        "draft_id": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "format": { "type": "string", "enum": ["html", "markdown"], "default": "html" }
+      }
+    }
+  }
+}

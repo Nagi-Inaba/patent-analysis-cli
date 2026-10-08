@@ -1,0 +1,215 @@
+{
+  "contract_version": "1.0.0",
+  "valid": [
+    {
+      "name": "average_top_n_other",
+      "description": "Average mode recalculates the other bucket from its source rows.",
+      "header": "出願人,IPCサブクラス,被引用件数",
+      "rows": [
+        {"出願人": "A社", "IPCサブクラス": "A61K", "被引用件数": "10"},
+        {"出願人": "A社", "IPCサブクラス": "A61K", "被引用件数": "20"},
+        {"出願人": "B社", "IPCサブクラス": "A61Q", "被引用件数": "100"},
+        {"出願人": "C社", "IPCサブクラス": "A61Q", "被引用件数": "200"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "average", "column": "被引用件数"},
+        "top_n": 1,
+        "include_other": true,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 4, "analyzed_rows": 4},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "C社", "value": 200.0, "count": 1, "share": 0.25},
+          {"row_kind": "remainder", "label": "その他", "value": 43.333333333333336, "count": 3, "share": 0.75}
+        ]
+      }
+    },
+    {
+      "name": "count_all_values_with_blank_and_other",
+      "description": "Count mode expands multi-values, retains a blank bucket, and applies code-point ties before top-N.",
+      "header": "出願人,被引用件数",
+      "rows": [
+        {"出願人": "A社|B社", "被引用件数": "10"},
+        {"出願人": "A社", "被引用件数": "20"},
+        {"出願人": "", "被引用件数": "30"},
+        {"出願人": "C社", "被引用件数": "40"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "count", "column": null},
+        "top_n": 2,
+        "include_other": true,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 4, "analyzed_rows": 5},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "A社", "value": 2, "count": 2, "share": 0.4},
+          {"row_kind": "dimension_value", "label": "(空白)", "value": 1, "count": 1, "share": 0.2},
+          {"row_kind": "remainder", "label": "その他", "value": 2, "count": 2, "share": 0.4}
+        ]
+      }
+    },
+    {
+      "name": "sum_with_nonnumeric_and_citation_prefix",
+      "description": "Sum mode accepts Workbench numeric grammar and excludes nonnumeric cells from values.",
+      "header": "出願人,被引用件数",
+      "rows": [
+        {"出願人": "A社", "被引用件数": "1,000"},
+        {"出願人": "A社", "被引用件数": "n/a"},
+        {"出願人": "B社", "被引用件数": "citation: 2,000"},
+        {"出願人": "C社", "被引用件数": "+30"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "sum", "column": "被引用件数"},
+        "top_n": 10,
+        "include_other": false,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 4, "analyzed_rows": 4},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "B社", "value": 2000.0, "count": 1, "share": 0.6666666666666666},
+          {"row_kind": "dimension_value", "label": "A社", "value": 1000.0, "count": 2, "share": 0.3333333333333333},
+          {"row_kind": "dimension_value", "label": "C社", "value": 0.0, "count": 1, "share": 0.0}
+        ]
+      }
+    },
+    {
+      "name": "max_mode",
+      "description": "Max mode uses the maximum finite numeric value per bucket and count-based shares.",
+      "header": "出願人,値",
+      "rows": [
+        {"出願人": "A社", "値": "10"},
+        {"出願人": "A社", "値": "30"},
+        {"出願人": "B社", "値": "20"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "max", "column": "値"},
+        "top_n": 10,
+        "include_other": false,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 3, "analyzed_rows": 3},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "A社", "value": 30.0, "count": 2, "share": 0.6666666666666666},
+          {"row_kind": "dimension_value", "label": "B社", "value": 20.0, "count": 1, "share": 0.3333333333333333}
+        ]
+      }
+    },
+    {
+      "name": "min_mode",
+      "description": "Min mode uses the minimum finite numeric value per bucket and count-based shares.",
+      "header": "出願人,値",
+      "rows": [
+        {"出願人": "A社", "値": "10"},
+        {"出願人": "A社", "値": "30"},
+        {"出願人": "B社", "値": "20"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "min", "column": "値"},
+        "top_n": 10,
+        "include_other": false,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 3, "analyzed_rows": 3},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "B社", "value": 20.0, "count": 1, "share": 0.3333333333333333},
+          {"row_kind": "dimension_value", "label": "A社", "value": 10.0, "count": 2, "share": 0.6666666666666666}
+        ]
+      }
+    },
+    {
+      "name": "sum_negative_total_count_share_fallback",
+      "description": "Sum mode falls back to count-based shares when the pre-top-N total is negative.",
+      "header": "出願人,値",
+      "rows": [
+        {"出願人": "A社", "値": "4"},
+        {"出願人": "A社", "値": "6"},
+        {"出願人": "B社", "値": "-20"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "sum", "column": "値"},
+        "top_n": 10,
+        "include_other": false,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 3, "analyzed_rows": 3},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "A社", "value": 10.0, "count": 2, "share": 0.6666666666666666},
+          {"row_kind": "dimension_value", "label": "B社", "value": -20.0, "count": 1, "share": 0.3333333333333333}
+        ]
+      }
+    },
+    {
+      "name": "sum_zero_total_count_share_fallback",
+      "description": "Sum mode falls back to count-based shares when the pre-top-N total is zero.",
+      "header": "出願人,値",
+      "rows": [
+        {"出願人": "A社", "値": "4"},
+        {"出願人": "A社", "値": "6"},
+        {"出願人": "B社", "値": "-10"}
+      ],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "sum", "column": "値"},
+        "top_n": 10,
+        "include_other": false,
+        "multi_value_mode": "all"
+      },
+      "expected": {
+        "population": {"input_rows": 3, "analyzed_rows": 3},
+        "rows": [
+          {"row_kind": "dimension_value", "label": "A社", "value": 10.0, "count": 2, "share": 0.6666666666666666},
+          {"row_kind": "dimension_value", "label": "B社", "value": -10.0, "count": 1, "share": 0.3333333333333333}
+        ]
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing_dimension_column",
+      "header": "出願人,値",
+      "rows": [{"出願人": "A社", "値": "1"}],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "存在しない次元",
+        "measure": {"mode": "count", "column": null},
+        "top_n": 10,
+        "include_other": true,
+        "multi_value_mode": "all"
+      },
+      "expected_error": {"code": "analysis.invalid", "retryable": false, "details": {}}
+    },
+    {
+      "name": "missing_measure_column_for_sum",
+      "header": "出願人,値",
+      "rows": [{"出願人": "A社", "値": "1"}],
+      "spec": {
+        "analysis_type": "ranking",
+        "dimension": "出願人",
+        "measure": {"mode": "sum", "column": "存在しない列"},
+        "top_n": 10,
+        "include_other": true,
+        "multi_value_mode": "all"
+      },
+      "expected_error": {"code": "analysis.invalid", "retryable": false, "details": {}}
+    }
+  ]
+}

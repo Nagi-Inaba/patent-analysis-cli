@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:concentration-parameters:1.0.0",
+  "title": "concentration.v1 AnalysisSpec",
+  "type": "object",
+  "required": [
+    "analysis_contract_version",
+    "analysis_id",
+    "resolution",
+    "normalization",
+    "population",
+    "parameters"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_contract_version": {"const": "2.0.0"},
+    "analysis_id": {"const": "concentration.v1"},
+    "resolution": {"type": "object"},
+    "normalization": {
+      "type": "object",
+      "required": ["profiles"],
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {"type": "array", "maxItems": 0}
+      }
+    },
+    "population": {"type": "object"},
+    "parameters": {"$ref": "#/$defs/parameters"}
+  },
+  "$defs": {
+    "parameters": {
+      "type": "object",
+      "required": ["date_role", "category_role"],
+      "additionalProperties": false,
+      "properties": {
+        "date_role": {"type": "string", "minLength": 1, "maxLength": 64},
+        "category_role": {"type": "string", "minLength": 1, "maxLength": 64}
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "analysis_id": "timeline.v1",
+  "x": [
+    "2021",
+    "2022"
+  ],
+  "series": [
+    {
+      "label": "A社",
+      "values": [1, 1]
+    },
+    {
+      "label": "B社",
+      "values": [0, 1]
+    }
+  ]
+}

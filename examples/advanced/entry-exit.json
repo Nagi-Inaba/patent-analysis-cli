@@ -1,0 +1,22 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "entry-exit.v1",
+  "resolution": {
+    "bindings": {
+      "year": "year",
+      "group": "group"
+    }
+  },
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "parameters": {
+    "date_role": "year",
+    "category_role": "group"
+  }
+}

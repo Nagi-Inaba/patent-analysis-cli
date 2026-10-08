@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:renderer-build-manifest:1.0.0",
+  "title": "RendererBuildManifest 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "renderer_build_manifest_version",
+    "bootstrap_sha256",
+    "renderer_bundle_sha256",
+    "renderer_protocol_version",
+    "echarts_version",
+    "build_tool_id",
+    "build_tool_version"
+  ],
+  "properties": {
+    "renderer_build_manifest_version": {"const": "1.0.0"},
+    "bootstrap_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "renderer_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "renderer_protocol_version": {"const": "1.0.0"},
+    "echarts_version": {"const": "6.1.0"},
+    "build_tool_id": {"const": "patent-analysis.renderer-bundler"},
+    "build_tool_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    }
+  }
+}

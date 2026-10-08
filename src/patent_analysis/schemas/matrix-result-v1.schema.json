@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:matrix-result:1.0.0",
+  "title": "matrix.v1 data",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "measure",
+    "x_axis",
+    "y_axis",
+    "cells",
+    "population",
+    "contributions",
+    "limits"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_id": {
+      "const": "matrix.v1"
+    },
+    "algorithm_version": {
+      "const": "1.0.0"
+    },
+    "measure": {
+      "const": "count"
+    },
+    "x_axis": {
+      "$ref": "#/$defs/axis"
+    },
+    "y_axis": {
+      "$ref": "#/$defs/axis"
+    },
+    "cells": {
+      "type": "array",
+      "maxItems": 400,
+      "items": {
+        "$ref": "#/$defs/cell"
+      }
+    },
+    "population": {
+      "$ref": "#/$defs/population"
+    },
+    "contributions": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2000000
+    },
+    "limits": {
+      "type": "object",
+      "required": [
+        "max_visible_cells",
+        "max_expanded_contributions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "max_visible_cells": {
+          "const": 400
+        },
+        "max_expanded_contributions": {
+          "const": 2000000
+        }
+      }
+    }
+  },
+  "$defs": {
+    "axis": {
+      "type": "object",
+      "required": [
+        "role",
+        "categories"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "categories": {
+          "type": "array",
+          "maxItems": 101,
+          "items": {
+            "$ref": "#/$defs/category"
+          }
+        }
+      }
+    },
+    "category": {
+      "type": "object",
+      "required": [
+        "label",
+        "count",
+        "is_other"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "is_other": {
+          "type": "boolean"
+        }
+      }
+    },
+    "cell": {
+      "type": "object",
+      "required": [
+        "x_index",
+        "y_index",
+        "x_label",
+        "y_label",
+        "value",
+        "row_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "y_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "x_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "y_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "row_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": [
+        "input_rows",
+        "visible_rows",
+        "blank_axis_rows",
+        "axis_other_rows",
+        "excluded_rows"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "visible_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blank_axis_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "axis_other_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_rows": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "$defs": {
+    "axis": {
+      "additionalProperties": false,
+      "properties": {
+        "categories": {
+          "items": {
+            "$ref": "#/$defs/category"
+          },
+          "maxItems": 101,
+          "type": "array"
+        },
+        "role": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "categories"
+      ],
+      "type": "object"
+    },
+    "category": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "id": {
+          "pattern": "^[xy]:[0-9]+$",
+          "type": "string"
+        },
+        "index": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "is_other": {
+          "type": "boolean"
+        },
+        "label": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "index",
+        "label",
+        "count",
+        "is_other"
+      ],
+      "type": "object"
+    },
+    "cell": {
+      "additionalProperties": false,
+      "properties": {
+        "row_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "value": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "x_index": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "x_label": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "y_index": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "y_label": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "x_index",
+        "y_index",
+        "x_label",
+        "y_label",
+        "value",
+        "row_count"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:patent-analysis:matrix-chart-model:1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysis_result_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "cells": {
+      "items": {
+        "$ref": "#/$defs/cell"
+      },
+      "maxItems": 400,
+      "type": "array"
+    },
+    "chart_model_contract_version": {
+      "const": "1.0.0"
+    },
+    "chart_type": {
+      "enum": [
+        "matrix.bubble",
+        "matrix.heatmap"
+      ]
+    },
+    "mark": {
+      "enum": [
+        "matrix-bubble-svg.v1",
+        "matrix-heatmap-svg.v1"
+      ]
+    },
+    "population": {
+      "additionalProperties": false,
+      "properties": {
+        "analyzed_rows": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "excluded_rows": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "input_rows": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "input_rows",
+        "analyzed_rows",
+        "excluded_rows"
+      ],
+      "type": "object"
+    },
+    "title": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "x_axis": {
+      "$ref": "#/$defs/axis"
+    },
+    "y_axis": {
+      "$ref": "#/$defs/axis"
+    }
+  },
+  "required": [
+    "chart_model_contract_version",
+    "chart_type",
+    "mark",
+    "analysis_result_sha256",
+    "title",
+    "x_axis",
+    "y_axis",
+    "cells",
+    "population",
+    "warnings"
+  ],
+  "type": "object"
+}

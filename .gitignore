@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+.verify-venv/
+build/
+dist/
+*.egg-info/
+inputs/
+.benchmark-work/
+renderer/node_modules/
+renderer/dist/
+renderer/coverage/

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:concentration-result:1.0.0",
+  "title": "concentration.v1 data",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "measure",
+    "x",
+    "series",
+    "population",
+    "contributions",
+    "limits"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "analysis_id": {"const": "concentration.v1"},
+    "algorithm_version": {"const": "1.0.0"},
+    "measure": {
+      "type": "object",
+      "required": ["mode", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {"const": "count"},
+        "role": {"type": "null"}
+      }
+    },
+    "x": {
+      "type": "array",
+      "maxItems": 400,
+      "items": {"type": "string", "pattern": "^(?:18|19|20|21)[0-9]{2}$"}
+    },
+    "series": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {"$ref": "#/$defs/seriesItem"}
+    },
+    "population": {"$ref": "#/$defs/population"},
+    "contributions": {"type": "integer", "minimum": 0, "maximum": 1000000},
+    "limits": {
+      "type": "object",
+      "required": [
+        "max_year_buckets",
+        "max_expanded_contributions",
+        "max_distinct_buckets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "max_year_buckets": {"const": 400},
+        "max_expanded_contributions": {"const": 1000000},
+        "max_distinct_buckets": {"const": 100000}
+      }
+    }
+  },
+  "$defs": {
+    "seriesItem": {
+      "type": "object",
+      "required": [
+        "label",
+        "values",
+        "row_counts",
+        "contribution_counts",
+        "classifications",
+        "is_other"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"const": "HHI"},
+        "values": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "row_counts": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "contribution_counts": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "classifications": {
+          "type": "array",
+          "maxItems": 400,
+          "items": {"enum": ["competitive", "moderate", "concentrated"]}
+        },
+        "is_other": {"const": false}
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": [
+        "input_rows",
+        "visible_rows",
+        "invalid_year_rows",
+        "blank_category_rows",
+        "excluded_rows"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "visible_rows": {"type": "integer", "minimum": 0},
+        "invalid_year_rows": {"type": "integer", "minimum": 0},
+        "blank_category_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

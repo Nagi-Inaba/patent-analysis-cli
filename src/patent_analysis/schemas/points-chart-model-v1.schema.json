@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:points-chart-model:1.0.0",
+  "title": "Points ChartModel 1.0.0",
+  "type": "object",
+  "required": [
+    "chart_model_contract_version",
+    "chart_type",
+    "mark",
+    "analysis_result_sha256",
+    "title",
+    "x_axis",
+    "y_axis",
+    "size_axis",
+    "points",
+    "population",
+    "warnings"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "chart_model_contract_version": {"const": "1.0.0"},
+    "chart_type": {"const": "points.bubble"},
+    "mark": {"const": "points-bubble-svg.v1"},
+    "analysis_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "title": {"const": "技術ライフサイクル"},
+    "x_axis": {
+      "type": "object",
+      "required": ["label", "value_kind"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"const": "ピーク年"},
+        "value_kind": {"const": "year"}
+      }
+    },
+    "y_axis": {
+      "type": "object",
+      "required": ["label", "value_kind"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"const": "CAGR（%）"},
+        "value_kind": {"const": "number"}
+      }
+    },
+    "size_axis": {
+      "type": "object",
+      "required": ["label", "value_kind"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"const": "総件数"},
+        "value_kind": {"const": "count"}
+      }
+    },
+    "points": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {"$ref": "#/$defs/point"}
+    },
+    "population": {"$ref": "#/$defs/population"},
+    "warnings": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {"type": "string", "maxLength": 4096}
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "required": ["label", "x", "y", "size", "stage"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "x": {"type": "integer", "minimum": 1800, "maximum": 2199},
+        "y": {"type": "number"},
+        "size": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "stage": {"enum": ["growth", "stable", "slowing", "decline"]}
+      }
+    },
+    "population": {
+      "type": "object",
+      "required": ["input_rows", "analyzed_rows", "excluded_rows"],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "analyzed_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

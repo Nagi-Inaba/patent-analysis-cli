@@ -1,0 +1,412 @@
+{
+  "measured_on": "2026-09-26",
+  "cpu": "Intel Core i7-9700",
+  "installed_memory_gib": 32,
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "repeat": 1
+  },
+  "method": "One fresh Python process per sample; native process peak RSS including imports; API elapsed time; generated local data only.",
+  "before_source_sha256": [
+    {
+      "path": "src/patent_analysis/access.py",
+      "sha256": "98c97123a180b37da326fe15eaf5fb7413b57c104232a319eeb22d849baa400b"
+    },
+    {
+      "path": "src/patent_analysis/data.py",
+      "sha256": "bff4c62e150bf3e11241c85f66c82d27ed07ef4bac32f71793d017627a50ec22"
+    },
+    {
+      "path": "src/patent_analysis/dataset_v2.py",
+      "sha256": "8770bab290566ec0c7e6d28d15142a1056346d7862bb4a2b40eb5a9b3fd42eaf"
+    },
+    {
+      "path": "src/patent_analysis/canonical_v2.py",
+      "sha256": "60d0b2616c9caf6af44b4c22710d10fac5a2a4a0e0366d424a220bb2737f8c49"
+    }
+  ],
+  "after_source_sha256": [
+    {
+      "path": "src/patent_analysis/access.py",
+      "sha256": "b32232159dd96deb41c7fe174a21a7e895cb1d5bb1ced79b1e1212b29df2dd07"
+    },
+    {
+      "path": "src/patent_analysis/data.py",
+      "sha256": "8e646417ce37215b367886b60d96a443144e0deb45fd6d3808d3d62dafb3df5a"
+    },
+    {
+      "path": "src/patent_analysis/dataset_v2.py",
+      "sha256": "713b1ec3b8cb9f5647ea807f802846b1198ce0e4db8b4ba86d1d9dde1ea7716b"
+    },
+    {
+      "path": "src/patent_analysis/canonical_v2.py",
+      "sha256": "36aa8375d74eadf8a039fe7da09e1b5f8afa826ce0b09be211acffd9a06daa65"
+    }
+  ],
+  "before": [
+    {
+      "case": "rows",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 900015,
+      "sha256": "28ae70014187d7407e640a51a2caa368afe1147e99df40c17d93d2d887cf94c0",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 0.268904,
+      "peak_rss_bytes": 347885568,
+      "golden_passed": true
+    },
+    {
+      "case": "rows",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 900015,
+      "sha256": "28ae70014187d7407e640a51a2caa368afe1147e99df40c17d93d2d887cf94c0",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 0.389527,
+      "peak_rss_bytes": 347721728,
+      "golden_passed": true
+    },
+    {
+      "case": "rows",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 900015,
+      "sha256": "28ae70014187d7407e640a51a2caa368afe1147e99df40c17d93d2d887cf94c0",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 5.412313,
+      "peak_rss_bytes": 347934720,
+      "golden_passed": true
+    },
+    {
+      "case": "cells",
+      "rows": 99999,
+      "columns": 20,
+      "bytes": 13500051,
+      "sha256": "af0c4668271351263624cff830e917bc6e65ae882adaf5b298834ee98a6af5f1",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 0.649075,
+      "peak_rss_bytes": 347963392,
+      "golden_passed": true
+    },
+    {
+      "case": "cells",
+      "rows": 99999,
+      "columns": 20,
+      "bytes": 13500051,
+      "sha256": "af0c4668271351263624cff830e917bc6e65ae882adaf5b298834ee98a6af5f1",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 0.895585,
+      "peak_rss_bytes": 347820032,
+      "golden_passed": true
+    },
+    {
+      "case": "cells",
+      "rows": 99999,
+      "columns": 20,
+      "bytes": 13500051,
+      "sha256": "af0c4668271351263624cff830e917bc6e65ae882adaf5b298834ee98a6af5f1",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 9.951384,
+      "peak_rss_bytes": 347885568,
+      "golden_passed": true
+    },
+    {
+      "case": "wide",
+      "rows": 1999,
+      "columns": 1000,
+      "bytes": 13993890,
+      "sha256": "0167c055403726a14c676382260e169363ac2fb81ed9d8105318270890348fc1",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 0.420241,
+      "peak_rss_bytes": 347725824,
+      "golden_passed": true
+    },
+    {
+      "case": "wide",
+      "rows": 1999,
+      "columns": 1000,
+      "bytes": 13993890,
+      "sha256": "0167c055403726a14c676382260e169363ac2fb81ed9d8105318270890348fc1",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 0.621941,
+      "peak_rss_bytes": 347803648,
+      "golden_passed": true
+    },
+    {
+      "case": "wide",
+      "rows": 1999,
+      "columns": 1000,
+      "bytes": 13993890,
+      "sha256": "0167c055403726a14c676382260e169363ac2fb81ed9d8105318270890348fc1",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 5.360373,
+      "peak_rss_bytes": 347934720,
+      "golden_passed": true
+    },
+    {
+      "case": "bytes",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "33676f4c550421e9718abe4477cba565aada3e7efd6c92cd6c2d57171ff7b097",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 3.831274,
+      "peak_rss_bytes": 2265370624,
+      "golden_passed": true
+    },
+    {
+      "case": "bytes",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "33676f4c550421e9718abe4477cba565aada3e7efd6c92cd6c2d57171ff7b097",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 3.891735,
+      "peak_rss_bytes": 2270564352,
+      "golden_passed": true
+    },
+    {
+      "case": "bytes",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "33676f4c550421e9718abe4477cba565aada3e7efd6c92cd6c2d57171ff7b097",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 87.594753,
+      "peak_rss_bytes": 2265882624,
+      "golden_passed": true
+    },
+    {
+      "case": "unicode",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "6f73b694316255af8201a8981c5121c2e472c6a1567438343f50d25bfbb3686f",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 2.299037,
+      "peak_rss_bytes": 1217855488,
+      "golden_passed": true
+    },
+    {
+      "case": "unicode",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "6f73b694316255af8201a8981c5121c2e472c6a1567438343f50d25bfbb3686f",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 2.423007,
+      "peak_rss_bytes": 1222025216,
+      "golden_passed": true
+    },
+    {
+      "case": "unicode",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "6f73b694316255af8201a8981c5121c2e472c6a1567438343f50d25bfbb3686f",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 51.343732,
+      "peak_rss_bytes": 1217839104,
+      "golden_passed": true
+    }
+  ],
+  "after": [
+    {
+      "case": "rows",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 900015,
+      "sha256": "28ae70014187d7407e640a51a2caa368afe1147e99df40c17d93d2d887cf94c0",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 0.207892,
+      "peak_rss_bytes": 55410688,
+      "golden_passed": true
+    },
+    {
+      "case": "rows",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 900015,
+      "sha256": "28ae70014187d7407e640a51a2caa368afe1147e99df40c17d93d2d887cf94c0",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 0.315977,
+      "peak_rss_bytes": 59908096,
+      "golden_passed": true
+    },
+    {
+      "case": "rows",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 900015,
+      "sha256": "28ae70014187d7407e640a51a2caa368afe1147e99df40c17d93d2d887cf94c0",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 3.375372,
+      "peak_rss_bytes": 100085760,
+      "golden_passed": true
+    },
+    {
+      "case": "cells",
+      "rows": 99999,
+      "columns": 20,
+      "bytes": 13500051,
+      "sha256": "af0c4668271351263624cff830e917bc6e65ae882adaf5b298834ee98a6af5f1",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 0.557749,
+      "peak_rss_bytes": 168947712,
+      "golden_passed": true
+    },
+    {
+      "case": "cells",
+      "rows": 99999,
+      "columns": 20,
+      "bytes": 13500051,
+      "sha256": "af0c4668271351263624cff830e917bc6e65ae882adaf5b298834ee98a6af5f1",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 0.850823,
+      "peak_rss_bytes": 187211776,
+      "golden_passed": true
+    },
+    {
+      "case": "cells",
+      "rows": 99999,
+      "columns": 20,
+      "bytes": 13500051,
+      "sha256": "af0c4668271351263624cff830e917bc6e65ae882adaf5b298834ee98a6af5f1",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 6.406336,
+      "peak_rss_bytes": 215986176,
+      "golden_passed": true
+    },
+    {
+      "case": "wide",
+      "rows": 1999,
+      "columns": 1000,
+      "bytes": 13993890,
+      "sha256": "0167c055403726a14c676382260e169363ac2fb81ed9d8105318270890348fc1",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 0.354977,
+      "peak_rss_bytes": 160567296,
+      "golden_passed": true
+    },
+    {
+      "case": "wide",
+      "rows": 1999,
+      "columns": 1000,
+      "bytes": 13993890,
+      "sha256": "0167c055403726a14c676382260e169363ac2fb81ed9d8105318270890348fc1",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 0.524846,
+      "peak_rss_bytes": 195756032,
+      "golden_passed": true
+    },
+    {
+      "case": "wide",
+      "rows": 1999,
+      "columns": 1000,
+      "bytes": 13993890,
+      "sha256": "0167c055403726a14c676382260e169363ac2fb81ed9d8105318270890348fc1",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 3.574093,
+      "peak_rss_bytes": 164081664,
+      "golden_passed": true
+    },
+    {
+      "case": "bytes",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "33676f4c550421e9718abe4477cba565aada3e7efd6c92cd6c2d57171ff7b097",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 3.296943,
+      "peak_rss_bytes": 694095872,
+      "golden_passed": true
+    },
+    {
+      "case": "bytes",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "33676f4c550421e9718abe4477cba565aada3e7efd6c92cd6c2d57171ff7b097",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 3.374784,
+      "peak_rss_bytes": 697868288,
+      "golden_passed": true
+    },
+    {
+      "case": "bytes",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "33676f4c550421e9718abe4477cba565aada3e7efd6c92cd6c2d57171ff7b097",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 9.869553,
+      "peak_rss_bytes": 694013952,
+      "golden_passed": true
+    },
+    {
+      "case": "unicode",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "6f73b694316255af8201a8981c5121c2e472c6a1567438343f50d25bfbb3686f",
+      "repetition": 1,
+      "operation": "inspect",
+      "seconds": 2.141515,
+      "peak_rss_bytes": 586878976,
+      "golden_passed": true
+    },
+    {
+      "case": "unicode",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "6f73b694316255af8201a8981c5121c2e472c6a1567438343f50d25bfbb3686f",
+      "repetition": 1,
+      "operation": "ranking",
+      "seconds": 2.303947,
+      "peak_rss_bytes": 590827520,
+      "golden_passed": true
+    },
+    {
+      "case": "unicode",
+      "rows": 100000,
+      "columns": 2,
+      "bytes": 314572800,
+      "sha256": "6f73b694316255af8201a8981c5121c2e472c6a1567438343f50d25bfbb3686f",
+      "repetition": 1,
+      "operation": "composition",
+      "seconds": 7.077005,
+      "peak_rss_bytes": 587948032,
+      "golden_passed": true
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$id": "urn:patent-analysis:matrix-chart-model-receipt:1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysis_result_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "chart_model_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "mark": {
+      "enum": [
+        "matrix-bubble-svg.v1",
+        "matrix-heatmap-svg.v1"
+      ]
+    },
+    "matrix_chart_model_build_receipt_version": {
+      "const": "1.0.0"
+    },
+    "result_data_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "matrix_chart_model_build_receipt_version",
+    "analysis_result_sha256",
+    "result_data_sha256",
+    "chart_model_sha256",
+    "mark"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,20 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "analysis_id": "composition.v1",
+  "resolution": {
+    "bindings": {
+      "group": "group"
+    }
+  },
+  "parameters": {
+    "role": "group"
+  }
+}

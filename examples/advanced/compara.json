@@ -1,0 +1,26 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "compara.v1",
+  "resolution": {
+    "bindings": {
+      "x": "x",
+      "y": "y",
+      "group": "group"
+    }
+  },
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "parameters": {
+    "x_role": "x",
+    "y_role": "y",
+    "group_role": "group",
+    "group_a": "A",
+    "group_b": "B"
+  }
+}

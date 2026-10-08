@@ -1,0 +1,154 @@
+[
+  {
+    "name": "formula-and-zero-guards",
+    "rows": [
+      [
+        "2020",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2020",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "B"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "B"
+        ]
+      ],
+      [
+        "2020",
+        [
+          "C"
+        ]
+      ],
+      [
+        "2020",
+        [
+          "C"
+        ]
+      ]
+    ],
+    "parameters": {
+      "date_role": "year",
+      "series_role": "category",
+      "start_year": 2020,
+      "end_year": 2024,
+      "top_n": 20
+    }
+  },
+  {
+    "name": "unique-memberships-and-invalid-values",
+    "rows": [
+      [
+        "2020",
+        [
+          "A",
+          "A",
+          "B"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "B",
+          "C"
+        ]
+      ],
+      [
+        "bad",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2022",
+        [
+          "A"
+        ]
+      ],
+      [
+        "1799",
+        [
+          "Z"
+        ]
+      ],
+      [
+        "2024",
+        [
+          "",
+          " "
+        ]
+      ]
+    ],
+    "parameters": {
+      "date_role": "year",
+      "series_role": "category",
+      "start_year": 2020,
+      "end_year": 2024,
+      "top_n": 20
+    }
+  },
+  {
+    "name": "empty",
+    "rows": [
+      [
+        "bad",
+        [
+          "A"
+        ]
+      ],
+      [
+        "2024",
+        []
+      ]
+    ],
+    "parameters": {
+      "date_role": "year",
+      "series_role": "category",
+      "start_year": 2020,
+      "end_year": 2024,
+      "top_n": 20
+    }
+  }
+]

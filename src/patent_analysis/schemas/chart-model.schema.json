@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:chart-model:1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "chart_model_contract_version",
+    "chart_type",
+    "analysis_result_sha256",
+    "label_overlay_sha256",
+    "title",
+    "dimension",
+    "measure",
+    "population",
+    "rows",
+    "warnings"
+  ],
+  "properties": {
+    "chart_model_contract_version": {"const": "1.0.0"},
+    "chart_type": {"const": "ranking.horizontal_bar"},
+    "analysis_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "label_overlay_sha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "title": {"type": "string", "minLength": 1},
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_label", "display_label", "description"],
+      "properties": {
+        "source_label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "display_label": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "description": {"type": ["string", "null"], "maxLength": 4096}
+      }
+    },
+    "measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "column"],
+      "properties": {
+        "mode": {"enum": ["count", "sum", "average", "max", "min"]},
+        "column": {
+          "oneOf": [
+            {"type": "string", "minLength": 1, "maxLength": 4096},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mode": {"const": "count"}}, "required": ["mode"]},
+          "then": {"properties": {"column": {"type": "null"}}},
+          "else": {"properties": {"column": {"type": "string"}}}
+        }
+      ]
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_rows", "analyzed_rows"],
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0, "maximum": 100000},
+        "analyzed_rows": {"type": "integer", "minimum": 0, "maximum": 500000}
+      }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 101,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "index",
+          "row_kind",
+          "source_label",
+          "display_label",
+          "description",
+          "semantic_label",
+          "value",
+          "count",
+          "share"
+        ],
+        "properties": {
+          "index": {"type": "integer", "minimum": 0, "maximum": 100},
+          "row_kind": {"enum": ["dimension_value", "remainder"]},
+          "source_label": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "display_label": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "description": {"type": ["string", "null"], "maxLength": 4096},
+          "semantic_label": {"enum": ["データ中の分類値", "上位表示外の合計"]},
+          "value": {"type": "number"},
+          "count": {"type": "integer", "minimum": 1, "maximum": 500000},
+          "share": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 32,
+      "items": {"type": "string", "minLength": 0, "maxLength": 4096}
+    }
+  }
+}

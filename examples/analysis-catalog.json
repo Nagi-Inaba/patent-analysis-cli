@@ -1,0 +1,167 @@
+{
+  "format_version": 1,
+  "cases": [
+    {
+      "analysis_id": "ranking.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/ranking.json",
+      "mcp": true,
+      "mark": "ranking-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "ff8719092289fca4b1589eb52f68bf04f594aea2f40c5b8db1bd5c8dae1c65ad"
+    },
+    {
+      "analysis_id": "matrix.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/matrix.json",
+      "mcp": true,
+      "mark": "matrix-bubble-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "8d0dbcba69e0f27026fc72cb43317f02d4c1f0f60c2607f202cd7ad137861305"
+    },
+    {
+      "analysis_id": "timeline.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/timeline.json",
+      "mcp": true,
+      "mark": "series-line-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "8130f71354fc138ec2aa5a50848d54e7557e5967f074fd1803827431398c4531"
+    },
+    {
+      "analysis_id": "composition.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/composition.json",
+      "mcp": true,
+      "mark": "composition-bar-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "01f6a0eeb18dadad59df4d6c8f1693986af3df7d127f4d95dfb613d65e4b4655"
+    },
+    {
+      "analysis_id": "growth.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/growth.json",
+      "mcp": true,
+      "mark": "series-line-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "75eaa19a51a02f3103e7ea9f30c3b061de65b98418ce05fd050827dc32b8c301"
+    },
+    {
+      "analysis_id": "concentration.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/concentration.json",
+      "mcp": true,
+      "mark": "series-line-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "8e76091a276b6ec38e14b1b71d58bb2a9f89bad4371b0dbe9028db2ebc1f6c33"
+    },
+    {
+      "analysis_id": "lifecycle.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/lifecycle.json",
+      "mcp": true,
+      "mark": "points-bubble-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "5eaa052464316887cd2473227783889c7b1defe0d556a8e8b2b1294017827f78"
+    },
+    {
+      "analysis_id": "growth-quadrant.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/growth-quadrant.json",
+      "mcp": true,
+      "mark": "growth-quadrant-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "a0f67fa2e708f69645c297f74d305319506268d906e210c24c04b3c6a0fab2da"
+    },
+    {
+      "analysis_id": "entry-exit.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/entry-exit.json",
+      "mcp": true,
+      "mark": "entry-exit-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "dcbc0fcf43e1f88a1900410ea9ca232df78887c6023d0cff40e9fa24b6fd5131"
+    },
+    {
+      "analysis_id": "citation.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/citation.json",
+      "mcp": true,
+      "mark": "citation-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "7499a6d35f4e6c22e68825fa291371f5c682dc28fe88b74e1697ba89b9a7f2e1"
+    },
+    {
+      "analysis_id": "matrix-composition.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/matrix-composition.json",
+      "mcp": true,
+      "mark": "matrix-composition-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "1dcf82e2b7f0615321b004390e9f2d841d2c9da1967315e6091baec8bbcbc60d"
+    },
+    {
+      "analysis_id": "new-entrants.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/new-entrants.json",
+      "mcp": true,
+      "mark": "new-entrants-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "96ffb8bf69112bc698ab8247b38f096cf4df77d5120c01ba629b063ae0c0a5de"
+    },
+    {
+      "analysis_id": "compara.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/compara.json",
+      "mcp": true,
+      "mark": "compara-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "cf8cb9807a587883e9ff1926f3f49edd5c1764ea051cf5ca5b900b170ca7bc1d"
+    },
+    {
+      "analysis_id": "cooccurrence.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/cooccurrence.json",
+      "mcp": true,
+      "mark": "cooccurrence-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "c2d3af70926009385fc266ac7713f2afdcffa0be73022e90f4d7e85a3fb6cf82"
+    },
+    {
+      "analysis_id": "collaboration-network.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/collaboration-network.json",
+      "mcp": true,
+      "mark": "collaboration-network-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "de58d97437e2293956c8de376cf466a705ab8a0d74b2c91f706b65a49cde94ae"
+    },
+    {
+      "analysis_id": "uniqueness.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/uniqueness.json",
+      "mcp": true,
+      "mark": "uniqueness-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "64e4fc485aa29e5319441aa3556c65e880cc0ecfdd540fb7372493d91cd1037d"
+    },
+    {
+      "analysis_id": "shared-involvement.v1",
+      "csv": "advanced/patents.csv",
+      "spec": "advanced/shared-involvement.json",
+      "mcp": true,
+      "mark": "shared-involvement-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "bf91faae7beca8e097c08a36d12e48dfb21e535a0be9d8b2fa258ddad3028b21"
+    },
+    {
+      "analysis_id": "inventor-tracking.v1",
+      "csv": "inventor-tracking/patents.csv",
+      "spec": "inventor-tracking/spec.json",
+      "mcp": true,
+      "mark": "inventor-tracking-svg.v1",
+      "csv_sha256": "2de682b4cef435b410d9e8ad3608d0ac167cb90065a847c23dfed5534dcd1fba",
+      "spec_sha256": "51b3653b16ca245b691203eacfe8a5975bf099ae6c60b3d2b68435909ecea5b9"
+    }
+  ]
+}

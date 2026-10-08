@@ -1,0 +1,18 @@
+* text=auto eol=lf
+
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.gif -text
+*.ico -text
+*.woff2 -text
+*.zip -text
+*.gz -text
+*.xlsx -text
+*.exe -text
+*.dll -text
+
+src/patent_analysis/resources/column-alias.v2.json -text
+
+# Preserve verbatim upstream license bytes and their recorded checksums.
+src/patent_analysis/renderer/THIRD_PARTY_NOTICES.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

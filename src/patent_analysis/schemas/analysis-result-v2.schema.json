@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:analysis-result:2.0.0",
+  "title": "AnalysisResultV2",
+  "type": "object",
+  "required": [
+    "analysis_id",
+    "algorithm_version",
+    "result_variant",
+    "population",
+    "data",
+    "warnings"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_id": {"type": "string", "minLength": 1},
+    "algorithm_version": {"type": "string", "minLength": 1},
+    "result_variant": {
+      "enum": [
+        "ranking",
+        "series",
+        "composition",
+        "matrix",
+        "points",
+        "quadrant",
+        "network",
+        "grouped-metrics"
+      ]
+    },
+    "population": {"$ref": "#/$defs/population"},
+    "data": {"type": "object"},
+    "family_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm_version",
+        "mode",
+        "family_role",
+        "date_role",
+        "matched_rows",
+        "representative_rows",
+        "collapsed_rows",
+        "unidentified_rows"
+      ],
+      "properties": {
+        "algorithm_version": {
+          "const": "1.0.0"
+        },
+        "mode": {
+          "const": "earliest"
+        },
+        "family_role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^\\S(?:.*\\S)?$"
+        },
+        "date_role": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^\\S(?:.*\\S)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "matched_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "representative_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "collapsed_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "unidentified_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        }
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "population": {
+      "type": "object",
+      "required": ["input_rows", "analyzed_rows", "excluded_rows"],
+      "additionalProperties": false,
+      "properties": {
+        "input_rows": {"type": "integer", "minimum": 0},
+        "analyzed_rows": {"type": "integer", "minimum": 0},
+        "excluded_rows": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

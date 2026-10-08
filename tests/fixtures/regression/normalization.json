@@ -1,0 +1,221 @@
+[
+  {
+    "id": "workbench-applicant-comma-is-literal",
+    "operation": "split_patent_values",
+    "input": {
+      "role": "applicant",
+      "raw": "PANASONIC IP MANAGEMENT CO., LTD."
+    },
+    "expected": [
+      "PANASONIC IP MANAGEMENT CO., LTD."
+    ]
+  },
+  {
+    "id": "workbench-general-delimiters-stable-dedupe",
+    "operation": "split_patent_values",
+    "input": {
+      "role": "applicant",
+      "raw": "A社、B社|A社；C社"
+    },
+    "expected": [
+      "A社",
+      "B社",
+      "C社"
+    ]
+  },
+  {
+    "id": "workbench-classification-comma-split",
+    "operation": "split_patent_values",
+    "input": {
+      "role": "ipc",
+      "raw": "A01G-009/00, A01G-031/00"
+    },
+    "expected": [
+      "A01G-009/00",
+      "A01G-031/00"
+    ]
+  },
+  {
+    "id": "workbench-classification-main-group-canonical-form",
+    "operation": "derive_classification_values",
+    "input": {
+      "values": [
+        "A01G-009/00",
+        "A01G-031/00",
+        "A01B-033/02"
+      ],
+      "level": "main_group"
+    },
+    "expected": [
+      "A01G 9/00",
+      "A01G 31/00",
+      "A01B 33/00"
+    ]
+  },
+  {
+    "id": "bubble-full-width-classification-canonical-form",
+    "operation": "derive_classification_values",
+    "input": {
+      "values": [
+        "Ａ０１Ｇ－０３１／００"
+      ],
+      "level": "main_group"
+    },
+    "expected": [
+      "A01G 31/00"
+    ]
+  },
+  {
+    "id": "workbench-applicant-basf-se",
+    "operation": "normalize_applicant",
+    "input": {
+      "value": "BASF SE"
+    },
+    "expected": "BASF"
+  },
+  {
+    "id": "workbench-applicant-se-research-inc",
+    "operation": "normalize_applicant",
+    "input": {
+      "value": "SE Research Inc."
+    },
+    "expected": "SE Research"
+  },
+  {
+    "id": "workbench-four-digit-gregorian-year",
+    "operation": "extract_year",
+    "input": {
+      "value": "2021-03-04"
+    },
+    "expected": "2021"
+  },
+  {
+    "id": "workbench-population-and-order",
+    "operation": "apply_population",
+    "input": {
+      "rows": [
+        {
+          "source_ordinal": 1,
+          "source_fields": [
+            "A社",
+            "2021"
+          ],
+          "values_by_role": {
+            "applicant": [
+              "A社"
+            ],
+            "year": [
+              "2021"
+            ]
+          }
+        },
+        {
+          "source_ordinal": 2,
+          "source_fields": [
+            "B社",
+            "2022"
+          ],
+          "values_by_role": {
+            "applicant": [
+              "B社"
+            ],
+            "year": [
+              "2022"
+            ]
+          }
+        },
+        {
+          "source_ordinal": 3,
+          "source_fields": [
+            "A社",
+            ""
+          ],
+          "values_by_role": {
+            "applicant": [
+              "A社"
+            ],
+            "year": []
+          }
+        }
+      ],
+      "spec": {
+        "filters": [
+          {
+            "role": "year",
+            "match": "year_range",
+            "start": 2020,
+            "end": 2022,
+            "exclude": false
+          },
+          {
+            "role": "applicant",
+            "match": "one_of",
+            "values": [
+              "A社"
+            ],
+            "exclude": false
+          }
+        ],
+        "family_mode": "records"
+      }
+    },
+    "expected": [
+      1
+    ]
+  },
+  {
+    "id": "workbench-population-exclude-keeps-unknown-year",
+    "operation": "apply_population",
+    "input": {
+      "rows": [
+        {
+          "source_ordinal": 1,
+          "source_fields": [
+            "2021"
+          ],
+          "values_by_role": {
+            "year": [
+              "2021"
+            ]
+          }
+        },
+        {
+          "source_ordinal": 2,
+          "source_fields": [
+            "2023"
+          ],
+          "values_by_role": {
+            "year": [
+              "2023"
+            ]
+          }
+        },
+        {
+          "source_ordinal": 3,
+          "source_fields": [
+            ""
+          ],
+          "values_by_role": {
+            "year": []
+          }
+        }
+      ],
+      "spec": {
+        "filters": [
+          {
+            "role": "year",
+            "match": "year_range",
+            "start": 2020,
+            "end": 2022,
+            "exclude": true
+          }
+        ],
+        "family_mode": "records"
+      }
+    },
+    "expected": [
+      2,
+      3
+    ]
+  }
+]

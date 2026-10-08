@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:label-overlay-pack:1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "label_overlay_contract_version",
+    "analysis_result_sha256",
+    "dimension",
+    "producer",
+    "selection_policy_id",
+    "rows"
+  ],
+  "properties": {
+    "label_overlay_contract_version": {"const": "1.0.0"},
+    "analysis_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_label", "display_label", "description"],
+      "properties": {
+        "source_label": {"type": "string", "minLength": 1},
+        "display_label": {"type": "string", "minLength": 1},
+        "description": {"type": ["string", "null"]}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        }
+      }
+    },
+    "selection_policy_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 101,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "index",
+          "row_kind",
+          "source_label",
+          "display_label",
+          "description",
+          "provenance_state",
+          "review_state",
+          "evidence_ids",
+          "evidence_sha256"
+        ],
+        "properties": {
+          "index": {"type": "integer", "minimum": 0, "maximum": 100},
+          "row_kind": {"enum": ["dimension_value", "remainder"]},
+          "source_label": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "display_label": {"type": "string", "minLength": 1},
+          "description": {"type": ["string", "null"]},
+          "provenance_state": {
+            "enum": ["source_backed", "derived", "manual", "synthetic"]
+          },
+          "review_state": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 16,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "evidence_sha256": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 16,
+            "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      }
+    }
+  }
+}

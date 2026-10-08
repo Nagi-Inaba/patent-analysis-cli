@@ -1,0 +1,20 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "analysis_id": "composition.v1",
+  "resolution": {
+    "bindings": {
+      "applicant": "applicant",
+      "family_id": "family",
+      "filing_date": "filed"
+    }
+  },
+  "normalization": {"profiles": []},
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "earliest",
+    "family_role": "family_id",
+    "date_role": "filing_date"
+  },
+  "parameters": {"role": "applicant"}
+}

@@ -1,0 +1,9 @@
+{
+  "bootstrap_sha256": "4207577f056ed3a594e79677d58504373757582fd6f8f47bf6b7eac080c20830",
+  "build_tool_id": "patent-analysis.renderer-bundler",
+  "build_tool_version": "1.0.0",
+  "echarts_version": "6.1.0",
+  "renderer_build_manifest_version": "1.0.0",
+  "renderer_bundle_sha256": "3f19654c938863d5892964961b2d5ec61b54fa8e7fcc74f29ba7eb8be33d2472",
+  "renderer_protocol_version": "1.0.0"
+}

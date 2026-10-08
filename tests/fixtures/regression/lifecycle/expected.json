@@ -1,0 +1,63 @@
+[
+  [
+    {
+      "label": "A",
+      "size": 8,
+      "stage": "growth",
+      "x": 2022,
+      "y": 18.920711500272102
+    },
+    {
+      "label": "E",
+      "size": 2,
+      "stage": "stable",
+      "x": 2018,
+      "y": 0
+    },
+    {
+      "label": "B",
+      "size": 1,
+      "stage": "growth",
+      "x": 2024,
+      "y": 100
+    },
+    {
+      "label": "C",
+      "size": 1,
+      "stage": "decline",
+      "x": 2020,
+      "y": -100
+    },
+    {
+      "label": "D",
+      "size": 1,
+      "stage": "stable",
+      "x": 2021,
+      "y": 0
+    }
+  ],
+  [
+    {
+      "label": "A",
+      "size": 2,
+      "stage": "decline",
+      "x": 2020,
+      "y": -100
+    },
+    {
+      "label": "B",
+      "size": 2,
+      "stage": "stable",
+      "x": 2020,
+      "y": 0
+    },
+    {
+      "label": "C",
+      "size": 1,
+      "stage": "growth",
+      "x": 2024,
+      "y": 100
+    }
+  ],
+  []
+]

@@ -1,0 +1,11 @@
+{
+  "analysis_type": "ranking",
+  "dimension": "applicant",
+  "measure": {
+    "mode": "count",
+    "column": null
+  },
+  "top_n": 3,
+  "include_other": true,
+  "multi_value_mode": "all"
+}

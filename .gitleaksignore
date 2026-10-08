@@ -1,0 +1,5 @@
+# Historical SHA-256 digest values that match the generic-api-key rule.
+# Each exception is limited to one commit, path, rule, and line.
+11cdfccd69ba5da0846bd79017dbba3585b9ae1b:.release-integration/expected-files.json:generic-api-key:31
+902d20ce2e1eeacfcbbf07fcef9b8ea7efda51be:docs/performance-sample.json:generic-api-key:13
+902d20ce2e1eeacfcbbf07fcef9b8ea7efda51be:docs/performance-sample.json:generic-api-key:19
