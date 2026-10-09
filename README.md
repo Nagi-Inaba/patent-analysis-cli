@@ -15,7 +15,12 @@ Python 3.14で動作するローカル実行専用のパッケージです。入
 
 **Python 3.14系（3.14以上・3.15未満）が必要**です。既存の文字処理はUnicode 16.0.0を要求するため、インストール条件も検証済みの3.14系に限定しています。SVGを使わなければNodeやnpmは不要です。依存の取得にはインストール時の通信が必要ですが、インストール後の分析処理は外部サービスを呼びません。
 
-権限のある利用者が取得したリポジトリのルートで実行します。
+公開リポジトリを取得し、そのルートで実行します。
+
+```text
+git clone https://github.com/Nagi-Inaba/patent-analysis-cli.git
+cd patent-analysis-cli
+```
 
 ### Windows / PowerShell
 
@@ -34,9 +39,9 @@ python3.14 -m venv .venv
 .venv/bin/python -m patent_analysis capabilities --json
 ```
 
-通常利用に`[dev]`、editable install、rendererの`node_modules`は不要です。wheelからは`python -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`で導入できます。既存の同名versionを更新するときは、新しいvenvを使い、releaseのcommitとwheelのSHA-256を確認してください。
+通常利用に`[dev]`、editable install、rendererの`node_modules`は不要です。wheelから導入する場合も、Windowsでは`& $pythonExe -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`、Linuxでは`.venv/bin/python -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`のように作成したvenvを指定します。既存の同名versionを更新するときは、新しいvenvを使い、releaseのcommitとwheelのSHA-256を確認してください。
 
-MCPを使う場合だけ`python -m pip install ".[mcp]"`を指定します。利用するクライアントには、そのvenvのPythonまたは`patent-analysis-mcp`の絶対パスを設定します。
+MCPを使う場合だけ、Windowsでは`& $pythonExe -m pip install ".[mcp]"`、Linuxでは`.venv/bin/python -m pip install ".[mcp]"`を実行します。利用するクライアントには、そのvenvのPythonまたは`patent-analysis-mcp`の絶対パスを設定します。
 
 ## 最初の集計
 
@@ -64,6 +69,7 @@ Linuxでは`export PATENT_ANALYSIS_ALLOWED_ROOT="$(pwd)/examples"`と設定し�
     "title": "潅水制御システム",
     "application_date": "2024-06-25",
     "publication_date": "2026-01-14",
+    "group": ["農業", "制御"],
     "applicants": ["株式会社クボタ"],
     "inventors": ["片桐  康之", "片岡  麻子"],
     "sections": {"abstract": "要約本文"}
@@ -73,7 +79,7 @@ Linuxでは`export PATENT_ANALYSIS_ALLOWED_ROOT="$(pwd)/examples"`と設定し�
 
 objectのキーが列名になります。入れ子objectは`sections.abstract`のようなドット区切り列へ展開し、`applicants`や`inventors`のscalar配列は`|`区切りのmulti-value cellとして既存の正規化へ渡します。複数objectで欠けた列は空文字になります。objectを含む配列、重複キー、NaN/Infinity、展開後に同名になるキーは拒否します。詳細な型変換と上限は[入力契約](docs/contracts.md#json-input)を参照してください。
 
-CLIではCSVと同じコマンドを使います。
+上記を`examples/patents.json`として保存すると、`group`列を使う同梱のRanking specでCSVと同じように実行できます。相対パスは`PATENT_ANALYSIS_ALLOWED_ROOT`を基準に解決されるため、入力とspecの両方を設定済みの`examples`配下に置きます。
 
 ```powershell
 & $pythonExe -m patent_analysis inspect patents.json --json
