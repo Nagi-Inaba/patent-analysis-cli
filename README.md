@@ -65,14 +65,14 @@ Linuxでは`export PATENT_ANALYSIS_ALLOWED_ROOT="$(pwd)/examples"`と設定し�
 ```json
 [
   {
-    "application_no": "JP2024-102312",
-    "title": "潅水制御システム",
-    "application_date": "2024-06-25",
-    "publication_date": "2026-01-14",
-    "group": ["農業", "制御"],
-    "applicants": ["株式会社クボタ"],
-    "inventors": ["片桐  康之", "片岡  麻子"],
-    "sections": {"abstract": "要約本文"}
+    "application_no": "SAMPLE-APPLICATION-001",
+    "title": "サンプル発明A",
+    "application_date": "2024-01-01",
+    "publication_date": "2025-01-01",
+    "group": ["分類A", "分類B"],
+    "applicants": ["サンプル出願人A"],
+    "inventors": ["サンプル発明者A", "サンプル発明者B"],
+    "sections": {"abstract": "サンプル要約"}
   }
 ]
 ```
