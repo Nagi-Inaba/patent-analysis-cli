@@ -15,6 +15,7 @@ from patent_analysis_mcp.contracts import (
     McpContractError,
     decode_tool_arguments,
     failure_envelope,
+    schema_success_envelope,
     success_envelope,
 )
 from patent_analysis_mcp.exposure import (
@@ -100,6 +101,8 @@ class ToolHandlers:
             if frozenset(arguments) != _ARGUMENT_KEYS[tool_name]:
                 raise McpContractError("input.invalid")
             result = self._dispatch(tool_name, arguments)
+            if tool_name == "patent_analysis.schema":
+                return schema_success_envelope(result, maximum_bytes=self.response_maximum_bytes)
             return success_envelope(result, maximum_bytes=self.response_maximum_bytes)
         except Exception as error:
             self._render_documents.clear()
@@ -130,9 +133,7 @@ class ToolHandlers:
         if tool_name == "patent_analysis.capabilities":
             return describe_mcp_capabilities()
         if tool_name == "patent_analysis.schema":
-            schema_name = require_visible_schema(
-                self._required_string(arguments, "schema_name")
-            )
+            schema_name = require_visible_schema(self._required_string(arguments, "schema_name"))
             return {
                 "schema_name": schema_name,
                 "schema": self._api_callable("get_public_schema")(schema_name),
@@ -211,21 +212,18 @@ class ToolHandlers:
 
     @classmethod
     def _without_linkable_provenance(cls, value: Mapping[str, object]) -> dict[str, object]:
+        def project(item: object) -> object:
+            if isinstance(item, Mapping):
+                return cls._without_linkable_provenance(item)
+            if isinstance(item, list):
+                return [project(child) for child in item]
+            return item
+
         result: dict[str, object] = {}
         for key, item in value.items():
             if key == "receipt" or key.casefold().endswith("sha256"):
                 continue
-            if isinstance(item, Mapping):
-                result[key] = cls._without_linkable_provenance(item)
-            elif isinstance(item, list):
-                result[key] = [
-                    cls._without_linkable_provenance(child)
-                    if isinstance(child, Mapping)
-                    else child
-                    for child in item
-                ]
-            else:
-                result[key] = item
+            result[key] = project(item)
         return result
 
     def _render(self, arguments: Mapping[str, Any]) -> object:

@@ -1,4 +1,6 @@
-import type { AdvancedModel, AdvancedProjection, AdvancedSpec } from "./advanced-types.js";
+import { buildInventorOption, isInventorProjection } from "./advanced-inventor-options.js";
+import { truncateAdvancedLabel } from "./advanced-text.js";
+import type { AdvancedModel, AdvancedSpec, LegacyProjection } from "./advanced-types.js";
 
 const TEXT = "#0f172a";
 const MUTED = "#475569";
@@ -8,16 +10,7 @@ const PALETTE: Readonly<Record<string, string>> = Object.freeze({
   active: TEAL, inactive: "#94a3b8", citation: TEAL,
   sustained_growth: TEAL, recovery: "#2563eb", slowing: "#a16207", decline: "#b45309"
 });
-const segmenter = new Intl.Segmenter("ja-JP", { granularity: "grapheme" });
-
-export function truncateAdvancedLabel(value: string, maximum: number): string {
-  const result: string[] = [];
-  for (const part of segmenter.segment(value)) {
-    if (result.length === maximum) return result.slice(0, maximum - 1).join("") + "…";
-    result.push(part.segment);
-  }
-  return result.join("");
-}
+export { truncateAdvancedLabel };
 function number(value: number): string {
   return value.toLocaleString("ja-JP", { maximumFractionDigits: 2 });
 }
@@ -25,7 +18,7 @@ function symbolSize(value: number, maximum: number): number {
   // Fixed minimum makes zero-valued citation records visible without changing data.
   return maximum <= 0 ? 12 : 12 + 24 * Math.sqrt(Math.max(0, value) / maximum);
 }
-function empty(p: AdvancedProjection): boolean {
+function empty(p: LegacyProjection): boolean {
   switch (p.kind) {
     case "scatter": case "quadrant": return p.points.length === 0;
     case "heatmap": return p.x.length === 0 || p.y.length === 0;
@@ -45,6 +38,7 @@ function axis(label: string, spec: AdvancedSpec, year: boolean): Record<string, 
 
 export function buildAdvancedOption(model: AdvancedModel, spec: AdvancedSpec): Record<string, unknown> {
   const p = model.projection;
+  if (isInventorProjection(p)) return buildInventorOption(model, spec, p);
   const omitted = p.kind === "quadrant" && p.unplottable.length > 0
     ? `増減率未定義: 座標表示対象外 ${p.unplottable.length} 件 (${p.unplottable.slice(0, 3).map(v => truncateAdvancedLabel(v.label, 12)).join("、")}${p.unplottable.length > 3 ? " ほか" : ""})` : "";
   const population = `入力 ${model.population.input_rows} / 分析 ${model.population.analyzed_rows} / 除外 ${model.population.excluded_rows}`;

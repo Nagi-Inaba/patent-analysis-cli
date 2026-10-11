@@ -1,0 +1,739 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:inventor-activity-result:1.0.0",
+  "title": "inventor-activity result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "statistics",
+    "input_coverage",
+    "family_basis",
+    "provenance",
+    "identity_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_id": {
+      "const": "inventor-activity.v1"
+    },
+    "algorithm_version": {
+      "const": "1.0.0"
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "people",
+        "calendar",
+        "observations",
+        "missing_date_record_ids",
+        "basis",
+        "coverage"
+      ],
+      "properties": {
+        "people": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "person_key",
+              "person_token",
+              "inventor_id",
+              "display_name",
+              "identity_status",
+              "caveats",
+              "candidate_ids",
+              "source_ids",
+              "eligible",
+              "cumulative_unit_activity",
+              "cumulative_unique_units",
+              "annual_unit_presences",
+              "missing_date_unit_ids"
+            ],
+            "properties": {
+              "person_key": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "enum": [
+                      "id",
+                      "name",
+                      "ambiguous_id",
+                      "ambiguous_name"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "person_token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "inventor_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "display_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "identity_status": {
+                "type": "array",
+                "maxItems": 4,
+                "items": {
+                  "enum": [
+                    "provided_id",
+                    "curated_mapping",
+                    "normalized_name_only",
+                    "ambiguous"
+                  ]
+                },
+                "uniqueItems": true
+              },
+              "caveats": {
+                "type": "array",
+                "maxItems": 64,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                },
+                "uniqueItems": true
+              },
+              "candidate_ids": {
+                "$ref": "#/$defs/identityEvidenceIds"
+              },
+              "source_ids": {
+                "$ref": "#/$defs/identityEvidenceIds"
+              },
+              "eligible": {
+                "type": "boolean"
+              },
+              "cumulative_unit_activity": {
+                "$ref": "#/$defs/exact"
+              },
+              "cumulative_unique_units": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "annual_unit_presences": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "missing_date_unit_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              }
+            }
+          }
+        },
+        "calendar": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "year",
+              "observed",
+              "record_count",
+              "unit_count"
+            ],
+            "properties": {
+              "year": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9999
+              },
+              "observed": {
+                "type": "boolean"
+              },
+              "record_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "unit_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            }
+          }
+        },
+        "observations": {
+          "type": "array",
+          "maxItems": 6000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "person_token",
+              "year",
+              "observed",
+              "unit_count",
+              "unit_ids",
+              "record_ids",
+              "activity",
+              "classifications",
+              "partners",
+              "added_partners",
+              "continued_partners",
+              "not_observed_partners",
+              "community_id"
+            ],
+            "properties": {
+              "person_token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "year": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9999
+              },
+              "observed": {
+                "type": "boolean"
+              },
+              "unit_count": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "unit_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "record_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "activity": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/exact"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "classifications": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "classification",
+                    "count"
+                  ],
+                  "properties": {
+                    "classification": {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "enum": [
+                            "IPC",
+                            "CPC"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 16384
+                        }
+                      ],
+                      "items": false,
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "count": {
+                      "$ref": "#/$defs/exact"
+                    }
+                  }
+                }
+              },
+              "partners": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "added_partners": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "continued_partners": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "not_observed_partners": {
+                "type": "array",
+                "maxItems": 200,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "community_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "missing_date_record_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "basis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unit",
+            "person_weight",
+            "classification_weight",
+            "annual_person_denominator",
+            "cumulative",
+            "annual",
+            "partner_comparison",
+            "community_method",
+            "annual_graph_basis",
+            "absence",
+            "precision"
+          ],
+          "properties": {
+            "unit": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "records",
+                    "publication",
+                    "application",
+                    "family"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "person_weight": {
+              "enum": [
+                "full",
+                "fractional"
+              ]
+            },
+            "classification_weight": {
+              "enum": [
+                "full",
+                "fractional"
+              ]
+            },
+            "annual_person_denominator": {
+              "const": "original_unit_unique_people_including_unresolved"
+            },
+            "cumulative": {
+              "const": "unique_units"
+            },
+            "annual": {
+              "const": "year_local_unit_presences"
+            },
+            "partner_comparison": {
+              "const": "adjacent_calendar_years"
+            },
+            "community_method": {
+              "enum": [
+                "connected_components",
+                "greedy_modularity"
+              ]
+            },
+            "annual_graph_basis": {
+              "const": "year_local_units"
+            },
+            "absence": {
+              "const": "not_observed_not_inactivity"
+            },
+            "precision": {
+              "const": 12
+            }
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "records",
+            "missing_date_records",
+            "ambiguous_people"
+          ],
+          "properties": {
+            "records": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "missing_date_records": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "ambiguous_people": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        }
+      }
+    },
+    "input_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_rows",
+        "included_rows",
+        "filtered_rows",
+        "missing_inventors",
+        "missing_date",
+        "missing_applicants",
+        "missing_classification"
+      ],
+      "properties": {
+        "input_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "included_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "filtered_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_inventors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_date": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_applicants": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_classification": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "family_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_mode",
+        "unit"
+      ],
+      "properties": {
+        "family_mode": {
+          "const": "records"
+        },
+        "unit": {
+          "enum": [
+            "records",
+            "publication",
+            "application",
+            "family"
+          ]
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "patent_sha256",
+        "sidecar_state",
+        "sidecars"
+      ],
+      "properties": {
+        "patent_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sidecar_state": {
+          "enum": [
+            "provided",
+            "input_not_provided"
+          ]
+        },
+        "sidecars": {
+          "type": "array",
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "table",
+              "format",
+              "schema_version",
+              "byte_size",
+              "sha256"
+            ],
+            "properties": {
+              "table": {
+                "enum": [
+                  "bundle",
+                  "sources",
+                  "identities",
+                  "entities",
+                  "entity_aliases",
+                  "groups",
+                  "events",
+                  "personal_evidence",
+                  "reviews",
+                  "citations"
+                ]
+              },
+              "format": {
+                "enum": [
+                  "json",
+                  "csv"
+                ]
+              },
+              "schema_version": {
+                "const": "1.0.0"
+              },
+              "byte_size": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1048576
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "identity_evidence": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "person_key",
+          "person_token",
+          "inventor_id",
+          "display_name",
+          "identity_status",
+          "caveats",
+          "candidate_ids",
+          "source_ids"
+        ],
+        "properties": {
+          "person_key": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "enum": [
+                  "id",
+                  "name",
+                  "ambiguous_id",
+                  "ambiguous_name"
+                ]
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "person_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "inventor_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "identity_status": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "enum": [
+                "provided_id",
+                "curated_mapping",
+                "normalized_name_only",
+                "ambiguous"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "caveats": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "uniqueItems": true
+          },
+          "candidate_ids": {
+            "$ref": "#/$defs/identityEvidenceIds"
+          },
+          "source_ids": {
+            "$ref": "#/$defs/identityEvidenceIds"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identityEvidenceIds": {
+      "type": "array",
+      "maxItems": 5000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 16384
+      }
+    },
+    "exact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "numerator",
+        "denominator"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3.402823669209385e+38
+        },
+        "numerator": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "maxLength": 40
+        },
+        "denominator": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "maxLength": 40
+        }
+      }
+    }
+  }
+}

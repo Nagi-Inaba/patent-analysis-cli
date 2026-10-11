@@ -106,8 +106,13 @@ def project_advanced_data(analysis_id: str, data: dict[str, Any]) -> dict[str, A
     definition = get_advanced_presentation(analysis_id)
     if data.get("analysis_id") != analysis_id:
         raise ValueError("presentation data has a different analysis identity")
+    if definition.kind.startswith("inventor-"):
+        from patent_analysis.inventor_projection import project_inventor
+
+        return project_inventor(analysis_id, data)
     if analysis_id == "inventor-tracking.v1":
         from patent_analysis.inventor_tracking_projection import project_tracking
+
         return project_tracking(data)
     if analysis_id == "growth-quadrant.v1":
         for span in (data["long_span"], data["short_span"]):
@@ -226,8 +231,7 @@ def project_advanced_data(analysis_id: str, data: dict[str, Any]) -> dict[str, A
                 for p in data["points"]
             ],
             "context": (
-                "レコード単位。同じ表示名でも別レコードとして保持。"
-                "被引用0件は最小の点で表示。"
+                "レコード単位。同じ表示名でも別レコードとして保持。被引用0件は最小の点で表示。"
             ),
         }
     if analysis_id == "matrix-composition.v1":
@@ -333,8 +337,7 @@ def project_advanced_data(analysis_id: str, data: dict[str, Any]) -> dict[str, A
             "nodes": nodes,
             "edges": edges,
             "context": (
-                "共同レコードのみを計数。固定円周配置は関係の強弱や距離を表しません。"
-                "線は共同件数。"
+                "共同レコードのみを計数。固定円周配置は関係の強弱や距離を表しません。線は共同件数。"
             ),
         }
     if analysis_id in {"uniqueness.v1", "shared-involvement.v1"}:

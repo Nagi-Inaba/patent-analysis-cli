@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:inventor-sidecar:1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "tables"],
+  "properties": {
+    "version": {"const": "1.0.0"},
+    "tables": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sources", "identities", "entities", "entity_aliases", "groups", "events", "personal_evidence", "reviews", "citations"],
+      "properties": {
+        "sources": {"$ref": "#/$defs/sources"},
+        "identities": {"$ref": "#/$defs/identities"},
+        "entities": {"$ref": "#/$defs/entities"},
+        "entity_aliases": {"$ref": "#/$defs/entity_aliases"},
+        "groups": {"$ref": "#/$defs/groups"},
+        "events": {"$ref": "#/$defs/events"},
+        "personal_evidence": {"$ref": "#/$defs/personal_evidence"},
+        "reviews": {"$ref": "#/$defs/reviews"},
+        "citations": {"$ref": "#/$defs/citations"}
+      }
+    }
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "maxLength": 2048, "pattern": "^[^\\u0000-\\u001f\\ud800-\\udfff]+(?![\\s\\S])"},
+    "nullable_text": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+    "date": {"anyOf": [{"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?(?![\\s\\S])", "maxLength": 10}, {"type": "null"}]},
+    "refs": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "sources_refs": {"allOf": [{"$ref": "#/$defs/refs"}], "minItems": 1},
+    "sources": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_id", "kind", "citation", "checked_date", "url"],
+        "properties": {
+          "source_id": {"$ref": "#/$defs/text"},
+          "kind": {"enum": ["local_document", "patent", "corporate_record", "employment_record", "user_review", "citation_dataset"]},
+          "citation": {"$ref": "#/$defs/text"},
+          "checked_date": {"$ref": "#/$defs/date"},
+          "url": {"$ref": "#/$defs/nullable_text"}
+        }
+      }
+    },
+    "identities": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["alias_id", "kind", "raw_alias", "inventor_id", "display_name", "source_ids", "status"],
+        "properties": {
+          "alias_id": {"$ref": "#/$defs/text"},
+          "kind": {"enum": ["id", "name"]},
+          "raw_alias": {"$ref": "#/$defs/text"},
+          "inventor_id": {"$ref": "#/$defs/text"},
+          "display_name": {"$ref": "#/$defs/text"},
+          "source_ids": {"$ref": "#/$defs/sources_refs"},
+          "status": {"enum": ["confirmed", "candidate"]}
+        }
+      }
+    },
+    "entities": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["entity_id", "display_name", "source_ids"],
+        "properties": {
+          "entity_id": {"$ref": "#/$defs/text"},
+          "display_name": {"$ref": "#/$defs/text"},
+          "source_ids": {"$ref": "#/$defs/sources_refs"}
+        }
+      }
+    },
+    "entity_aliases": {
+      "type": "array", "maxItems": 256,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["alias_id", "raw_alias", "entity_id", "valid_from", "valid_to", "source_ids"],
+        "properties": {
+          "alias_id": {"$ref": "#/$defs/text"},
+          "raw_alias": {"$ref": "#/$defs/text"},
+          "entity_id": {"$ref": "#/$defs/text"},
+          "valid_from": {"$ref": "#/$defs/date"},
+          "valid_to": {"$ref": "#/$defs/date"},
+          "source_ids": {"$ref": "#/$defs/sources_refs"}
+        }
+      }
+    },
+    "groups": {
+      "type": "array", "maxItems": 256,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["group_id", "child_id", "parent_id", "relation", "valid_from", "valid_to", "source_ids"],
+        "properties": {
+          "group_id": {"$ref": "#/$defs/text"},
+          "child_id": {"$ref": "#/$defs/text"},
+          "parent_id": {"$ref": "#/$defs/text"},
+          "relation": {"enum": ["subsidiary", "control", "minority_interest"]},
+          "valid_from": {"$ref": "#/$defs/date"},
+          "valid_to": {"$ref": "#/$defs/date"},
+          "source_ids": {"$ref": "#/$defs/sources_refs"}
+        }
+      }
+    },
+    "events": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["event_id", "type", "entity_ids", "record_ids", "announcement_date", "effective_date", "status", "scope", "source_ids"],
+        "properties": {
+          "event_id": {"$ref": "#/$defs/text"},
+          "type": {"enum": ["acquisition", "merger", "name_change", "group_change", "business_transfer", "patent_rights_transfer", "minority_investment"]},
+          "entity_ids": {"allOf": [{"$ref": "#/$defs/refs"}], "minItems": 1},
+          "record_ids": {"$ref": "#/$defs/refs"},
+          "announcement_date": {"$ref": "#/$defs/date"},
+          "effective_date": {"$ref": "#/$defs/date"},
+          "status": {"enum": ["announced", "completed", "withdrawn", "unknown"]},
+          "scope": {"enum": ["whole_entity", "partial_business", "patents_only", "minority_interest", "unknown"]},
+          "source_ids": {"$ref": "#/$defs/sources_refs"}
+        }
+      }
+    },
+    "personal_evidence": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["evidence_id", "inventor_id", "from_entity_id", "to_entity_id", "valid_from", "valid_to", "type", "claim_status", "source_ids"],
+        "properties": {
+          "evidence_id": {"$ref": "#/$defs/text"},
+          "inventor_id": {"$ref": "#/$defs/text"},
+          "from_entity_id": {"$ref": "#/$defs/nullable_text"},
+          "to_entity_id": {"$ref": "#/$defs/nullable_text"},
+          "valid_from": {"$ref": "#/$defs/date"},
+          "valid_to": {"$ref": "#/$defs/date"},
+          "type": {"enum": ["employment_move", "employment_continuity", "patent_association", "user_assertion"]},
+          "claim_status": {"enum": ["reported", "user_asserted", "conflicting", "unknown"]},
+          "source_ids": {"$ref": "#/$defs/sources_refs"}
+        }
+      }
+    },
+    "reviews": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["review_id", "inventor_id", "claim", "status", "reason", "reviewed_date", "evidence_ids", "event_ids", "record_ids", "source_ids", "supersedes_review_id"],
+        "properties": {
+          "review_id": {"$ref": "#/$defs/text"},
+          "inventor_id": {"$ref": "#/$defs/text"},
+          "claim": {"enum": ["employment_move", "employment_continuity", "corporate_event", "patent_association", "identity"]},
+          "status": {"enum": ["accepted", "rejected", "pending", "withdrawn", "user_asserted", "conflicting"]},
+          "reason": {"$ref": "#/$defs/text"},
+          "reviewed_date": {"$ref": "#/$defs/date"},
+          "evidence_ids": {"$ref": "#/$defs/refs"},
+          "event_ids": {"$ref": "#/$defs/refs"},
+          "record_ids": {"$ref": "#/$defs/refs"},
+          "source_ids": {"$ref": "#/$defs/sources_refs"},
+          "supersedes_review_id": {"$ref": "#/$defs/nullable_text"}
+        }
+      }
+    },
+    "citations": {
+      "type": "array", "maxItems": 5000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["citation_id", "record_id", "count", "snapshot_date", "citing_ids", "source_ids"],
+        "properties": {
+          "citation_id": {"$ref": "#/$defs/text"},
+          "record_id": {"$ref": "#/$defs/text"},
+          "count": {"type": ["integer", "null"], "minimum": 0, "maximum": 9007199254740991},
+          "snapshot_date": {"$ref": "#/$defs/date"},
+          "citing_ids": {"anyOf": [{"$ref": "#/$defs/refs"}, {"type": "null"}]},
+          "source_ids": {"$ref": "#/$defs/sources_refs"}
+        }
+      }
+    }
+  }
+}

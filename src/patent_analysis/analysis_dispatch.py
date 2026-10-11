@@ -14,6 +14,7 @@ from patent_analysis.analyses._advanced_registration import (
 from patent_analysis.analyses._advanced_registration import (
     validate_parameters as validate_advanced_parameters,
 )
+from patent_analysis.analyses._inventor_registration import MODULE_BY_ID as INVENTOR_MODULE_BY_ID
 from patent_analysis.analyses.composition import required_roles as composition_required_roles
 from patent_analysis.analyses.concentration import required_roles as concentration_required_roles
 from patent_analysis.analyses.growth import required_roles as growth_required_roles
@@ -150,10 +151,16 @@ def _validate_definition_specific_spec(
             roles = growth_required_roles(spec["parameters"])
         elif module := MODULE_BY_ID.get(definition.analysis_id):
             roles = module.required_roles(spec["parameters"])
+        elif module := INVENTOR_MODULE_BY_ID.get(definition.analysis_id):
+            roles = module.required_roles(spec["parameters"])
         else:
             roles = definition.required_roles
         population, filter_roles = records_population_spec(spec["population"])
         _validate_population_spec(population)
+        if definition.analysis_id in INVENTOR_MODULE_BY_ID:
+            from patent_analysis.analyses._inventor_common import executable_roles
+            roles = executable_roles(spec, roles, filter_roles)
+            filter_roles = ()
         normalized_roles = stable_roles((*roles, *filter_roles))
         if len(normalized_roles) > MAX_NORMALIZATION_ROLES:
             raise ValueError("analysis and selection roles exceed the normalization limit")

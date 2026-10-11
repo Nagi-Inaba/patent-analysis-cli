@@ -26,6 +26,8 @@ def _is_forbidden_code_point(code_point: int) -> bool:
         or 0xD800 <= code_point <= 0xDFFF
         or 0xFDD0 <= code_point <= 0xFDEF
         or code_point & 0xFFFF in (0xFFFE, 0xFFFF)
+        or code_point == 0x061C
+        or 0x200E <= code_point <= 0x200F
         or 0x202A <= code_point <= 0x202E
         or 0x2066 <= code_point <= 0x2069
     )

@@ -1,0 +1,687 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:inventor-technology-result:1.0.0",
+  "title": "inventor-technology result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "statistics",
+    "input_coverage",
+    "family_basis",
+    "provenance",
+    "identity_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_id": {
+      "const": "inventor-technology.v1"
+    },
+    "algorithm_version": {
+      "const": "1.0.0"
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profiles",
+        "cells",
+        "classifications",
+        "basis",
+        "coverage"
+      ],
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/profile"
+          }
+        },
+        "cells": {
+          "type": "array",
+          "maxItems": 25600,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "person_token",
+              "classification",
+              "count",
+              "unit_count",
+              "share",
+              "relative_specialization"
+            ],
+            "properties": {
+              "person_token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "classification": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "enum": [
+                      "IPC",
+                      "CPC"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "count": {
+                "$ref": "#/$defs/exact"
+              },
+              "unit_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "share": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "relative_specialization": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "classifications": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "classification",
+              "count",
+              "reference_share"
+            ],
+            "properties": {
+              "classification": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "enum": [
+                      "IPC",
+                      "CPC"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "count": {
+                "$ref": "#/$defs/exact"
+              },
+              "reference_share": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "basis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unit",
+            "person_weight",
+            "classification_weight",
+            "reference",
+            "classification_denominator",
+            "precision"
+          ],
+          "properties": {
+            "unit": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "records",
+                    "publication",
+                    "application",
+                    "family"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "person_weight": {
+              "enum": [
+                "full",
+                "fractional"
+              ]
+            },
+            "classification_weight": {
+              "enum": [
+                "full",
+                "fractional"
+              ]
+            },
+            "reference": {
+              "const": "all_person_witnessed_classification_contributions"
+            },
+            "classification_denominator": {
+              "const": "person_witnessed_unit_codes"
+            },
+            "precision": {
+              "const": 12
+            }
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "units",
+            "records",
+            "missing_classification_memberships",
+            "ambiguous_people",
+            "classification_mass"
+          ],
+          "properties": {
+            "units": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "records": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "missing_classification_memberships": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "ambiguous_people": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "classification_mass": {
+              "$ref": "#/$defs/exact"
+            }
+          }
+        }
+      }
+    },
+    "input_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_rows",
+        "included_rows",
+        "filtered_rows",
+        "missing_inventors",
+        "missing_date",
+        "missing_applicants",
+        "missing_classification"
+      ],
+      "properties": {
+        "input_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "included_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "filtered_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_inventors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_date": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_applicants": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_classification": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "family_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_mode",
+        "unit"
+      ],
+      "properties": {
+        "family_mode": {
+          "const": "records"
+        },
+        "unit": {
+          "enum": [
+            "records",
+            "publication",
+            "application",
+            "family"
+          ]
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "patent_sha256",
+        "sidecar_state",
+        "sidecars"
+      ],
+      "properties": {
+        "patent_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sidecar_state": {
+          "enum": [
+            "provided",
+            "input_not_provided"
+          ]
+        },
+        "sidecars": {
+          "type": "array",
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "table",
+              "format",
+              "schema_version",
+              "byte_size",
+              "sha256"
+            ],
+            "properties": {
+              "table": {
+                "enum": [
+                  "bundle",
+                  "sources",
+                  "identities",
+                  "entities",
+                  "entity_aliases",
+                  "groups",
+                  "events",
+                  "personal_evidence",
+                  "reviews",
+                  "citations"
+                ]
+              },
+              "format": {
+                "enum": [
+                  "json",
+                  "csv"
+                ]
+              },
+              "schema_version": {
+                "const": "1.0.0"
+              },
+              "byte_size": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1048576
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "identity_evidence": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "person_key",
+          "person_token",
+          "inventor_id",
+          "display_name",
+          "identity_status",
+          "caveats",
+          "candidate_ids",
+          "source_ids"
+        ],
+        "properties": {
+          "person_key": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "enum": [
+                  "id",
+                  "name",
+                  "ambiguous_id",
+                  "ambiguous_name"
+                ]
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "person_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "inventor_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "identity_status": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "enum": [
+                "provided_id",
+                "curated_mapping",
+                "normalized_name_only",
+                "ambiguous"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "caveats": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "uniqueItems": true
+          },
+          "candidate_ids": {
+            "$ref": "#/$defs/identityEvidenceIds"
+          },
+          "source_ids": {
+            "$ref": "#/$defs/identityEvidenceIds"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identityEvidenceIds": {
+      "type": "array",
+      "maxItems": 5000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 16384
+      }
+    },
+    "exact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "numerator",
+        "denominator"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3.402823669209385e+38
+        },
+        "numerator": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "maxLength": 40
+        },
+        "denominator": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "maxLength": 40
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "person_key",
+        "person_token",
+        "inventor_id",
+        "display_name",
+        "identity_status",
+        "caveats",
+        "candidate_ids",
+        "source_ids",
+        "eligible",
+        "activity",
+        "classification_total",
+        "entropy",
+        "hhi",
+        "predominant_classification",
+        "undefined_reason"
+      ],
+      "properties": {
+        "person_key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "enum": [
+                "id",
+                "name",
+                "ambiguous_id",
+                "ambiguous_name"
+              ]
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "person_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "inventor_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "identity_status": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "enum": [
+              "provided_id",
+              "curated_mapping",
+              "normalized_name_only",
+              "ambiguous"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "caveats": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "uniqueItems": true
+        },
+        "candidate_ids": {
+          "$ref": "#/$defs/identityEvidenceIds"
+        },
+        "source_ids": {
+          "$ref": "#/$defs/identityEvidenceIds"
+        },
+        "eligible": {
+          "type": "boolean"
+        },
+        "activity": {
+          "$ref": "#/$defs/exact"
+        },
+        "classification_total": {
+          "$ref": "#/$defs/exact"
+        },
+        "entropy": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hhi": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "predominant_classification": {
+          "anyOf": [
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "enum": [
+                    "IPC",
+                    "CPC"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "undefined_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "missing_classification"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

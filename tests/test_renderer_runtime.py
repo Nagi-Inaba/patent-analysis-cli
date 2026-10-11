@@ -451,7 +451,11 @@ def test_process_failures_and_pipe_limits_raise_only_the_fixed_safe_runtime_erro
     )
     assert secret not in surfaces
     assert "raw-model-spec" not in surfaces
-    assert "private" not in surfaces
+    # Tracebacks may legitimately contain a checkout named "*-private".
+    # Reject the actual untrusted input path, not a word in the source path.
+    input_path = "C:\\private\\case.csv"
+    assert input_path not in surfaces
+    assert repr(input_path)[1:-1] not in surfaces
 
 
 def test_launcher_exception_and_invalid_stdout_do_not_retain_payload_or_exception_context() -> None:
@@ -468,7 +472,7 @@ def test_launcher_exception_and_invalid_stdout_do_not_retain_payload_or_exceptio
     assert launcher_error.value.__context__ is None
     assert "sensitive" not in "".join(traceback.format_exception(launcher_error.value))
 
-    invalid_stdout = b'{"' + b'private":"payload"}\n'
+    invalid_stdout = b'{"' + b'private-payload-canary":"payload"}\n'
 
     def invalid_response(_frame: bytes) -> _ProcessResult:
         return _ProcessResult(0, invalid_stdout, b"")
@@ -478,11 +482,12 @@ def test_launcher_exception_and_invalid_stdout_do_not_retain_payload_or_exceptio
     assert type(protocol_error.value).__name__ == "RendererProtocolError"
     assert protocol_error.value.__cause__ is None
     assert protocol_error.value.__context__ is None
-    assert "private" not in "\n".join(
+    assert "private-payload-canary" not in "\n".join(
         [
             str(protocol_error.value),
             repr(protocol_error.value),
             "".join(traceback.format_exception(protocol_error.value)),
+            repr(vars(protocol_error.value)),
         ]
     )
 

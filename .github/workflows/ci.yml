@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --require-hashes -r requirements/mcp-2.0.0.lock
-          python -m pip install -e ".[dev]" build
+          python -m pip install -e ".[dev,inventor]" build "setuptools>=77.0.3"
 
       - name: Install renderer dependencies
         working-directory: renderer
@@ -71,8 +71,10 @@ jobs:
           import os
           from collections import Counter
           from pathlib import Path
+          from runpy import run_path
           from xml.etree import ElementTree
-          from patent_analysis.advanced_presentation import ADVANCED_PRESENTATIONS
+          inventory = run_path("tests/advanced_inventory.py")
+          svg_ids = (*inventory["ADVANCED_IDS"], *inventory["INVENTOR_IDS"][:-1])
           report = ElementTree.parse(Path(os.environ["RUNNER_TEMP"]) / "pytest-results.xml")
           assert list(report.iter("testcase")), "No Python tests executed"
           assert not list(report.iter("skipped")), "Windows tests must execute, not skip"
@@ -80,9 +82,9 @@ jobs:
           mcp_case = "test_real_mcp_advanced_analysis_handle_renders_the_same_public_result"
           expected = Counter(
               f"{api_case}[{explicit}-{analysis_id}]"
-              for analysis_id in ADVANCED_PRESENTATIONS for explicit in (False, True)
+              for analysis_id in svg_ids for explicit in (False, True)
           )
-          expected.update(f"{mcp_case}[{analysis_id}]" for analysis_id in ADVANCED_PRESENTATIONS)
+          expected.update(f"{mcp_case}[{analysis_id}]" for analysis_id in svg_ids)
           actual = Counter(
               case.get("name") for case in report.iter("testcase")
               if case.get("classname") == "tests.test_advanced_svg_end_to_end"
@@ -151,7 +153,7 @@ jobs:
       - name: Verify distribution contents and clean installed entrypoints
         shell: python
         run: |
-          import hashlib, json, os, shutil, subprocess, sys, tarfile, tempfile, venv
+          import hashlib, json, os, runpy, shutil, subprocess, sys, tarfile, tempfile, venv
           from pathlib import Path
           from zipfile import ZipFile
           root = Path.cwd().resolve()
@@ -159,32 +161,46 @@ jobs:
           sdist, = (root / "dist").glob("*.tar.gz")
           def sha(path):
               return hashlib.sha256(path.read_bytes()).hexdigest()
-          tracked = subprocess.check_output(["git", "ls-files", "src"], text=True).splitlines()
-          sources = [Path(p) for p in tracked if Path(p).suffix in {".py", ".json", ".js", ".gz", ".txt"}]
+          verifier = root / "scripts" / "verify_installed_release.py"
+          sources = runpy.run_path(str(verifier))["release_source_files"](root)
+          forbidden_parts = {".ai", ".git", ".venv", "venv", "node_modules", "__pycache__"}
+          def public_archive_name(name):
+              parts = Path(name).parts
+              return not any(p in forbidden_parts or p == ".env" or p.startswith(".env.")
+                             or p in {"id_rsa", "id_ed25519"} for p in parts)
           with ZipFile(wheel) as archive:
               for path in sources:
-                  assert archive.read(path.relative_to("src").as_posix()) == path.read_bytes(), path
-              assert not any(p.startswith(("tests/", "node_modules/")) for p in archive.namelist())
+                  assert archive.read(path.relative_to(root / "src").as_posix()) == path.read_bytes(), path
+              assert all(public_archive_name(p) for p in archive.namelist())
+              assert not any(p.startswith("tests/") for p in archive.namelist())
+              assert any(p.endswith("/licenses/LICENSE") for p in archive.namelist())
+              assert any(p.endswith("/licenses/src/patent_analysis/renderer/THIRD_PARTY_NOTICES.txt")
+                         for p in archive.namelist())
           with tarfile.open(sdist) as archive:
               members = {
                   member.name.partition("/")[2]: member
                   for member in archive.getmembers()
                   if member.name.partition("/")[2]
               }
+              assert all(public_archive_name(name) for name in members)
               for name in ("LICENSE", "README.md", "scripts/verify_installed_release.py",
+                           "scripts/verify_installed_inventor_release.py", "docs/inventor-analysis.md",
                            "docs/analysis-catalog.md", "docs/mcp.md", "docs/release.md",
                            "src/patent_analysis/renderer/THIRD_PARTY_NOTICES.txt"):
                   assert name in members, name
-              for name in subprocess.check_output(
-                  ["git", "ls-files", "tests", "renderer", "requirements"], text=True
-              ).splitlines():
-                  path = root / name
+              candidates = sources + [
+                  p for folder in ("tests", "renderer", "requirements", "examples")
+                  for p in (root / folder).rglob("*")
+                  if p.is_file() and public_archive_name(p.relative_to(root).as_posix())
+                  and not any(part in {"dist", "coverage", ".pytest_cache"}
+                              for part in p.relative_to(root).parts)
+                  and p.suffix != ".pyc"
+              ]
+              for path in candidates:
+                  name = path.relative_to(root).as_posix()
                   if path.is_file():
                       stored = archive.extractfile(members[name])
                       assert stored is not None and stored.read() == path.read_bytes(), name
-              for p in (root / "examples").rglob("*"):
-                  if p.is_file() and p.suffix in {".csv", ".json"}:
-                      assert p.relative_to(root).as_posix() in members, p
           report_dir = root / "dist" / "verification"
           report_dir.mkdir()
           env = os.environ.copy()
@@ -196,18 +212,27 @@ jobs:
               temp = Path(temp).resolve()
               wheels = temp / "wheels"
               wheels.mkdir()
-              run([sys.executable, "-m", "pip", "download", "--only-binary=:all:", "--dest", wheels, str(wheel) + "[mcp]"], temp)
+              run([sys.executable, "-m", "pip", "download", "--only-binary=:all:", "--dest", wheels, str(wheel) + "[mcp,inventor]"], temp)
               dependency_hashes = {p.name: sha(p) for p in wheels.glob("*.whl")}
               target = temp / "venv"
               venv.EnvBuilder(with_pip=True).create(target)
               python = target / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
               run([python, "-m", "pip", "install", "--no-index", "--find-links", wheels, wheel], temp)
               run([python, "-m", "pip", "check"], temp)
-              verifier = root / "scripts" / "verify_installed_release.py"
               run([python, "-I", verifier, "--examples", root / "examples", "--report", report_dir / "core.json"], temp)
               run([python, "-m", "pip", "install", "--no-index", "--find-links", wheels, str(wheel) + "[mcp]"], temp)
               run([python, "-m", "pip", "check"], temp)
               run([python, "-I", verifier, "--examples", root / "examples", "--report", report_dir / "mcp.json", "--mcp"], temp)
+              native_target = temp / "inventor-venv"
+              venv.EnvBuilder(with_pip=True).create(native_target)
+              python = native_target / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+              native_verifier = root / "scripts" / "verify_installed_inventor_release.py"
+              run([python, "-m", "pip", "install", "--no-index", "--find-links", wheels, str(wheel) + "[inventor]"], temp)
+              run([python, "-m", "pip", "check"], temp)
+              run([python, "-I", native_verifier, "--examples", root / "examples", "--report", report_dir / "inventor.json", "--artifacts", report_dir / "inventor-svg"], temp)
+              run([python, "-m", "pip", "install", "--no-index", "--find-links", wheels, str(wheel) + "[mcp,inventor]"], temp)
+              run([python, "-m", "pip", "check"], temp)
+              run([python, "-I", native_verifier, "--examples", root / "examples", "--report", report_dir / "inventor-mcp.json", "--artifacts", report_dir / "inventor-mcp-svg", "--mcp"], temp)
               installed = json.loads(subprocess.check_output(
                   [python, "-m", "pip", "list", "--format=json"], cwd=temp, env=env, text=True
               ))
@@ -220,6 +245,16 @@ jobs:
           mcp = json.loads((report_dir / "mcp.json").read_text(encoding="utf-8"))
           for aid, rendered in mcp["svg"].items():
               assert core["svg"][aid]["svg_sha256"] == rendered["svg_sha256"], aid
+          native = json.loads((report_dir / "inventor.json").read_text(encoding="utf-8"))
+          native_mcp = json.loads((report_dir / "inventor-mcp.json").read_text(encoding="utf-8"))
+          ids = runpy.run_path(str(verifier))["INVENTOR_IDS"]
+          expected_svg = set(ids[:-1]) if sys.platform == "win32" else set()
+          assert set(native["svg"]) == set(native_mcp["svg"]) == set(native_mcp["mcp"]["svg"]) == expected_svg
+          assert native_mcp["mcp"]["analysis_ids"] == list(ids)
+          for aid in ids:
+              assert native["results"][aid]["result_sha256"] == native_mcp["results"][aid]["result_sha256"] == native_mcp["mcp"]["result_sha256"][aid]
+          for aid in expected_svg:
+              assert native["svg"][aid]["svg_sha256"] == native_mcp["mcp"]["svg"][aid]["svg_sha256"]
           evidence = {
               "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
               "python": sys.version,
@@ -230,6 +265,11 @@ jobs:
               ).strip(),
               "distributions_sha256": {p.name: sha(p) for p in (wheel, sdist)},
               "dependency_wheels_sha256": dependency_hashes,
+              "wheel_source_files_checked": len(sources),
+              "sdist_files_checked": len(candidates),
+              "archive_names_safe": True,
+              "advanced_bundle_sha256": native["advanced_bundle_sha256"],
+              "advanced_bundle_bytes": native["advanced_bundle_bytes"],
           }
           (report_dir / "distribution.json").write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
 
@@ -276,5 +316,6 @@ jobs:
             dist/*.tar.gz
             dist/verification/*.json
             dist/verification/dependencies.txt
+            dist/verification/**/*svg
           if-no-files-found: error
           retention-days: 7

@@ -1,6 +1,7 @@
 // @ts-expect-error -- generated validators are build-time assets, not handwritten declarations.
 import { validateModelRaw, validateSpecRaw, validateRuntimeRaw, validateRequestRaw } from "./generated/advanced-standalone-validators.js";
 import type { AdvancedModel } from "./advanced-types.js";
+import { validateInventorProjection } from "./advanced-inventor-validation.js";
 
 const segmenter = new Intl.Segmenter("ja-JP", { granularity: "grapheme" });
 function textIsSafe(value: string): boolean {
@@ -9,6 +10,7 @@ function textIsSafe(value: string): boolean {
     const n = character.codePointAt(0)!;
     if (n <= 0x1f || (n >= 0x7f && n <= 0x9f) || (n >= 0xd800 && n <= 0xdfff) ||
       (n >= 0xfdd0 && n <= 0xfdef) || (n & 0xffff) >= 0xfffe ||
+      n === 0x061c || n === 0x200e || n === 0x200f ||
       (n >= 0x202a && n <= 0x202e) || (n >= 0x2066 && n <= 0x2069)) return false;
   }
   return true;
@@ -101,6 +103,8 @@ export function validateAdvancedModel(value: unknown): value is AdvancedModel {
       expected.delete(key);
     }
     if (expected.size) return false;
+  } else if (p.kind !== "network") {
+    return validateInventorProjection(model);
   } else {
     if (!unique(p.nodes.map(node => node.label))) return false;
     const edges = new Set<string>();

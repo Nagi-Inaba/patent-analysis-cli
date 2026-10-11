@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import importlib
+import importlib.metadata
 import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -176,6 +178,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
     try:
+        # On Windows NumPy's DLL initialization can wait on CRT stdin locks.
+        # Import the *installed, pinned optional extra* before starting the reader
+        # thread. Base/mcp-only installs neither require nor import NumPy.
+        if sys.platform == "win32":
+            try:
+                numpy_version = importlib.metadata.version("numpy")
+            except importlib.metadata.PackageNotFoundError:
+                numpy_version = None
+            if numpy_version == "2.4.3":
+                importlib.import_module("numpy")
         anyio.run(run_stdio_server, server)
     except KeyboardInterrupt:
         return 130

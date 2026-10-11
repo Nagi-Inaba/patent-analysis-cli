@@ -4,6 +4,7 @@ include docs/family-population.md docs/contracts.md docs/architecture.md docs/ra
 include docs/advanced-json-slices.md docs/advanced-rendering.md
 include docs/table-export.md
 include docs/inventor-tracking.md docs/images/inventor-tracking.svg
+include docs/inventor-analysis.md
 include docs/performance.md docs/performance-sample.json
 recursive-include examples *.csv *.json
 recursive-include tests *.py *.csv *.json
@@ -15,4 +16,8 @@ prune renderer/dist
 prune renderer/coverage
 
 include scripts/verify_installed_release.py
+include scripts/verify_installed_inventor_release.py
 include scripts/benchmark_csv.py
+
+prune .ai
+global-exclude *.pyc *.pyo .env .env.*

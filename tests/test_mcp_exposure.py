@@ -5,7 +5,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-from advanced_inventory import ADVANCED_IDS, MCP_IDS, MCP_MARKS
+from advanced_inventory import ADVANCED_IDS, INVENTOR_IDS, MCP_IDS, MCP_MARKS
 
 
 def test_mcp_dependencies_are_exact_and_core_import_stays_independent() -> None:
@@ -47,14 +47,21 @@ def test_mcp_exposure_is_derived_only_from_completed_public_registry_entries() -
     assert set(capabilities["schemas"]) == {
         "analysis-result.schema.json",
         "analysis-spec.schema.json",
-        *(f"{name}-{kind}-v1.schema.json"
-          for name in ("matrix", "timeline", "composition") for kind in ("parameters", "result")),
+        *(
+            f"{name}-{kind}-v1.schema.json"
+            for name in ("matrix", "timeline", "composition")
+            for kind in ("parameters", "result")
+        ),
         "growth-parameters-v1.schema.json",
         "growth-result-v1.schema.json",
         "concentration-parameters-v1.schema.json",
         "concentration-result-v1.schema.json",
         "lifecycle-parameters-v1.schema.json",
         "lifecycle-result-v1.schema.json",
-        *(f"{name[:-3]}-{kind}-v1.schema.json"
-          for name in ADVANCED_IDS for kind in ("parameters", "result")),
+        *(
+            f"{name[:-3]}-{kind}-v1.schema.json"
+            for name in (*ADVANCED_IDS, *INVENTOR_IDS)
+            for kind in ("parameters", "result")
+        ),
+        "inventor-sidecar-v1.schema.json",
     }

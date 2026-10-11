@@ -17,7 +17,7 @@ project専用venvへhash固定したMCP依存と開発依存を導入し、test�
 
 ```text
 python -m pip install --require-hashes -r requirements/mcp-2.0.0.lock
-python -m pip install -e '.[dev]' build
+python -m pip install -e '.[dev,inventor]' build
 python -m pytest -q -p no:cacheprovider
 python -m ruff check --no-cache src tests scripts
 python -m build
@@ -34,9 +34,10 @@ CIはwheelとsdistを作成し、次を確認します。
 3. system site-packagesを継承しない新しいvenvへwheelを非editable installする。この検証では公開metadataのversion範囲から現在の依存を新規解決し、lock環境とは別に互換性を確認する。
 4. coreだけの環境でconsole entrypoint、18分析、Windowsの対応SVGと再利用を検証する。
 5. 同じwheelへ`[mcp]` extraを導入し、実stdio経由の18分析、未知分析の拒否、対応SVGと再利用を検証する。
-6. 検証前後で入力CSV・JSONとspecが変化していないことを確認する。
+6. 別の新しいvenvへ同じwheelの`[inventor]`、続いて`[inventor,mcp]` extraを導入し、発明者分析10種類のPython API・console entrypoint・実stdio MCPを比較する。Windowsでは発明者SVG9種類と再利用も確認し、Linuxでは公開SVG経路を迂回しない。
+7. 検証前後で入力CSV・JSONとspecが変化していないことを確認する。
 
-`scripts/verify_installed_release.py`はsource tree外から`-I`付きで実行し、検証結果をJSON reportへ保存します。
+`scripts/verify_installed_release.py`と発明者用の`scripts/verify_installed_inventor_release.py`はsource tree外から`-I`付きで実行し、検証結果をJSON reportへ保存します。
 
 ## 依存・secret検査
 

@@ -145,6 +145,7 @@ def _canonical_clone(
     invalid_code: str,
     too_large_code: str,
     reject_unsafe_keys: bool,
+    schema_numbers: bool = False,
 ) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         raise McpContractError(invalid_code)
@@ -157,7 +158,16 @@ def _canonical_clone(
         failure_code=invalid_code,
     )
     try:
-        encoded = canonical_json_bytes(value)
+        # JSON Schema bounds may legitimately exceed canonical result integers.
+        # This exception is used only for an explicitly resolved public schema;
+        # the same finite/depth/key/size validation still runs above and below.
+        encoded = (
+            json.dumps(
+                value, ensure_ascii=False, allow_nan=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+            if schema_numbers
+            else canonical_json_bytes(value)
+        )
     except (CanonicalizationError, TypeError, ValueError, RecursionError, UnicodeError):
         raise McpContractError(invalid_code) from None
     if len(encoded) > maximum_bytes:
@@ -211,6 +221,30 @@ def success_envelope(
     return {"ok": True, "content": to_mcp_safe_result(value, maximum_bytes=maximum_bytes)}
 
 
+def schema_success_envelope(
+    value: object, *, maximum_bytes: int = MAX_TOOL_RESPONSE_BYTES
+) -> dict[str, object]:
+    """Preserve trusted public JSON Schema bounds without relaxing analysis results."""
+    if (
+        type(maximum_bytes) is not int
+        or maximum_bytes <= 0
+        or not isinstance(value, Mapping)
+        or set(value) != {"schema_name", "schema"}
+        or not isinstance(value["schema_name"], str)
+        or not isinstance(value["schema"], Mapping)
+    ):
+        raise McpContractError("internal.failed")
+    content = _canonical_clone(
+        value,
+        maximum_bytes=maximum_bytes,
+        invalid_code="internal.failed",
+        too_large_code="response.too_large",
+        reject_unsafe_keys=True,
+        schema_numbers=True,
+    )
+    return {"ok": True, "content": content}
+
+
 def failure_envelope(error: Exception) -> dict[str, object]:
     candidate = getattr(error, "code", None)
     if candidate in {
@@ -240,6 +274,7 @@ __all__ = (
     "McpContractError",
     "decode_tool_arguments",
     "failure_envelope",
+    "schema_success_envelope",
     "success_envelope",
     "to_mcp_safe_result",
 )

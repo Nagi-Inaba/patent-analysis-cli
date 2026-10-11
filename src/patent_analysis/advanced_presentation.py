@@ -14,6 +14,22 @@ from patent_analysis.advanced_renderer_build import ADVANCED_BUILD
 ADVANCED_RENDER_PROFILE_ID = "advanced-svg-ja-jp-node22-echarts6.v1"
 MAX_ADVANCED_MODEL_BYTES = 256 * 1024
 
+# Older verified activation records predate a per-mark inventory. This frozen
+# compatibility set must never be derived from the expanding presentation table.
+_LEGACY_BUILT_MARKS = (
+    "growth-quadrant-svg.v1",
+    "entry-exit-svg.v1",
+    "citation-svg.v1",
+    "matrix-composition-svg.v1",
+    "new-entrants-svg.v1",
+    "compara-svg.v1",
+    "cooccurrence-svg.v1",
+    "collaboration-network-svg.v1",
+    "uniqueness-svg.v1",
+    "shared-involvement-svg.v1",
+    "inventor-tracking-svg.v1",
+)
+
 
 @dataclass(frozen=True, slots=True)
 class AdvancedPresentation:
@@ -74,8 +90,86 @@ _PRESENTATIONS = (
 )
 _PRESENTATIONS += (
     AdvancedPresentation(
-        "inventor-tracking.v1", "inventor-tracking-svg.v1", "network",
-        "発明者・共発明クラスタの年次追跡", "tracking",
+        "inventor-tracking.v1",
+        "inventor-tracking-svg.v1",
+        "network",
+        "発明者・共発明クラスタの年次追跡",
+        "tracking",
+    ),
+    AdvancedPresentation(
+        "inventor-network.v1",
+        "inventor-network-svg.v1",
+        "network",
+        "共発明ネットワーク",
+        "inventor-network",
+    ),
+    AdvancedPresentation(
+        "inventor-ego-network.v1",
+        "inventor-ego-network-svg.v1",
+        "network",
+        "発明者中心の関係マップ",
+        "inventor-network",
+    ),
+    AdvancedPresentation(
+        "inventor-technology.v1",
+        "inventor-technology-svg.v1",
+        "matrix",
+        "発明者×技術分野",
+        "inventor-heatmap",
+    ),
+)
+_PRESENTATIONS += (
+    AdvancedPresentation(
+        "inventor-activity.v1",
+        "inventor-activity-svg.v1",
+        "network",
+        "発明者の活動履歴",
+        "inventor-timeline",
+    ),
+)
+_PRESENTATIONS += (
+    AdvancedPresentation(
+        "inventor-cluster-flow.v1",
+        "inventor-cluster-flow-svg.v1",
+        "network",
+        "協働グループの変遷",
+        "inventor-alluvial",
+    ),
+)
+_PRESENTATIONS += (
+    AdvancedPresentation(
+        "inventor-similarity.v1",
+        "inventor-similarity-svg.v1",
+        "points",
+        "発明者の技術類似度",
+        "inventor-scatter",
+    ),
+)
+_PRESENTATIONS += (
+    AdvancedPresentation(
+        "inventor-impact.v1",
+        "inventor-impact-svg.v1",
+        "points",
+        "発明者の活動量と引用指標",
+        "inventor-scatter",
+    ),
+)
+_PRESENTATIONS += (
+    AdvancedPresentation(
+        "inventor-mobility.v1",
+        "inventor-mobility-svg.v1",
+        "network",
+        "発明者と企業の関係変化",
+        "inventor-timeline",
+    ),
+)
+_PRESENTATIONS += (
+    AdvancedPresentation(
+        "inventor-mobility-flow.v1",
+        "inventor-mobility-flow-svg.v1",
+        "network",
+        "企業間の観測・移動フロー",
+        "inventor-network",
     ),
 )
 ADVANCED_PRESENTATIONS = MappingProxyType({p.analysis_id: p for p in _PRESENTATIONS})
@@ -97,4 +191,8 @@ def advanced_marks_for(analysis_id: str) -> tuple[str, ...]:
     """An unbuilt source distribution must not advertise an unavailable renderer."""
     if ADVANCED_BUILD is None or analysis_id not in ADVANCED_PRESENTATIONS:
         return ()
-    return (ADVANCED_PRESENTATIONS[analysis_id].mark,)
+    mark = ADVANCED_PRESENTATIONS[analysis_id].mark
+    built = ADVANCED_BUILD.get("built_marks", _LEGACY_BUILT_MARKS)
+    if not isinstance(built, (list, tuple)) or not all(isinstance(item, str) for item in built):
+        return ()
+    return (mark,) if mark in built else ()

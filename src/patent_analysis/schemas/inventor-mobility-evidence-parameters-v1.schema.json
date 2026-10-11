@@ -1,0 +1,548 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:inventor-mobility-evidence-parameters:1.0.0",
+  "title": "inventor-mobility-evidence parameters",
+  "type": "object",
+  "required": [
+    "analysis_contract_version",
+    "analysis_id",
+    "resolution",
+    "normalization",
+    "population",
+    "parameters"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_contract_version": {
+      "const": "2.0.0"
+    },
+    "analysis_id": {
+      "const": "inventor-mobility-evidence.v1"
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindings"
+      ],
+      "properties": {
+        "bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "record_id",
+            "date",
+            "applicant_ids"
+          ],
+          "properties": {
+            "record_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "inventor_ids": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "date": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "publication_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "application_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "family_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "classification": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "applicant_ids": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "source_ids": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "inventor_names": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          },
+          "oneOf": [
+            {
+              "required": [
+                "inventor_ids"
+              ],
+              "not": {
+                "required": [
+                  "inventor_names"
+                ]
+              }
+            },
+            {
+              "required": [
+                "inventor_names"
+              ],
+              "not": {
+                "required": [
+                  "inventor_ids"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profiles"
+      ],
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "maxItems": 0
+        }
+      }
+    },
+    "population": {
+      "$ref": "#/$defs/recordPopulation"
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "date_kind": {
+          "enum": [
+            "filing",
+            "publication",
+            "priority"
+          ],
+          "default": "filing"
+        },
+        "classification_scheme": {
+          "enum": [
+            "IPC",
+            "CPC"
+          ],
+          "default": "IPC"
+        },
+        "classification_level": {
+          "enum": [
+            "full",
+            "class",
+            "subclass",
+            "main_group",
+            "subgroup"
+          ],
+          "default": "full"
+        },
+        "minimum_observations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000,
+          "default": 1
+        },
+        "maximum_gap_years": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9998,
+          "default": 5
+        },
+        "review_bindings": {
+          "type": "object",
+          "maxProperties": 5000,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "additionalProperties": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "uniqueItems": true
+          }
+        },
+        "auxiliary": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "format",
+                "path"
+              ],
+              "properties": {
+                "format": {
+                  "const": "json"
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "format",
+                "version",
+                "tables"
+              ],
+              "properties": {
+                "format": {
+                  "const": "csv"
+                },
+                "version": {
+                  "const": "1.0.0"
+                },
+                "tables": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "sources",
+                    "identities",
+                    "entities",
+                    "entity_aliases",
+                    "groups",
+                    "events",
+                    "personal_evidence",
+                    "reviews",
+                    "citations"
+                  ],
+                  "properties": {
+                    "sources": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "identities": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "entities": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "entity_aliases": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "groups": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "events": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "personal_evidence": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "reviews": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    },
+                    "citations": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16384
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "filter": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/exactFilter"
+        },
+        {
+          "$ref": "#/$defs/oneOfFilter"
+        },
+        {
+          "$ref": "#/$defs/yearFilter"
+        },
+        {
+          "$ref": "#/$defs/yearRangeFilter"
+        },
+        {
+          "$ref": "#/$defs/outsideYearRangeFilter"
+        }
+      ]
+    },
+    "exactFilter": {
+      "type": "object",
+      "required": [
+        "role",
+        "effect",
+        "match",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "match": {
+          "const": "exact"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "oneOfFilter": {
+      "type": "object",
+      "required": [
+        "role",
+        "effect",
+        "match",
+        "values"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "match": {
+          "const": "one_of"
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "yearFilter": {
+      "type": "object",
+      "required": [
+        "role",
+        "effect",
+        "match",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "match": {
+          "const": "year"
+        },
+        "value": {
+          "type": "integer"
+        }
+      }
+    },
+    "yearRangeFilter": {
+      "type": "object",
+      "required": [
+        "role",
+        "effect",
+        "match",
+        "start_year",
+        "end_year"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "match": {
+          "const": "year_range"
+        },
+        "start_year": {
+          "type": "integer"
+        },
+        "end_year": {
+          "type": "integer"
+        }
+      }
+    },
+    "outsideYearRangeFilter": {
+      "type": "object",
+      "required": [
+        "role",
+        "effect",
+        "match",
+        "start_year",
+        "end_year"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effect": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "match": {
+          "const": "outside_year_range"
+        },
+        "start_year": {
+          "type": "integer"
+        },
+        "end_year": {
+          "type": "integer"
+        }
+      }
+    },
+    "selectionSet": {
+      "type": "object",
+      "required": [
+        "dimension_role",
+        "mode",
+        "values"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "dimension_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": [
+            "include",
+            "exclude"
+          ]
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_date_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_year": {
+          "type": "integer"
+        },
+        "end_year": {
+          "type": "integer"
+        }
+      },
+      "dependentRequired": {
+        "source_date_role": [
+          "start_year",
+          "end_year"
+        ],
+        "start_year": [
+          "source_date_role",
+          "end_year"
+        ],
+        "end_year": [
+          "source_date_role",
+          "start_year"
+        ]
+      }
+    },
+    "recordPopulation": {
+      "type": "object",
+      "required": [
+        "filters",
+        "selection_sets",
+        "family_mode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/filter"
+          }
+        },
+        "selection_sets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/selectionSet"
+          }
+        },
+        "family_mode": {
+          "const": "records"
+        }
+      }
+    }
+  }
+}

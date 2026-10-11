@@ -1,0 +1,2208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:inventor-mobility-flow-result:1.0.0",
+  "title": "inventor-mobility-flow result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "algorithm_version",
+    "statistics",
+    "input_coverage",
+    "family_basis",
+    "provenance",
+    "identity_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "analysis_id": {
+      "const": "inventor-mobility-flow.v1"
+    },
+    "algorithm_version": {
+      "const": "1.0.0"
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "associations",
+        "episodes",
+        "candidates",
+        "corporate_changes",
+        "unbound_reviews",
+        "coverage",
+        "provenance",
+        "disclaimers",
+        "flows",
+        "nodes",
+        "unallocated",
+        "allocation_summary"
+      ],
+      "properties": {
+        "associations": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/association"
+          }
+        },
+        "episodes": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/episode"
+          }
+        },
+        "candidates": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/candidate"
+          }
+        },
+        "corporate_changes": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/corporateChange"
+          }
+        },
+        "unbound_reviews": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/review"
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observations",
+            "persons",
+            "canonical_persons",
+            "missing_dates",
+            "missing_applicants",
+            "ambiguous_associations",
+            "sidecar",
+            "missing_inventors",
+            "name_only_associations"
+          ],
+          "properties": {
+            "observations": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "persons": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "canonical_persons": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "missing_dates": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "missing_applicants": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "ambiguous_associations": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "sidecar": {
+              "enum": [
+                "provided",
+                "input_not_provided"
+              ]
+            },
+            "missing_inventors": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "name_only_associations": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kernel_version",
+            "minimum_observations",
+            "maximum_gap_years",
+            "date_basis",
+            "candidate_period_basis",
+            "gap_threshold_basis",
+            "matching_period_basis",
+            "review_binding_basis",
+            "axis",
+            "mode",
+            "allocation",
+            "weight_basis",
+            "layer",
+            "statuses",
+            "network_kind"
+          ],
+          "properties": {
+            "kernel_version": {
+              "const": "mobility.1"
+            },
+            "minimum_observations": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5000
+            },
+            "maximum_gap_years": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9998
+            },
+            "date_basis": {
+              "const": "input_observation_kind"
+            },
+            "candidate_period_basis": {
+              "const": "preceding_end_to_following_start"
+            },
+            "gap_threshold_basis": {
+              "const": "calendar_boundary_year_distance"
+            },
+            "matching_period_basis": {
+              "const": "boundary_episode_uncertainty_envelope"
+            },
+            "review_binding_basis": {
+              "enum": [
+                "explicit_candidate_ids",
+                "unambiguous_exact_scope"
+              ]
+            },
+            "axis": {
+              "enum": [
+                "legal_entity",
+                "group"
+              ]
+            },
+            "mode": {
+              "enum": [
+                "observations",
+                "candidate_moves",
+                "confirmed_moves"
+              ]
+            },
+            "allocation": {
+              "enum": [
+                "unique_inventors",
+                "fractional_flows"
+              ]
+            },
+            "weight_basis": {
+              "enum": [
+                "unique_canonical_inventors_per_bucket",
+                "fractional_candidate_event_mass"
+              ]
+            },
+            "layer": {
+              "enum": [
+                "observed_association_change",
+                "individual_move_candidate",
+                "confirmed_employment_move",
+                "organizational_transfer_candidate"
+              ]
+            },
+            "statuses": {
+              "type": "array",
+              "maxItems": 9,
+              "items": {
+                "enum": [
+                  "observed",
+                  "candidate",
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              }
+            },
+            "network_kind": {
+              "enum": [
+                "directed_legal_network_cycles_permitted",
+                "directed_historical_group_network_cycles_permitted"
+              ]
+            }
+          }
+        },
+        "disclaimers": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "enum": [
+              "patent_applicant_association_is_not_employment",
+              "candidate_period_is_not_guaranteed_employment_interval",
+              "calendar_gaps_are_not_proof_of_absence_or_retirement",
+              "corporate_completion_does_not_confirm_personal_employment_move"
+            ]
+          }
+        },
+        "flows": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "flow_id",
+              "from_id",
+              "to_id",
+              "layer",
+              "status",
+              "axis",
+              "mode",
+              "allocation",
+              "weight_basis",
+              "employment_status",
+              "corporate_status",
+              "reason_codes",
+              "event_mass",
+              "unique_inventors",
+              "transition_events",
+              "inventor_ids",
+              "candidate_ids",
+              "flow_weight",
+              "record_ids",
+              "source_ids",
+              "evidence_ids",
+              "review_ids",
+              "event_ids"
+            ],
+            "properties": {
+              "flow_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "from_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "to_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "layer": {
+                "enum": [
+                  "observed_association_change",
+                  "individual_move_candidate",
+                  "confirmed_employment_move",
+                  "organizational_transfer_candidate"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "observed",
+                  "candidate",
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              },
+              "axis": {
+                "enum": [
+                  "legal_entity",
+                  "group"
+                ]
+              },
+              "mode": {
+                "enum": [
+                  "observations",
+                  "candidate_moves",
+                  "confirmed_moves"
+                ]
+              },
+              "allocation": {
+                "enum": [
+                  "unique_inventors",
+                  "fractional_flows"
+                ]
+              },
+              "weight_basis": {
+                "enum": [
+                  "unique_canonical_inventors_per_bucket",
+                  "fractional_candidate_event_mass"
+                ]
+              },
+              "employment_status": {
+                "enum": [
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              },
+              "corporate_status": {
+                "enum": [
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              },
+              "reason_codes": {
+                "type": "array",
+                "maxItems": 4,
+                "items": {
+                  "enum": [
+                    "name_match_is_not_person_confirmation",
+                    "unknown_applicants",
+                    "insufficient_observations",
+                    "gap_exceeds_threshold"
+                  ]
+                }
+              },
+              "event_mass": {
+                "$ref": "#/$defs/exact"
+              },
+              "unique_inventors": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "transition_events": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "inventor_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "candidate_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "flow_weight": {
+                "$ref": "#/$defs/exact"
+              },
+              "record_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "source_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "evidence_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "review_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              },
+              "event_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              }
+            }
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "entity_id"
+            ],
+            "properties": {
+              "entity_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              }
+            }
+          }
+        },
+        "unallocated": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "candidate_id",
+              "reason",
+              "layer",
+              "status",
+              "axis",
+              "mode",
+              "allocation",
+              "weight_basis",
+              "employment_status",
+              "corporate_status",
+              "reason_codes",
+              "event_mass",
+              "from_legal_id",
+              "to_legal_id",
+              "from_id",
+              "to_id"
+            ],
+            "properties": {
+              "candidate_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "reason": {
+                "enum": [
+                  "unconfirmed_identity",
+                  "multivalue_or_missing_origin_destination",
+                  "unknown_applicants",
+                  "conflicting",
+                  "rejected",
+                  "withdrawn",
+                  "pending",
+                  "employment_not_confirmed",
+                  "no_organizational_transfer_support",
+                  "status_not_selected",
+                  "missing_group_mapping",
+                  "uncertain_group_mapping",
+                  "same_historical_group",
+                  "rights_only_without_personal_evidence",
+                  "missing_origin_destination",
+                  "self_edge"
+                ]
+              },
+              "layer": {
+                "enum": [
+                  "observed_association_change",
+                  "individual_move_candidate",
+                  "confirmed_employment_move",
+                  "organizational_transfer_candidate"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "observed",
+                  "candidate",
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              },
+              "axis": {
+                "enum": [
+                  "legal_entity",
+                  "group"
+                ]
+              },
+              "mode": {
+                "enum": [
+                  "observations",
+                  "candidate_moves",
+                  "confirmed_moves"
+                ]
+              },
+              "allocation": {
+                "enum": [
+                  "unique_inventors",
+                  "fractional_flows"
+                ]
+              },
+              "weight_basis": {
+                "enum": [
+                  "unique_canonical_inventors_per_bucket",
+                  "fractional_candidate_event_mass"
+                ]
+              },
+              "employment_status": {
+                "enum": [
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              },
+              "corporate_status": {
+                "enum": [
+                  "unknown",
+                  "confirmed",
+                  "user_asserted",
+                  "pending",
+                  "rejected",
+                  "withdrawn",
+                  "conflicting"
+                ]
+              },
+              "reason_codes": {
+                "type": "array",
+                "maxItems": 4,
+                "items": {
+                  "enum": [
+                    "name_match_is_not_person_confirmation",
+                    "unknown_applicants",
+                    "insufficient_observations",
+                    "gap_exceeds_threshold"
+                  ]
+                }
+              },
+              "event_mass": {
+                "$ref": "#/$defs/exact"
+              },
+              "from_legal_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "to_legal_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "from_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "to_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "allocation_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "allocation",
+            "weight_basis",
+            "mass_basis",
+            "eligible_events",
+            "allocated_event_mass",
+            "unallocated_event_mass",
+            "total_event_mass"
+          ],
+          "properties": {
+            "allocation": {
+              "enum": [
+                "unique_inventors",
+                "fractional_flows"
+              ]
+            },
+            "weight_basis": {
+              "enum": [
+                "unique_canonical_inventors_per_bucket",
+                "fractional_candidate_event_mass"
+              ]
+            },
+            "mass_basis": {
+              "const": "canonical_candidate_events"
+            },
+            "eligible_events": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "allocated_event_mass": {
+              "$ref": "#/$defs/exact"
+            },
+            "unallocated_event_mass": {
+              "$ref": "#/$defs/exact"
+            },
+            "total_event_mass": {
+              "$ref": "#/$defs/exact"
+            }
+          }
+        }
+      }
+    },
+    "input_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_rows",
+        "included_rows",
+        "filtered_rows",
+        "missing_inventors",
+        "missing_date",
+        "missing_applicants",
+        "missing_classification"
+      ],
+      "properties": {
+        "input_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "included_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "filtered_rows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_inventors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_date": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_applicants": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_classification": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "family_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_mode",
+        "unit"
+      ],
+      "properties": {
+        "family_mode": {
+          "const": "records"
+        },
+        "unit": {
+          "enum": [
+            "records",
+            "publication",
+            "application",
+            "family"
+          ]
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "patent_sha256",
+        "sidecar_state",
+        "sidecars"
+      ],
+      "properties": {
+        "patent_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sidecar_state": {
+          "enum": [
+            "provided",
+            "input_not_provided"
+          ]
+        },
+        "sidecars": {
+          "type": "array",
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "table",
+              "format",
+              "schema_version",
+              "byte_size",
+              "sha256"
+            ],
+            "properties": {
+              "table": {
+                "enum": [
+                  "bundle",
+                  "sources",
+                  "identities",
+                  "entities",
+                  "entity_aliases",
+                  "groups",
+                  "events",
+                  "personal_evidence",
+                  "reviews",
+                  "citations"
+                ]
+              },
+              "format": {
+                "enum": [
+                  "json",
+                  "csv"
+                ]
+              },
+              "schema_version": {
+                "const": "1.0.0"
+              },
+              "byte_size": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1048576
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "identity_evidence": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "person_key",
+          "person_token",
+          "inventor_id",
+          "display_name",
+          "identity_status",
+          "caveats",
+          "candidate_ids",
+          "source_ids"
+        ],
+        "properties": {
+          "person_key": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "enum": [
+                  "id",
+                  "name",
+                  "ambiguous_id",
+                  "ambiguous_name"
+                ]
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "person_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "inventor_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          },
+          "identity_status": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "enum": [
+                "provided_id",
+                "curated_mapping",
+                "normalized_name_only",
+                "ambiguous"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "caveats": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            "uniqueItems": true
+          },
+          "candidate_ids": {
+            "$ref": "#/$defs/identityEvidenceIds"
+          },
+          "source_ids": {
+            "$ref": "#/$defs/identityEvidenceIds"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identityEvidenceIds": {
+      "type": "array",
+      "maxItems": 5000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 16384
+      }
+    },
+    "exact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "numerator",
+        "denominator"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3.402823669209385e+38
+        },
+        "numerator": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "maxLength": 40
+        },
+        "denominator": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "maxLength": 40
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "inventor_id",
+        "claim",
+        "status",
+        "reason",
+        "reviewed_date",
+        "evidence_ids",
+        "event_ids",
+        "record_ids",
+        "source_ids",
+        "supersedes_review_id",
+        "active"
+      ],
+      "properties": {
+        "review_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "inventor_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "claim": {
+          "enum": [
+            "employment_move",
+            "employment_continuity",
+            "corporate_event",
+            "patent_association",
+            "identity"
+          ]
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "rejected",
+            "pending",
+            "withdrawn",
+            "user_asserted",
+            "conflicting"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "reviewed_date": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "event_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "record_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "supersedes_review_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "observedDate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw",
+        "kind",
+        "precision",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 16384
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "enum": [
+            "filing",
+            "publication",
+            "priority",
+            "valid_from",
+            "valid_to",
+            "announcement",
+            "effective",
+            "checked",
+            "citation_snapshot"
+          ]
+        },
+        "precision": {
+          "enum": [
+            "day",
+            "month",
+            "year",
+            "missing"
+          ]
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "minLength": 10,
+              "maxLength": 10
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "minLength": 10,
+              "maxLength": 10
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "corporateChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_id",
+        "person_key",
+        "type",
+        "entity_ids",
+        "record_ids",
+        "from_relations",
+        "to_relations",
+        "event_matches",
+        "employment_confirmation"
+      ],
+      "properties": {
+        "change_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "person_key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "enum": [
+                "id",
+                "name",
+                "ambiguous_id",
+                "ambiguous_name"
+              ]
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "type": {
+          "enum": [
+            "acquisition",
+            "merger",
+            "name_change",
+            "group_change",
+            "business_transfer",
+            "patent_rights_transfer",
+            "minority_investment"
+          ]
+        },
+        "entity_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "record_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "from_relations": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "to_relations": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "event_matches": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/eventMatch"
+          }
+        },
+        "employment_confirmation": {
+          "const": false
+        }
+      }
+    },
+    "eventMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "type",
+        "status",
+        "scope",
+        "entity_ids",
+        "record_ids",
+        "source_ids",
+        "announcement_date",
+        "effective_date",
+        "strength",
+        "corporate_status",
+        "organizational_transfer_support",
+        "employment_confirmation",
+        "uncertainty"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "type": {
+          "enum": [
+            "acquisition",
+            "merger",
+            "name_change",
+            "group_change",
+            "business_transfer",
+            "patent_rights_transfer",
+            "minority_investment"
+          ]
+        },
+        "status": {
+          "enum": [
+            "announced",
+            "completed",
+            "withdrawn",
+            "unknown"
+          ]
+        },
+        "scope": {
+          "enum": [
+            "whole_entity",
+            "partial_business",
+            "patents_only",
+            "minority_interest",
+            "unknown"
+          ]
+        },
+        "entity_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "record_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "announcement_date": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "effective_date": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "strength": {
+          "const": "possible"
+        },
+        "corporate_status": {
+          "enum": [
+            "confirmed",
+            "unknown"
+          ]
+        },
+        "organizational_transfer_support": {
+          "type": "boolean"
+        },
+        "employment_confirmation": {
+          "const": false
+        },
+        "uncertainty": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "enum": [
+              "date_overlap_not_temporal_proof",
+              "effective_date_missing",
+              "record_scope_not_matched"
+            ]
+          }
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "group_id",
+        "child_id",
+        "parent_id",
+        "relation",
+        "controlling",
+        "strength",
+        "valid_from",
+        "valid_to",
+        "source_ids",
+        "uncertainty"
+      ],
+      "properties": {
+        "group_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "child_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "parent_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "relation": {
+          "enum": [
+            "subsidiary",
+            "control",
+            "minority_interest"
+          ]
+        },
+        "controlling": {
+          "type": "boolean"
+        },
+        "strength": {
+          "enum": [
+            "definite",
+            "possible"
+          ]
+        },
+        "valid_from": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "uncertainty": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "enum": [
+              "incomplete_temporal_containment"
+            ]
+          }
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "person_key",
+        "canonical_inventor_id",
+        "identity_status",
+        "from_ids",
+        "to_ids",
+        "removed_ids",
+        "added_ids",
+        "retained_ids",
+        "preceding_episode_id",
+        "following_episode_id",
+        "preceding_observation_count",
+        "following_observation_count",
+        "preceding_dates",
+        "following_dates",
+        "period_start",
+        "period_end",
+        "missing_calendar_years",
+        "gap_year_distance",
+        "record_ids",
+        "source_ids",
+        "observed_status",
+        "candidate_status",
+        "employment_status",
+        "corporate_status",
+        "interpretations",
+        "reason_codes",
+        "supporting_signals",
+        "corporate_matches",
+        "evidence",
+        "reviews",
+        "conflicts",
+        "corporate_conflicts",
+        "default_flow_adoption",
+        "possible_period_start",
+        "possible_period_end"
+      ],
+      "properties": {
+        "candidate_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "person_key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "enum": [
+                "id",
+                "name",
+                "ambiguous_id",
+                "ambiguous_name"
+              ]
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "canonical_inventor_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identity_status": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "enum": [
+              "provided_id",
+              "curated_mapping",
+              "normalized_name_only",
+              "ambiguous"
+            ]
+          }
+        },
+        "from_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "to_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "removed_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "added_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "retained_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "preceding_episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "following_episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "preceding_observation_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "following_observation_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "preceding_dates": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/observedDate"
+          }
+        },
+        "following_dates": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/observedDate"
+          }
+        },
+        "period_start": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "period_end": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "missing_calendar_years": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gap_year_distance": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "record_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "observed_status": {
+          "const": "observed"
+        },
+        "candidate_status": {
+          "enum": [
+            "unknown",
+            "candidate"
+          ]
+        },
+        "employment_status": {
+          "enum": [
+            "unknown",
+            "confirmed",
+            "user_asserted",
+            "pending",
+            "rejected",
+            "withdrawn",
+            "conflicting"
+          ]
+        },
+        "corporate_status": {
+          "enum": [
+            "unknown",
+            "confirmed",
+            "user_asserted",
+            "pending",
+            "rejected",
+            "withdrawn",
+            "conflicting"
+          ]
+        },
+        "interpretations": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "enum": [
+              "individual_move_candidate",
+              "unexplained_association_change",
+              "parallel_association",
+              "organizational_transfer_candidate",
+              "patent_rights_transfer",
+              "confirmed_employment_move"
+            ]
+          }
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "enum": [
+              "name_match_is_not_person_confirmation",
+              "unknown_applicants",
+              "insufficient_observations",
+              "gap_exceeds_threshold"
+            ]
+          }
+        },
+        "supporting_signals": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "shared_technologies",
+            "shared_coinventor_keys",
+            "simultaneous_canonical_persons"
+          ],
+          "properties": {
+            "shared_technologies": {
+              "type": "array",
+              "maxItems": 128,
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "enum": [
+                      "IPC",
+                      "CPC"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "shared_coinventor_keys": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "enum": [
+                      "id",
+                      "name",
+                      "ambiguous_id",
+                      "ambiguous_name"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16384
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "simultaneous_canonical_persons": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "corporate_matches": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/eventMatch"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/personalEvidence"
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/review"
+          }
+        },
+        "conflicts": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "corporate_conflicts": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "default_flow_adoption": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observed_association_change",
+            "individual_move_candidate",
+            "confirmed_employment_move",
+            "organizational_transfer_candidate"
+          ],
+          "properties": {
+            "observed_association_change": {
+              "type": "boolean"
+            },
+            "individual_move_candidate": {
+              "type": "boolean"
+            },
+            "confirmed_employment_move": {
+              "type": "boolean"
+            },
+            "organizational_transfer_candidate": {
+              "type": "boolean"
+            }
+          }
+        },
+        "possible_period_start": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "possible_period_end": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        }
+      }
+    },
+    "personalEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "inventor_id",
+        "from_entity_id",
+        "to_entity_id",
+        "type",
+        "claim_status",
+        "valid_from",
+        "valid_to",
+        "source_ids",
+        "matching_entities",
+        "direct_employment_support"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "inventor_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "from_entity_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "to_entity_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "enum": [
+            "employment_move",
+            "employment_continuity",
+            "patent_association",
+            "user_assertion"
+          ]
+        },
+        "claim_status": {
+          "enum": [
+            "reported",
+            "user_asserted",
+            "conflicting",
+            "unknown"
+          ]
+        },
+        "valid_from": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "matching_entities": {
+          "type": "boolean"
+        },
+        "direct_employment_support": {
+          "type": "boolean"
+        }
+      }
+    },
+    "episode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "episode_id",
+        "person_key",
+        "start",
+        "end",
+        "record_ids",
+        "applicant_ids",
+        "observations",
+        "unknown_applicants",
+        "parallel_association",
+        "unordered"
+      ],
+      "properties": {
+        "episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "person_key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "enum": [
+                "id",
+                "name",
+                "ambiguous_id",
+                "ambiguous_name"
+              ]
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "start": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "end": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "record_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "applicant_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "observations": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "record_id",
+              "observed_date",
+              "applicant_ids"
+            ],
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384
+              },
+              "observed_date": {
+                "$ref": "#/$defs/observedDate"
+              },
+              "applicant_ids": {
+                "type": "array",
+                "maxItems": 5000,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384
+                }
+              }
+            }
+          }
+        },
+        "unknown_applicants": {
+          "type": "boolean"
+        },
+        "parallel_association": {
+          "type": "boolean"
+        },
+        "unordered": {
+          "const": true
+        }
+      }
+    },
+    "association": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "person_key",
+        "record_id",
+        "observed_date",
+        "applicant_ids",
+        "source_ids",
+        "identity_status",
+        "group_relations",
+        "entity_aliases"
+      ],
+      "properties": {
+        "person_key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "enum": [
+                "id",
+                "name",
+                "ambiguous_id",
+                "ambiguous_name"
+              ]
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16384
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "record_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "observed_date": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "applicant_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "identity_status": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "enum": [
+              "provided_id",
+              "curated_mapping",
+              "normalized_name_only",
+              "ambiguous"
+            ]
+          }
+        },
+        "group_relations": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "entity_aliases": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "$ref": "#/$defs/alias"
+          }
+        }
+      }
+    },
+    "alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias_id",
+        "entity_id",
+        "raw_alias",
+        "valid_from",
+        "valid_to",
+        "source_ids",
+        "strength",
+        "display_hint_only"
+      ],
+      "properties": {
+        "alias_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "entity_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "raw_alias": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "valid_from": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/observedDate"
+        },
+        "source_ids": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "strength": {
+          "enum": [
+            "definite",
+            "possible"
+          ]
+        },
+        "display_hint_only": {
+          "const": true
+        }
+      }
+    }
+  }
+}

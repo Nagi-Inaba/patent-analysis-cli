@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from advanced_inventory import ANALYSIS_IDS, MCP_IDS, expected_advanced_capabilities
+from advanced_inventory import (
+    ANALYSIS_IDS,
+    MCP_IDS,
+    expected_advanced_capabilities,
+    expected_inventor_capabilities,
+)
 
 
 def test_capabilities_exactly_project_the_implemented_registry() -> None:
@@ -167,6 +172,7 @@ def test_capabilities_exactly_project_the_implemented_registry() -> None:
                 "result_schema": "schemas/lifecycle-result-v1.schema.json",
             },
             *expected_advanced_capabilities(),
+            *expected_inventor_capabilities(),
         ],
     }
 
@@ -185,7 +191,4 @@ def test_capabilities_do_not_advertise_future_or_source_product_modes() -> None:
         by_id[analysis_id]["mcp_public"] is True
         for analysis_id in ("matrix.v1", "timeline.v1", "composition.v1")
     )
-    assert all(
-        by_id[analysis_id]["mcp_public"] is True
-        for analysis_id in MCP_IDS
-    )
+    assert all(by_id[analysis_id]["mcp_public"] is True for analysis_id in MCP_IDS)

@@ -25,9 +25,7 @@ class ExposureError(ValueError):
 
 
 def _visible_definitions() -> tuple[AnalysisDefinition, ...]:
-    return tuple(
-        definition for definition in list_analysis_definitions() if definition.mcp_public
-    )
+    return tuple(definition for definition in list_analysis_definitions() if definition.mcp_public)
 
 
 def visible_analysis_ids() -> tuple[str, ...]:
@@ -58,7 +56,8 @@ def _schema_name(path: str) -> str | None:
 
 
 def visible_schema_names() -> tuple[str, ...]:
-    names: set[str] = set()
+    # Local sidecar input schema is an explicit public dependency of native inventor specs.
+    names: set[str] = {"inventor-sidecar-v1.schema.json"}
     for definition in _visible_definitions():
         for path in (definition.spec_schema, definition.result_schema):
             name = _schema_name(path)

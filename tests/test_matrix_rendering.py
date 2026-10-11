@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
-from advanced_inventory import ADVANCED_MARKS
+from advanced_inventory import ADVANCED_MARKS, INVENTOR_MARKS
 
 from patent_analysis._render_canonical import canonical_json_bytes
 from tests.test_matrix_chart_model import MATRIX_RESULT
@@ -27,6 +27,7 @@ def test_renderer_registry_exposes_all_completed_closed_marks() -> None:
         "composition-pie-svg.v1",
         "points-bubble-svg.v1",
         *ADVANCED_MARKS,
+        *INVENTOR_MARKS,
     )
     assert get_renderer_definition("matrix-bubble-svg.v1").result_variant == "matrix"
     assert get_renderer_definition("matrix-heatmap-svg.v1").result_variant == "matrix"

@@ -112,6 +112,7 @@ def test_title_truncation_preserves_256_graphemes_and_shortens_overflow() -> Non
 
 def test_safe_display_text_is_returned_unchanged() -> None:
     assert validate_safe_text("👩‍🔬e\u0301 日本") == "👩‍🔬e\u0301 日本"
+    assert validate_safe_text("العربية עברית 👩‍🔬") == "العربية עברית 👩‍🔬"
 
 
 @pytest.mark.parametrize(
@@ -119,6 +120,9 @@ def test_safe_display_text_is_returned_unchanged() -> None:
     [
         "a\n",
         "a\x7f",
+        "a\u061c",
+        "a\u200e",
+        "a\u200f",
         "a\u202e",
         "a\u2066",
         "a\ud800",

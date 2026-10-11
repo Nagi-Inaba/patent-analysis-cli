@@ -43,6 +43,27 @@ def _validate_text_and_population(model: dict[str, Any]) -> None:
         raise ValueError("presentation population counters are inconsistent")
 
 
+def validate_advanced_chart_model(model: dict[str, Any]) -> None:
+    """Validate a persisted fixed DTO, including non-schema reference invariants."""
+    validate_schema(model, "advanced-chart-model-v1.schema.json")
+    definition = get_advanced_presentation(model["analysis_id"], model["mark"])
+    if model["title"] != definition.title or model["projection"]["kind"] != definition.kind:
+        raise ValueError("advanced presentation identity is inconsistent")
+    _validate_text_and_population(model)
+    if definition.kind in {
+        "inventor-network",
+        "inventor-heatmap",
+        "inventor-timeline",
+        "inventor-alluvial",
+        "inventor-scatter",
+    }:
+        from patent_analysis.inventor_projection_validation import validate_inventor_projection
+
+        validate_inventor_projection(model["analysis_id"], model["projection"])
+    if len(canonical_json_bytes(model)) > MAX_ADVANCED_MODEL_BYTES:
+        raise ValueError("advanced chart model exceeds its byte limit")
+
+
 def build_advanced_chart_model(
     analysis_result: object, *, analysis_id: str, mark: str | None = None
 ) -> tuple[dict[str, Any], dict[str, object]]:
@@ -56,15 +77,30 @@ def build_advanced_chart_model(
     if result.get("algorithm_version") != "1.0.0":
         raise ValueError("unsupported analytical algorithm version")
     data = result["data"]
-    inner, outer = data["population"], result["population"]
-    # The inner population is after selection filters; it may be smaller than
-    # the original CSV. Both layers must describe the same analyzed rows.
-    if (
-        inner["visible_rows"] != outer["analyzed_rows"]
-        or inner["input_rows"] > outer["input_rows"]
-        or inner["input_rows"] != inner["visible_rows"] + inner["excluded_rows"]
-    ):
-        raise ValueError("inner and outer presentation population counters are inconsistent")
+    outer = result["population"]
+    if definition.kind in {
+        "inventor-network",
+        "inventor-heatmap",
+        "inventor-timeline",
+        "inventor-alluvial",
+        "inventor-scatter",
+    }:
+        coverage = data["input_coverage"]
+        if (
+            coverage["included_rows"] != outer["analyzed_rows"]
+            or coverage["input_rows"] != outer["input_rows"]
+            or coverage["filtered_rows"] != outer["excluded_rows"]
+        ):
+            raise ValueError("inventor coverage and population counters are inconsistent")
+    else:
+        inner = data["population"]
+        # Legacy inner population is after selection filters.
+        if (
+            inner["visible_rows"] != outer["analyzed_rows"]
+            or inner["input_rows"] > outer["input_rows"]
+            or inner["input_rows"] != inner["visible_rows"] + inner["excluded_rows"]
+        ):
+            raise ValueError("inner and outer presentation population counters are inconsistent")
     projection = project_advanced_data(analysis_id, data)
     model = {
         "chart_model_contract_version": "1.0.0",
@@ -78,10 +114,7 @@ def build_advanced_chart_model(
         "warnings": list(result["warnings"]),
     }
     validate_schema(projection, "advanced-projection-v1.schema.json")
-    validate_schema(model, "advanced-chart-model-v1.schema.json")
-    _validate_text_and_population(model)
-    if len(canonical_json_bytes(model)) > MAX_ADVANCED_MODEL_BYTES:
-        raise ValueError("advanced chart model exceeds its byte limit")
+    validate_advanced_chart_model(model)
     receipt = build_receipt(result, data, model, mark=definition.mark)
     return model, receipt
 

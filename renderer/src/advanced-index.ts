@@ -1,5 +1,5 @@
 import { BarChart, HeatmapChart, ScatterChart } from "echarts/charts";
-import { GridComponent, MarkLineComponent, TitleComponent, VisualMapComponent } from "echarts/components";
+import { GraphicComponent, GridComponent, MarkLineComponent, TitleComponent, VisualMapComponent } from "echarts/components";
 import * as echarts from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
 import { buildAdvancedOption } from "./advanced-options.js";
@@ -7,7 +7,7 @@ import { advancedFailure, encodeCanonicalBase64, encodeUtf8, processAdvancedTran
 import type { AdvancedModel, AdvancedSpec } from "./advanced-types.js";
 import { normalizeEChartsSvg } from "./categorical-svg-normalize.js";
 
-echarts.use([BarChart, HeatmapChart, ScatterChart, GridComponent,
+echarts.use([BarChart, HeatmapChart, ScatterChart, GraphicComponent, GridComponent,
   MarkLineComponent, TitleComponent, VisualMapComponent, SVGRenderer]);
 type Painter = { renderToString(options: { cssAnimation: false; cssEmphasis: false; useViewBox: true }): string };
 export function renderAdvancedModelToRawSvg(model: AdvancedModel, spec: AdvancedSpec): string {

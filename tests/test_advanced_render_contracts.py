@@ -6,6 +6,7 @@ from copy import deepcopy
 from pathlib import Path
 
 import pytest
+from advanced_inventory import ADVANCED_MARKS
 
 from patent_analysis import api
 from patent_analysis.advanced_presentation import ADVANCED_PRESENTATIONS, get_advanced_presentation
@@ -22,6 +23,10 @@ EXAMPLES = ROOT / "examples" / "advanced"
 
 
 def analysis(analysis_id: str):
+    if analysis_id.startswith("inventor-") and analysis_id != "inventor-tracking.v1":
+        examples = ROOT / "examples" / "inventor-analysis"
+        spec = (examples / f"{analysis_id}.json").read_bytes()
+        return api.run_analysis("patents.json", spec, allowed_root=examples)
     spec = (EXAMPLES / f"{analysis_id.removesuffix('.v1')}.json").read_bytes()
     return api.run_analysis_csv("patents.csv", spec, allowed_root=EXAMPLES)
 
@@ -64,9 +69,12 @@ def test_unknown_advanced_mark_cannot_render_legacy_result(tmp_path):
 
 def test_unbuilt_distribution_advertises_no_advanced_svg_capability():
     definitions = {d["analysis_id"]: d for d in api.describe_capabilities()["analyses"]}
+    built_marks = (
+        () if ADVANCED_BUILD is None else ADVANCED_BUILD.get("built_marks", ADVANCED_MARKS)
+    )
     for analysis_id, expected in ADVANCED_PRESENTATIONS.items():
         assert definitions[analysis_id]["render_marks"] == (
-            [] if ADVANCED_BUILD is None else [expected.mark]
+            [expected.mark] if expected.mark in built_marks else []
         )
 
 

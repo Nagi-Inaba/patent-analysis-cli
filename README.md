@@ -4,10 +4,10 @@
 
 | 入口 | 現在の範囲 |
 | --- | --- |
-| Python API / CLI | 18分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
-| local stdio MCP | 18分析・6ツール。[設定と呼び出し例](docs/mcp.md) |
-| SVG | 19固定形式。Windows x64 / **Node.js 22.19.0 x64**のみ |
-| 集計単位 | 17種類のv2分析で`records` / `earliest`。旧Rankingはレコード単位のみ |
+| Python API / CLI | 28分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
+| local stdio MCP | 28分析・6ツール。[設定と呼び出し例](docs/mcp.md) |
+| SVG | 固定形式。利用可能なmarkは`capabilities --json`を参照。Windows x64 / **Node.js 22.19.0 x64**のみ |
+| 集計単位 | 既存17種類のv2分析で`records` / `earliest`。新しい発明者分析は[専用仕様](docs/inventor-analysis.md)。旧Rankingはレコード単位のみ |
 
 Python 3.14で動作するローカル実行専用のパッケージです。入力・出力契約と安全性の境界は[SECURITY.md](SECURITY.md)、配布物の検証方法は[リリース手順](docs/release.md)を参照してください。
 
@@ -42,6 +42,8 @@ python3.14 -m venv .venv
 通常利用に`[dev]`、editable install、rendererの`node_modules`は不要です。wheelから導入する場合も、Windowsでは`& $pythonExe -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`、Linuxでは`.venv/bin/python -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`のように作成したvenvを指定します。既存の同名versionを更新するときは、新しいvenvを使い、releaseのcommitとwheelのSHA-256を確認してください。
 
 MCPを使う場合だけ、Windowsでは`& $pythonExe -m pip install ".[mcp]"`、Linuxでは`.venv/bin/python -m pip install ".[mcp]"`を実行します。利用するクライアントには、そのvenvのPythonまたは`patent-analysis-mcp`の絶対パスを設定します。
+
+新しい発明者分析10種類には`.[inventor]`、MCPと併用する場合には`.[inventor,mcp]`をインストールします。人物ID、技術構成、協働グループ、引用、関係先変化の根拠を扱います。[全10種類の合成例と入力条件](docs/inventor-analysis.md)を参照してください。
 
 ## 最初の集計
 
@@ -123,7 +125,7 @@ SVGには`inventor-tracking-svg.v1`を指定します。横軸は年、縦軸は
 
 ## CSV・テキストの集計表を出力する
 
-18分析すべてで`--format csv`または`--format text`を使えます。Nodeは不要です。
+28分析すべてで`--format csv`または`--format text`を使えます。Nodeは不要です。
 
 ```powershell
 & $pythonExe -m patent_analysis analyze advanced/patents.csv --spec basic/timeline.json --format csv
@@ -186,7 +188,7 @@ flowchart TB
         validate[Spec検証・分析registry]
         input[許可root配下のCSV・JSON読込]
         population[列対応・正規化・フィルター・代表選択]
-        analysis[分析コア：発明者追跡など18分析]
+        analysis[分析コア：発明者分析など28分析]
         result[JSON結果・receipt / CSV・テキスト表]
         model[固定ChartModel・内容整合性検証]
         runtime[固定Node・同梱ECharts bundle]
@@ -311,7 +313,7 @@ JSON出力はstdoutに1オブジェクトです。エラーを成功結果とし
 
 ```bash
 python -m pip install --require-hashes -r requirements/mcp-2.0.0.lock
-python -m pip install -e '.[dev]' build
+python -m pip install -e '.[dev,inventor]' build
 python -m pytest -q -p no:cacheprovider
 python -m ruff check --no-cache src tests scripts
 python -m build

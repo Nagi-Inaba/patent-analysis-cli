@@ -7,10 +7,11 @@
 ### Added
 
 - CSVに加え、strict UTF-8の特許JSONをdataset入力として追加。単一objectとobject配列、入れ子objectのドット区切り列、scalar配列のmulti-value cell変換に対応。
-- Python API、CLI、local stdio MCPから利用できる18種類の分析と、CSV・text・JSONの集計出力。
+- Python API、CLI、local stdio MCPから利用できる既存18種類の分析に、発明者向け10種類の分析を追加。CSV・text・JSONの集計出力に対応。
 - `records`と`earliest`による明示的なファミリー代表選択。
-- Matrix、Timeline、Composition、Network、Inventor Trackingなど19種類の固定SVG表現。
+- Matrix、Timeline、Composition、Network、Inventor Trackingなど従来の19種類の固定SVG表現に、発明者分析の9種類のマップを追加。
 - `inventor-tracking.v1`による年別共発明クラスタ、分裂・合流、出願人記載の変化、未観測期間の集計。
+- 発明者の共発明・人物中心の関係・技術構成・活動履歴・協働グループ変遷・技術類似・引用・関係先変化を分析。移動候補の根拠一覧はJSON／表で確認でき、出願人変更だけで転職とは断定しない。
 - `selection_sets`による値・年範囲フィルターと、分析前のSpec検証。
 - Apache License 2.0、公開用security reporting、再現可能な配布検証手順。
 

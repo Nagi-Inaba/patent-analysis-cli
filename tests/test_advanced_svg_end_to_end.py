@@ -24,6 +24,9 @@ ANALYSES = (
     "new-entrants.v1", "compara.v1", "cooccurrence.v1", "collaboration-network.v1",
     "uniqueness.v1", "shared-involvement.v1",
     "inventor-tracking.v1",
+    "inventor-network.v1", "inventor-ego-network.v1", "inventor-technology.v1",
+    "inventor-activity.v1", "inventor-cluster-flow.v1", "inventor-similarity.v1",
+    "inventor-impact.v1", "inventor-mobility.v1", "inventor-mobility-flow.v1",
 )
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples" / "advanced"
 
@@ -54,6 +57,13 @@ requires_windows_node = pytest.mark.skipif(
 def _input(tmp_path: Path, analysis_id: str):
     root = tmp_path / "input"
     root.mkdir()
+    if analysis_id.startswith("inventor-") and analysis_id != "inventor-tracking.v1":
+        examples = EXAMPLES.parent / "inventor-analysis"
+        source = root / "patents.json"
+        source.write_bytes((examples / source.name).read_bytes())
+        spec_path = root / "spec.json"
+        spec_path.write_bytes((examples / f"{analysis_id}.json").read_bytes())
+        return root, source, spec_path
     source = root / "patents.csv"
     tracking = analysis_id == "inventor-tracking.v1"
     examples = EXAMPLES.parent / "inventor-tracking" if tracking else EXAMPLES
@@ -178,7 +188,8 @@ def test_real_mcp_advanced_analysis_handle_renders_the_same_public_result(
     assert analyzed["ok"] is True, analyzed
     handle = analyzed["content"]["render_handle"]
     direct = api.run_analysis_csv(source.name, spec_path.read_bytes(), allowed_root=input_root)
-    assert analyzed["content"]["data"] == direct["data"]
+    expected_data = ToolHandlers._without_linkable_provenance(direct["data"])
+    assert analyzed["content"]["data"] == expected_data
     rendered = handlers.call("patent_analysis.render", {
         "output_root_id": "output", "output_path": "session",
         "analysis_handle": handle, "mark": mark,

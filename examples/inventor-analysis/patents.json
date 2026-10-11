@@ -1,0 +1,30 @@
+[
+  {
+    "record": "sample-r1",
+    "people": "[\"SAMPLE-A\",\"SAMPLE-B\"]",
+    "day": "2023-01-01",
+    "ipc": "A01B 1/00",
+    "org": "[\"SAMPLE-ORG-1\"]"
+  },
+  {
+    "record": "sample-r2",
+    "people": "[\"SAMPLE-B\",\"SAMPLE-C\"]",
+    "day": "2024-01-01",
+    "ipc": "C02F 1/00",
+    "org": "[\"SAMPLE-ORG-2\"]"
+  },
+  {
+    "record": "sample-r3",
+    "people": "[\"SAMPLE-A\",\"SAMPLE-B\"]",
+    "day": "2024-06-01",
+    "ipc": "A01B 1/00",
+    "org": "[\"SAMPLE-ORG-1\"]"
+  },
+  {
+    "record": "sample-r4",
+    "people": "[\"SAMPLE-D\"]",
+    "day": "",
+    "ipc": "",
+    "org": "[]"
+  }
+]

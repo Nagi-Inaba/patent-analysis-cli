@@ -38,6 +38,10 @@ patent-analysis = "patent_analysis.cli:main"
 patent-analysis-mcp = "patent_analysis_mcp.server:main"
 
 [project.optional-dependencies]
+inventor = [
+  "networkx==3.6.1",
+  "numpy==2.4.3",
+]
 dev = [
   "pytest>=8.0",
   "ruff>=0.6",

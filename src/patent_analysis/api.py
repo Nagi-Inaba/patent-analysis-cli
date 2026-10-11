@@ -12,12 +12,18 @@ from typing import Any
 from patent_analysis.analyses._advanced_registration import (
     PUBLIC_SCHEMA_NAMES as ADVANCED_SCHEMA_NAMES,
 )
+from patent_analysis.analyses._inventor_registration import (
+    MODULE_BY_ID as INVENTOR_MODULE_BY_ID,
+)
+from patent_analysis.analyses._inventor_registration import (
+    PUBLIC_SCHEMA_NAMES as INVENTOR_SCHEMA_NAMES,
+)
 from patent_analysis.analysis_dispatch import (
     ValidatedV1Spec,
     dispatch_and_validate_spec_bytes,
 )
 from patent_analysis.analysis_runner import run_analysis, run_analysis_csv
-from patent_analysis.analysis_tables import run_analysis_table
+from patent_analysis.analysis_tables import run_analysis_table as _legacy_analysis_table
 from patent_analysis.capabilities import describe_capabilities
 from patent_analysis.column_resolution import describe_header_candidates
 from patent_analysis.dataset_v2 import (
@@ -63,6 +69,8 @@ _PUBLIC_SCHEMA_NAMES = (
         }
     )
     | ADVANCED_SCHEMA_NAMES
+    | INVENTOR_SCHEMA_NAMES
+    | {"inventor-sidecar-v1.schema.json"}
 )
 
 
@@ -126,6 +134,38 @@ def render_analysis_svg(
         overlay_document=overlay,
         output_directory=output_directory,
         node_executable=node_executable,
+    )
+
+
+def run_analysis_table(
+    source, spec_bytes, *, allowed_root, table_format="csv", include_context=False
+):
+    # Preserve legacy table-option validation precedence without touching its exporter.
+    if table_format not in ("csv", "text") or type(include_context) is not bool:
+        return _legacy_analysis_table(
+            source,
+            spec_bytes,
+            allowed_root=allowed_root,
+            table_format=table_format,
+            include_context=include_context,
+        )
+    validated = dispatch_and_validate_spec_bytes(spec_bytes)
+    if validated.spec.get("analysis_id") in INVENTOR_MODULE_BY_ID:
+        from patent_analysis.analyses._inventor_common import inventor_table
+
+        return inventor_table(
+            source,
+            spec_bytes,
+            allowed_root=allowed_root,
+            table_format=table_format,
+            include_context=include_context,
+        )
+    return _legacy_analysis_table(
+        source,
+        spec_bytes,
+        allowed_root=allowed_root,
+        table_format=table_format,
+        include_context=include_context,
     )
 
 

@@ -16,10 +16,35 @@ import os
 import shutil
 import subprocess
 import sys
+import sysconfig
 import tempfile
 from io import StringIO
 from pathlib import Path
 from xml.etree import ElementTree
+
+LEGACY_IDS = (
+    "ranking.v1", "matrix.v1", "timeline.v1", "composition.v1", "growth.v1",
+    "concentration.v1", "lifecycle.v1", "growth-quadrant.v1", "entry-exit.v1",
+    "citation.v1", "matrix-composition.v1", "new-entrants.v1", "compara.v1",
+    "cooccurrence.v1", "collaboration-network.v1", "uniqueness.v1",
+    "shared-involvement.v1", "inventor-tracking.v1",
+)
+INVENTOR_IDS = (
+    "inventor-network.v1", "inventor-ego-network.v1", "inventor-technology.v1",
+    "inventor-activity.v1", "inventor-cluster-flow.v1", "inventor-similarity.v1",
+    "inventor-impact.v1", "inventor-mobility.v1", "inventor-mobility-flow.v1",
+    "inventor-mobility-evidence.v1",
+)
+
+
+def verify_capability_inventory(caps: dict, cases: list[dict]) -> None:
+    """Keep all 18 golden cases while independently requiring the ten native IDs."""
+    legacy = [case["analysis_id"] for case in cases]
+    assert len(legacy) == len(LEGACY_IDS) and set(legacy) == set(LEGACY_IDS)
+    actual = [item["analysis_id"] for item in caps["analyses"]]
+    assert len(actual) == len(LEGACY_IDS) + len(INVENTOR_IDS)
+    assert set(actual) == set(LEGACY_IDS + INVENTOR_IDS)
+
 
 SVG_CASES = frozenset({
     "ranking.v1", "matrix.v1", "timeline.v1", "composition.v1", "collaboration-network.v1",
@@ -43,6 +68,15 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def release_source_files(root: Path) -> list[Path]:
+    """Include every on-disk package source/resource, including untracked additions."""
+    return sorted(
+        p for p in (root / "src").rglob("*")
+        if p.is_file() and p.suffix in {".py", ".json", ".js", ".gz", ".txt"}
+        and not any(part.endswith(".egg-info") or part == "__pycache__" for part in p.parts)
+    )
+
+
 def fixture(root: Path, relative: str) -> Path:
     path = (root / relative).resolve(strict=True)
     if not path.is_relative_to(root) or not path.is_file():
@@ -52,7 +86,7 @@ def fixture(root: Path, relative: str) -> Path:
 
 def console(name: str) -> str:
     suffix = ".exe" if sys.platform == "win32" else ""
-    path = Path(sys.executable).parent / (name + suffix)
+    path = Path(sysconfig.get_path("scripts")) / (name + suffix)
     if not path.is_file():
         raise RuntimeError(f"installed console script missing: {name}")
     return str(path)
@@ -106,9 +140,11 @@ def installed_package() -> dict:
     assert requires_python and {part.strip() for part in requires_python.split(",")} == {
         ">=3.14", "<3.15"
     }, "Package Python range must match the fixed Unicode runtime"
-    assert "mcp" in distribution.metadata.get_all("Provides-Extra", [])
+    assert {"mcp", "inventor"} <= set(distribution.metadata.get_all("Provides-Extra", []))
     forbidden = {"patent-analysis-workbench", "bubble-matrix-map", "matrix-map-desktop"}
     requirements = distribution.requires or []
+    assert 'networkx==3.6.1; extra == "inventor"' in requirements
+    assert 'numpy==2.4.3; extra == "inventor"' in requirements
     assert not any(name in req.lower() for name in forbidden for req in requirements)
     paths = [str(path).replace("\\", "/") for path in distribution.files or []]
     assert "patent_analysis/normalization/family.py" in paths
@@ -124,11 +160,18 @@ def installed_package() -> dict:
     }
     assert "patent_analysis/renderer/advanced-renderer.bundle.js.gz" in resources
     assert "patent_analysis/renderer/THIRD_PARTY_NOTICES.txt" in resources
+    from patent_analysis.advanced_renderer_resources import (
+        load_verified_advanced_renderer_resources,
+    )
+
+    advanced = load_verified_advanced_renderer_resources()
     return {
         "package_version": distribution.version,
         "requires_python": requires_python,
         "requires_dist": requirements,
         "resources_sha256": resources,
+        "advanced_bundle_sha256": hashlib.sha256(advanced.bundle_bytes).hexdigest(),
+        "advanced_bundle_bytes": len(advanced.bundle_bytes),
     }
 
 
@@ -165,8 +208,12 @@ def verify_svg_accessibility(path: Path) -> None:
 
 def verify_core(cases: list[dict], expected: dict, input_root: Path, output_root: Path) -> dict:
     assert importlib.util.find_spec("mcp") is None, "Core install unexpectedly includes MCP"
+    assert importlib.util.find_spec("networkx") is None, (
+        "Base wheel must not require inventor extra"
+    )
+    assert importlib.util.find_spec("numpy") is None, "Base wheel must not require inventor extra"
     caps = run_json("capabilities", "--json")
-    assert {a["analysis_id"] for a in caps["analyses"]} == {c["analysis_id"] for c in cases}
+    verify_capability_inventory(caps, cases)
     inspection = run_json("inspect", cases[0]["csv"], "--json")
     assert inspection.get("ok") is not False
     validation = run_json("validate-spec", "basic/ranking.json", "--json")
@@ -236,9 +283,7 @@ async def verify_mcp(
                 assert {t.name for t in (await session.list_tools()).tools} == MCP_TOOLS
                 caps = await session.call_tool("patent_analysis.capabilities", {})
                 assert not caps.is_error
-                assert {
-                    a["analysis_id"] for a in caps.structured_content["content"]["analyses"]
-                } == public
+                verify_capability_inventory(caps.structured_content["content"], cases)
                 unknown = await session.call_tool(
                     "patent_analysis.validate_spec",
                     {"spec": {"analysis_contract_version": "2.0.0", "analysis_id": "future.v1"}},

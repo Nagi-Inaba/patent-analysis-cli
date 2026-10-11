@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from types import MappingProxyType
 
 from patent_analysis.analyses._advanced_registration import definitions as _advanced_definitions
+from patent_analysis.analyses._inventor_registration import definitions as _inventor_definitions
 from patent_analysis.analyses.composition import (
     MAX_EXPANDED_CONTRIBUTIONS as MAX_COMPOSITION_EXPANDED_CONTRIBUTIONS,
 )
@@ -514,6 +515,7 @@ _REGISTRY = build_registry(
         _CONCENTRATION_V1,
         _LIFECYCLE_V1,
         *_advanced_definitions(AnalysisDefinition, SourceProvenance, COLUMN_ALIAS_PROFILE),
+        *_inventor_definitions(AnalysisDefinition, SourceProvenance),
     )
 )
 

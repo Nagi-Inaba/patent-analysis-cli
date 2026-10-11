@@ -2,7 +2,7 @@
 
 ## 選び方
 
-入力は利用者が用意するローカルCSVです。全分析をPython API・CLIで利用でき、MCP対応は下表のとおりです。利用可能なmarkと上限の機械可読な正本は`patent-analysis capabilities --json`です。
+入力は利用者が用意するローカルCSVまたはJSONです。全分析をPython API・CLIで利用でき、MCP対応は下表のとおりです。利用可能なmarkと上限の機械可読な正本は`patent-analysis capabilities --json`です。
 
 | 分析ID | 調べたいこと | spec（examples/からの相対パス） | local MCP |
 | --- | --- | --- | --- |
@@ -35,9 +35,28 @@ patent-analysis analyze advanced/patents.csv --spec basic/timeline.json --json
 
 MCPの呼び出しには[共通手順](mcp.md)で該当specのJSONオブジェクトを渡します。
 
+## 人物ID・根拠を保持する発明者分析
+
+次の10分析は`inventor` extraが必要です。全件local MCPに対応し、[専用の入力条件・解釈・合成例](inventor-analysis.md)があります。各Specは`examples/`からの相対パスです。
+
+| 分析ID | 調べたいこと | spec |
+| --- | --- | --- |
+| `inventor-network.v1` | 共発明の全体グラフと中心性 | `inventor-analysis/inventor-network.v1.json` |
+| `inventor-ego-network.v1` | 指定人物の周囲の関係 | `inventor-analysis/inventor-ego-network.v1.json` |
+| `inventor-technology.v1` | 発明者別技術分類と構成 | `inventor-analysis/inventor-technology.v1.json` |
+| `inventor-activity.v1` | 年次活動と未観測・日付欠損 | `inventor-analysis/inventor-activity.v1.json` |
+| `inventor-cluster-flow.v1` | 協働グループの年次変化 | `inventor-analysis/inventor-cluster-flow.v1.json` |
+| `inventor-similarity.v1` | 技術構成の類似度 | `inventor-analysis/inventor-similarity.v1.json` |
+| `inventor-impact.v1` | 活動量と提供された引用データ | `inventor-analysis/inventor-impact.v1.json` |
+| `inventor-mobility.v1` | 出願人との関係変化と企業イベント | `inventor-analysis/inventor-mobility.v1.json` |
+| `inventor-mobility-flow.v1` | 法人・当時のグループ間フロー | `inventor-analysis/inventor-mobility-flow.v1.json` |
+| `inventor-mobility-evidence.v1` | 変化候補の根拠・review履歴 | `inventor-analysis/inventor-mobility-evidence.v1.json` |
+
+入力は`inventor-analysis/patents.json`です。この分析群の本体は`data.statistics`、入力充足率は`data.input_coverage`です。共通母集団の`family_mode`は`records`だけを受け付け、最初の7分析の計算単位は別途`parameters.unit`で指定します。旧来の代表1行選択と混同しないでください。根拠一覧にはSVGがなく、残る9分析も同梱の対応資産が有効な場合だけmarkを公開します。
+
 ## 結果を読むときの注意
 
-Rankingは契約v1、その他17分析はv2です。前者の集計本体は応答の`result`、後者は`data`です。v2の外側の`population`は元入力の件数、`data.population`はフィルター・代表選択後の母集団を表すため、同じ意味の件数とは限りません。
+Rankingは契約v1、その他はv2です。前者の集計本体は応答の`result`、後者は`data`です。既存17種類のv2分析の外側の`population`は元入力の件数、`data.population`はフィルター・代表選択後の母集団を表すため、同じ意味の件数とは限りません。新しい発明者分析は上記の専用出力契約を使います。
 
 複数値の項目は1レコードから複数の所属・組み合わせを生む場合があります。レコード数、所属件数、ペア件数、構成比の分母を混同しないでください。成長の基準年や窓はspecで明示します。ゼロ分母・欠損・上位外の扱いは各閉じた分析仕様に従います。
 
@@ -45,7 +64,7 @@ Rankingは契約v1、その他17分析はv2です。前者の集計本体は応�
 
 Matrix Compositionは全セルに円グラフを並べる機能ではなく**選択1セル**です。Comparaは**count-only**です。被引用数は外部サービスから取得せず、CSVに記録された値だけを使います。
 
-v2の17分析は[ファミリー代表単位](family-population.md)を選べます。代表以外の出願人・分類・引用数を合算しないため、「ファミリー全構成員の属性集合」とは別の結果です。Rankingは従来のレコード単位を維持します。
+既存v2の17分析は[ファミリー代表単位](family-population.md)を選べます。代表以外の出願人・分類・引用数を合算しないため、「ファミリー全構成員の属性集合」とは別の結果です。Rankingは従来のレコード単位を維持します。
 
 ## SVG
 
