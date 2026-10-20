@@ -186,6 +186,7 @@ describe("self-contained renderer build", () => {
     const approvedModules = [
       "\0rolldown/runtime.js",
       join(rendererRoot, "src", "index.ts"),
+      join(rendererRoot, "src", "palette.ts"),
       join(rendererRoot, "src", "payload.ts"),
       join(rendererRoot, "src", "svg-normalize.ts"),
       join(rendererRoot, "src", "generated", "standalone-validators.js"),
@@ -225,6 +226,7 @@ describe("self-contained renderer build", () => {
     for (const requiredModule of [
       "\0rolldown/runtime.js",
       join(rendererRoot, "src", "index.ts"),
+      join(rendererRoot, "src", "palette.ts"),
       join(rendererRoot, "src", "payload.ts"),
       join(rendererRoot, "src", "svg-normalize.ts"),
       join(rendererRoot, "src", "generated", "standalone-validators.js"),

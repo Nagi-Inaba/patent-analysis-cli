@@ -114,7 +114,7 @@ def test_render_categorical_svg_rejects_cross_family_and_unknown_marks(
 ) -> None:
     import patent_analysis.rendering as rendering
 
-    monkeypatch.setattr(rendering, "require_windows_x64", lambda: None)
+    monkeypatch.setattr(rendering, "require_supported_platform", lambda: None)
 
     with pytest.raises(RenderError) as caught:
         rendering.render_categorical_svg(
@@ -171,6 +171,7 @@ def test_render_analysis_svg_dispatches_categorical_results(
         mark: str,
         output_directory: str | Path,
         node_executable: str | Path | None = None,
+        palette: str | None = None,
     ) -> dict[str, object]:
         received.update(
             analysis_document=analysis_document,

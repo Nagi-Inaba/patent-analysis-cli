@@ -93,8 +93,10 @@ def console_bytes(*args: str) -> bytes:
     return done.stdout
 
 
-def exact_windows_node() -> str:
-    assert sys.platform == "win32", "SVG acceptance must execute on Windows, not pretend on Linux"
+def exact_renderer_node() -> str:
+    from patent_analysis.local_renderer import require_supported_platform
+
+    require_supported_platform()
     node = shutil.which("node")
     assert node is not None, "Node is required for installed SVG acceptance"
     probe = subprocess.run(
@@ -104,7 +106,9 @@ def exact_windows_node() -> str:
         check=True,
         timeout=10,
     )
-    assert probe.stdout.strip() == "22.19.0/x64"
+    assert probe.stdout.strip() in (
+        {"22.19.0/x64", "22.19.0/arm64"} if sys.platform == "darwin" else {"22.19.0/x64"}
+    )
     return node
 
 
@@ -132,7 +136,7 @@ def check_svg(receipt: dict, output: Path) -> bytes:
 def verify_native_svg(result: dict, mark: str, input_root: Path, output_root: Path) -> dict:
     from patent_analysis import api
 
-    node = exact_windows_node()
+    node = exact_renderer_node()
     document = canonical(result)
     analysis_path = input_root / "verification-result.json"
     analysis_path.write_bytes(document)
@@ -226,7 +230,7 @@ def verify_native(input_root: Path, output_root: Path, *, render_svg: bool) -> d
         "analysis_ids": list(INVENTOR_IDS),
         "results": results,
         "svg": rendered,
-        "svg_platform_supported": sys.platform == "win32",
+        "svg_platform_supported": sys.platform in {"win32", "darwin"},
     }
 
 
@@ -356,7 +360,7 @@ async def verify_native_mcp_svg(
 ) -> dict:
     from patent_analysis import api
 
-    node = exact_windows_node()
+    node = exact_renderer_node()
     mark = INVENTOR_MARKS[INVENTOR_IDS.index(aid)]
     output_path = f"mcp/{aid}"
     output = output_root / output_path
@@ -538,14 +542,16 @@ def main() -> None:
             os.environ.pop("PYTHONHOME", None)
             os.environ["PATENT_ANALYSIS_ALLOWED_ROOT"] = str(input_root)
             report.update(
-                verify_native(input_root, output_root, render_svg=sys.platform == "win32")
+                verify_native(
+                    input_root, output_root, render_svg=sys.platform in {"win32", "darwin"}
+                )
             )
             report["review_roundtrip"] = verify_review_roundtrip(input_root)
             if args.mcp:
                 import anyio
 
                 report["mcp"] = anyio.run(
-                    verify_native_mcp, input_root, output_root, sys.platform == "win32"
+                    verify_native_mcp, input_root, output_root, sys.platform in {"win32", "darwin"}
                 )
             assert all(release.digest(input_root / p) == value for p, value in before.items())
             report["installed_module_paths"] = assert_installed_imports()

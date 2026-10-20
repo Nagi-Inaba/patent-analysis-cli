@@ -1,4 +1,7 @@
 import json
+from decimal import ROUND_UP, Context, Inexact, localcontext
+
+import pytest
 
 from patent_analysis.analysis_runner import run_analysis
 
@@ -60,6 +63,29 @@ def test_public_network_keeps_isolates_and_missing_date_evidence(tmp_path):
     assert result["data"]["input_coverage"]["missing_date"] == 1
     assert all(e["record_ids"] for e in graph["edges"])
     assert result["data"]["family_basis"]["family_mode"] == "records"
+
+
+@pytest.mark.parametrize(
+    "caller_context",
+    [Context(rounding=ROUND_UP), Context(traps=[Inexact])],
+    ids=["round-up", "inexact-trap"],
+)
+def test_public_fractional_analysis_ignores_caller_decimal_context(tmp_path, caller_context):
+    source = tmp_path / "patents.json"
+    raw = json.dumps([
+        dict(record="r1", people='["A","B","C"]', day="2023-01-01", ipc="A01B", org="[]")
+    ]).encode()
+    source.write_bytes(raw)
+    request = json.dumps(spec(parameters={"person_weight": "fractional"})).encode()
+    with localcontext(Context()):
+        expected = run_analysis(source.name, request, allowed_root=tmp_path)
+    with localcontext(caller_context):
+        result = run_analysis(source.name, request, allowed_root=tmp_path)
+    assert result == expected
+    assert [node["activity"] for node in result["data"]["statistics"]["nodes"]] == [
+        {"value": 0.333333333333, "numerator": "1", "denominator": "3"}
+    ] * 3
+    assert source.read_bytes() == raw
 
 
 def test_public_curated_alias_filters_on_resolved_identity(tmp_path):

@@ -166,6 +166,7 @@ def build_series_render_spec(
     mark: str,
     x_count: int,
     series_count: int,
+    palette: str | None = None,
 ) -> dict[str, object]:
     """Build the fixed categorical render spec for a series mark."""
 
@@ -183,6 +184,7 @@ def build_series_render_spec(
     spec = fixed_render_spec(
         renderer_kind=renderer_kind,
         render_profile_id=CATEGORICAL_RENDER_PROFILE_ID,
+        palette=palette,
     )
     validate_schema(spec, "categorical-render-spec-v1.schema.json")
     return deepcopy(spec)

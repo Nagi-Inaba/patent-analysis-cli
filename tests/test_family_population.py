@@ -361,7 +361,7 @@ def test_family_json_cli_and_mcp_use_the_same_core(tmp_path, monkeypatch, capsys
                     assert str(tmp_path) not in repr(content)
                     # One real Windows family-result render, not another full
                     # analysis x adapter x mark cross product.
-                    if sys.platform == "win32":
+                    if sys.platform in {"win32", "darwin"}:
                         rendered = await session.call_tool(
                             "patent_analysis.render",
                             {

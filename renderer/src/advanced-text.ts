@@ -8,6 +8,10 @@ export function truncateAdvancedLabel(value: string, maximum: number): string {
   }
   return result.join("");
 }
+/** Grapheme count as segmented for display; layout decisions must not split characters. */
+export function graphemeLength(value: string): number {
+  return [...segmenter.segment(value)].length;
+}
 /** Display text only: identifiers are never normalized, labels are NFC and bounded. */
 export function displayLabel(value: string, maximum: number): string {
   return truncateAdvancedLabel(value.normalize("NFC"), maximum);

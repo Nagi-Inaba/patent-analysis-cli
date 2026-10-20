@@ -35,7 +35,8 @@ const SOURCES = new Set([
   "src/advanced-inventor-validation.ts", "src/advanced-inventor-network.ts",
   "src/advanced-inventor-heatmap.ts", "src/advanced-inventor-timeline.ts",
   "src/advanced-inventor-alluvial.ts", "src/advanced-inventor-scatter.ts",
-  "src/points-payload.ts", "src/generated/points-standalone-validators.js", "src/categorical-svg-normalize.ts"
+  "src/points-payload.ts", "src/generated/points-standalone-validators.js", "src/categorical-svg-normalize.ts",
+  "src/palette.ts", "src/label-layout.ts"
 ]);
 function normalizedStrings(source) {
   let text = source.replace(/\\x([0-9A-Fa-f]{2})/gu, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
@@ -82,7 +83,8 @@ function validateGraph(ids, lock) {
     "src/generated/advanced-standalone-validators.js", "src/categorical-svg-normalize.ts",
     "src/advanced-inventor-options.ts", "src/advanced-inventor-validation.ts", "src/advanced-inventor-frame.ts",
     "src/advanced-inventor-network.ts", "src/advanced-inventor-heatmap.ts", "src/advanced-inventor-timeline.ts",
-    "src/advanced-inventor-alluvial.ts", "src/advanced-inventor-scatter.ts"]) {
+    "src/advanced-inventor-alluvial.ts", "src/advanced-inventor-scatter.ts", "src/palette.ts",
+    "src/label-layout.ts"]) {
     assert(sources.has(path), `Unreachable approved renderer source: ${path}`);
   }
 }
@@ -160,7 +162,9 @@ async function advancedValidatorsSource() {
 export async function buildAdvancedBundle(args = []) {
   const { stageOnly, destination } = parseArguments(args);
   const outputRoot = resolve(destination, "renderer");
-  assert(process.version === "v22.19.0" && process.arch === "x64", "Requires Node 22.19.0 x64");
+  assert(process.version === "v22.19.0" &&
+    (process.arch === "x64" || (process.platform === "darwin" && process.arch === "arm64")),
+    "Requires Node 22.19.0 (x64 or macOS arm64)");
   const { build } = await import("vite");
   const [pkg, lock, template] = await Promise.all([
     readFile(resolve(root, "package.json"), "utf8").then(JSON.parse),

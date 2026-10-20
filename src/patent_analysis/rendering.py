@@ -37,7 +37,7 @@ from patent_analysis.chart_models.series import (
 from patent_analysis.local_renderer import (
     LocalRendererError,
     launch_trusted_node,
-    require_windows_x64,
+    require_supported_platform,
     resolve_node_executable,
     validate_local_directory,
 )
@@ -326,7 +326,11 @@ def _parse_document(raw: bytes, limit: int) -> dict[str, Any]:
     return value
 
 
-def _prepare_render(analysis: dict[str, Any], overlay: dict[str, Any] | None) -> _PreparedRender:
+def _prepare_render(
+    analysis: dict[str, Any],
+    overlay: dict[str, Any] | None,
+    palette: str | None = None,
+) -> _PreparedRender:
     model, receipt = build_ranking_chart_model(analysis, overlay=overlay)
     model_bytes = strict_b64decode(
         receipt["chart_model_bytes"],
@@ -335,7 +339,7 @@ def _prepare_render(analysis: dict[str, Any], overlay: dict[str, Any] | None) ->
     model_sha256 = receipt["chart_model_sha256"]
     if not isinstance(model_sha256, str) or sha256_bytes(model_bytes) != model_sha256:
         raise RenderContractError() from None
-    spec = build_ranking_render_spec(row_count=len(model["rows"]))
+    spec = build_ranking_render_spec(row_count=len(model["rows"]), palette=palette)
     spec_bytes = canonical_json_bytes(spec)
     spec_sha256 = sha256_bytes(spec_bytes)
     return _PreparedRender(
@@ -422,13 +426,20 @@ def _publish_svg_impl(output_directory: Path, filename: str, svg: bytes) -> str:
             stream.flush()
             os.fsync(stream.fileno())
         try:
-            os.rename(temp_path, final)
+            if os.name == "nt":
+                os.rename(temp_path, final)
+            else:
+                # POSIX rename replaces an existing destination. A same-directory
+                # hard link publishes complete bytes atomically without clobbering
+                # a concurrent winner; finally removes only our temporary name.
+                os.link(temp_path, final, follow_symlinks=False)
         except FileExistsError:
             winner_state = _probe_final(final, svg)
             if winner_state == "equal":
                 return "reused"
             raise _PublicationViolation from None
-        temp_path = None
+        if os.name == "nt":
+            temp_path = None
         return "created"
     finally:
         if temp_path is not None:
@@ -456,6 +467,7 @@ def render_ranking_svg(
     overlay_document: bytes | None = None,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     if (
         type(analysis_document) is not bytes
@@ -478,7 +490,7 @@ def render_ranking_svg(
     prepared: _PreparedRender | None = None
     prepare_failed = False
     try:
-        prepared = _prepare_render(analysis, overlay)
+        prepared = _prepare_render(analysis, overlay, palette)
     except (
         RenderContractError,
         CanonicalJsonError,
@@ -492,7 +504,7 @@ def render_ranking_svg(
 
     platform_failed = False
     try:
-        require_windows_x64()
+        require_supported_platform()
     except LocalRendererError:
         platform_failed = True
     if platform_failed:
@@ -564,6 +576,8 @@ def _prepare_matrix_render(
     analysis: dict[str, Any],
     *,
     mark: str,
+    value_labels: str | None = None,
+    palette: str | None = None,
 ) -> _PreparedRender:
     model, receipt = build_matrix_chart_model(analysis, mark=mark)
     model_bytes = canonical_json_bytes(model)
@@ -574,6 +588,8 @@ def _prepare_matrix_render(
         mark=mark,
         x_count=len(model["x_axis"]["categories"]),
         y_count=len(model["y_axis"]["categories"]),
+        value_labels=value_labels,
+        palette=palette,
     )
     spec_bytes = canonical_json_bytes(spec)
     return _PreparedRender(
@@ -611,6 +627,8 @@ def render_matrix_svg(
     mark: str,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    value_labels: str | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     if mark not in {"matrix-bubble-svg.v1", "matrix-heatmap-svg.v1"}:
         raise ValueError("unknown matrix renderer mark")
@@ -618,14 +636,16 @@ def render_matrix_svg(
         _raise("input.invalid")
     analysis = _parse_document(analysis_document, MAX_ANALYSIS_DOCUMENT_BYTES)
     try:
-        prepared = _prepare_matrix_render(analysis, mark=mark)
+        prepared = _prepare_matrix_render(
+            analysis, mark=mark, value_labels=value_labels, palette=palette
+        )
     except RenderError:
         raise
     except (RenderContractError, CanonicalJsonError, TypeError, ValueError, RecursionError):
         _raise("render.invalid")
 
     try:
-        require_windows_x64()
+        require_supported_platform()
     except LocalRendererError:
         _raise("renderer.unavailable")
     try:
@@ -690,6 +710,7 @@ def _prepare_categorical_render(
     analysis: dict[str, Any],
     *,
     mark: str,
+    palette: str | None = None,
 ) -> _PreparedRender:
     if mark in SERIES_RENDER_MARKS:
         model, receipt = build_series_chart_model(analysis, mark=mark)
@@ -701,6 +722,7 @@ def _prepare_categorical_render(
             mark=mark,
             x_count=len(x),
             series_count=len(series),
+            palette=palette,
         )
     elif mark in COMPOSITION_RENDER_MARKS:
         model, receipt = build_composition_chart_model(analysis, mark=mark)
@@ -710,6 +732,7 @@ def _prepare_categorical_render(
         spec = build_composition_render_spec(
             mark=mark,
             item_count=len(items),
+            palette=palette,
         )
     else:
         raise ValueError("unknown categorical renderer mark")
@@ -765,6 +788,7 @@ def render_categorical_svg(
     mark: str,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     if mark not in {*SERIES_RENDER_MARKS, *COMPOSITION_RENDER_MARKS}:
         raise ValueError("unknown categorical renderer mark")
@@ -778,7 +802,7 @@ def render_categorical_svg(
         MAX_ANALYSIS_DOCUMENT_BYTES,
     )
     try:
-        prepared = _prepare_categorical_render(analysis, mark=mark)
+        prepared = _prepare_categorical_render(analysis, mark=mark, palette=palette)
     except RenderError:
         raise
     except (
@@ -791,7 +815,7 @@ def render_categorical_svg(
         _raise("render.invalid")
 
     try:
-        require_windows_x64()
+        require_supported_platform()
     except LocalRendererError:
         _raise("renderer.unavailable")
     try:
@@ -862,12 +886,13 @@ def _prepare_points_render(
     analysis: dict[str, Any],
     *,
     mark: str,
+    palette: str | None = None,
 ) -> _PreparedRender:
     model, receipt = build_points_chart_model(analysis, mark=mark)
     points = model.get("points")
     if not isinstance(points, list):
         raise ValueError("points chart model is invalid")
-    spec = build_points_render_spec(mark=mark, point_count=len(points))
+    spec = build_points_render_spec(mark=mark, point_count=len(points), palette=palette)
     model_bytes = canonical_json_bytes(model)
     model_sha256 = receipt.get("chart_model_sha256")
     if not isinstance(model_sha256, str) or sha256_bytes(model_bytes) != model_sha256:
@@ -908,6 +933,7 @@ def render_points_svg(
     mark: str,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     if mark not in POINTS_RENDER_MARKS:
         raise ValueError("unknown points renderer mark")
@@ -915,7 +941,7 @@ def render_points_svg(
         _raise("input.invalid")
     analysis = _parse_document(analysis_document, MAX_ANALYSIS_DOCUMENT_BYTES)
     try:
-        prepared = _prepare_points_render(analysis, mark=mark)
+        prepared = _prepare_points_render(analysis, mark=mark, palette=palette)
     except RenderError:
         raise
     except (
@@ -928,7 +954,7 @@ def render_points_svg(
         _raise("render.invalid")
 
     try:
-        require_windows_x64()
+        require_supported_platform()
     except LocalRendererError:
         _raise("renderer.unavailable")
     try:
@@ -994,6 +1020,8 @@ def render_analysis_svg(
     overlay_document: bytes | None = None,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    value_labels: str | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     if type(analysis_document) is not bytes or len(analysis_document) > MAX_ANALYSIS_DOCUMENT_BYTES:
         _raise("input.invalid")
@@ -1009,7 +1037,12 @@ def render_analysis_svg(
             mark=mark or "matrix-bubble-svg.v1",
             output_directory=output_directory,
             node_executable=node_executable,
+            value_labels=value_labels,
+            palette=palette,
         )
+    if value_labels is not None:
+        # Count labels exist only on the matrix bubble mark.
+        _raise("render.invalid")
     result_variant = analysis.get("result_variant")
     if result_variant == "points":
         if overlay_document is not None:
@@ -1019,6 +1052,7 @@ def render_analysis_svg(
             mark=mark or "points-bubble-svg.v1",
             output_directory=output_directory,
             node_executable=node_executable,
+            palette=palette,
         )
     if result_variant in ("series", "composition"):
         if overlay_document is not None:
@@ -1033,6 +1067,7 @@ def render_analysis_svg(
             mark=mark or default_mark,
             output_directory=output_directory,
             node_executable=node_executable,
+            palette=palette,
         )
     if mark not in {None, "ranking-svg.v1"}:
         _raise("render.invalid")
@@ -1041,4 +1076,5 @@ def render_analysis_svg(
         overlay_document=overlay_document,
         output_directory=output_directory,
         node_executable=node_executable,
+        palette=palette,
     )

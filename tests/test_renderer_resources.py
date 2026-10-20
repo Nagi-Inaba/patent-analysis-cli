@@ -34,16 +34,16 @@ def test_python_trust_anchors_are_exact_reviewed_values() -> None:
     module = _resources_module()
 
     assert getattr(module, "PINNED_RENDERER_BUILD_MANIFEST_SHA256", None) == (
-        "7d703dcd25c2c67ee2c4c2096b96e48abe278926f1b4c3218bfcf83979d03396"
+        "7b5fc7a60986031616fc4ae0ed07253e5a2249720a9f43ef250f97fc4db40dd5"
     )
     assert getattr(module, "PINNED_RENDERER_BUILD_DIGEST", None) == (
-        "0476648d6fda1dca713fe78703c6ccad05529880362e5c8a767efa1161fec11b"
+        "49ef33df4ffa9e61e1507f2f8bb8db98ac27ba52b3b88d26f5eee5217bcbebb7"
     )
     assert getattr(module, "PINNED_RENDERER_BOOTSTRAP_SHA256", None) == (
-        "677528c5a5a884668ad7e64be91ab13996b0d1684d2ef69eefb72ad561551641"
+        "8d2907e4fa4c097abecc2dfcfe5b28768d0174670062f91b0da14ef1b5f66622"
     )
     assert getattr(module, "PINNED_RENDERER_BUNDLE_SHA256", None) == (
-        "1870a731cc2222d3ceed199706b163881993f7918ed7dd25ae087a4442ef11ae"
+        "f086c7b2fbf248085512845d77443c9693237057acefd15921336efd6e56829c"
     )
 
 
@@ -67,22 +67,22 @@ def test_packaged_renderer_resources_have_exact_current_digests() -> None:
     resources = module.load_verified_renderer_resources()
 
     assert hashlib.sha256(resources.manifest_bytes).hexdigest() == (
-        "7d703dcd25c2c67ee2c4c2096b96e48abe278926f1b4c3218bfcf83979d03396"
+        "7b5fc7a60986031616fc4ae0ed07253e5a2249720a9f43ef250f97fc4db40dd5"
     )
     assert hashlib.sha256(resources.bootstrap_bytes).hexdigest() == (
-        "677528c5a5a884668ad7e64be91ab13996b0d1684d2ef69eefb72ad561551641"
+        "8d2907e4fa4c097abecc2dfcfe5b28768d0174670062f91b0da14ef1b5f66622"
     )
     assert hashlib.sha256(resources.bundle_bytes).hexdigest() == (
-        "1870a731cc2222d3ceed199706b163881993f7918ed7dd25ae087a4442ef11ae"
+        "f086c7b2fbf248085512845d77443c9693237057acefd15921336efd6e56829c"
     )
     assert resources.renderer_build_digest == (
-        "0476648d6fda1dca713fe78703c6ccad05529880362e5c8a767efa1161fec11b"
+        "49ef33df4ffa9e61e1507f2f8bb8db98ac27ba52b3b88d26f5eee5217bcbebb7"
     )
     assert resources.runtime == module.RendererRuntimeBinding(
         node_version="22.19.0",
         echarts_version="6.1.0",
         renderer_build_digest=(
-            "0476648d6fda1dca713fe78703c6ccad05529880362e5c8a767efa1161fec11b"
+            "49ef33df4ffa9e61e1507f2f8bb8db98ac27ba52b3b88d26f5eee5217bcbebb7"
         ),
         render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",
     )

@@ -19,7 +19,7 @@ from patent_analysis.chart_models.advanced import (
 from patent_analysis.local_renderer import (
     LocalRendererError,
     launch_trusted_node,
-    require_windows_x64,
+    require_supported_platform,
     resolve_node_executable,
     validate_local_directory,
 )
@@ -36,6 +36,7 @@ def render_advanced_svg(
     overlay_document: bytes | None = None,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    palette: str | None = None,
 ) -> dict[str, Any]:
     # Lazy import preserves the existing public facade/import graph.
     from patent_analysis.rendering import (
@@ -55,14 +56,14 @@ def render_advanced_svg(
         model, receipt = build_advanced_chart_model(
             document, analysis_id=analysis_id, mark=definition.mark
         )
-        spec = build_advanced_render_spec()
+        spec = build_advanced_render_spec(palette)
         model_bytes, spec_bytes = canonical_json_bytes(model), canonical_json_bytes(spec)
         if sha256_bytes(model_bytes) != receipt["chart_model_sha256"]:
             raise ValueError("model binding")
     except (TypeError, ValueError, RecursionError):
         raise _make_render_error("render.invalid") from None
     try:
-        require_windows_x64()
+        require_supported_platform()
     except LocalRendererError:
         raise _make_render_error("renderer.unavailable") from None
     try:

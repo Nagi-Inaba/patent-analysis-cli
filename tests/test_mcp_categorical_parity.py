@@ -61,7 +61,7 @@ def test_real_stdio_categorical_analysis_and_render(name, tmp_path):
                     rejected = await session.call_tool("patent_analysis.render", request)
                     assert rejected.is_error
                     assert not (tmp_path / name).exists()
-                    if sys.platform == "win32":
+                    if sys.platform in {"win32", "darwin"}:
                         for mark in definitions[analysis_id]["render_marks"]:
                             request.update(output_path=mark, mark=mark)
                             rendered = await session.call_tool("patent_analysis.render", request)

@@ -43,6 +43,16 @@ def read(tmp_path):
                                 inventor_ids=('p1',), record_ids=('r1',))
 
 
+def test_sidecar_file_tolerates_one_leading_utf8_bom(tmp_path):
+    raw = save(tmp_path, bundle())
+    (tmp_path / 'sidecar.json').write_bytes(b'\xef\xbb\xbf' + raw)
+    snapshot = read(tmp_path)
+    assert snapshot.raw_snapshots == (('bundle', b'\xef\xbb\xbf' + raw),)
+    assert snapshot.receipts[0].sha256 == hashlib.sha256(b'\xef\xbb\xbf' + raw).hexdigest()
+    assert snapshot.receipts[0].byte_size == len(raw) + 3
+    assert snapshot.version == '1.0.0'
+
+
 def test_json_snapshot_hash_immutable_raw_references_and_no_employment_claim(tmp_path):
     raw = save(tmp_path, bundle())
     snapshot = read(tmp_path)

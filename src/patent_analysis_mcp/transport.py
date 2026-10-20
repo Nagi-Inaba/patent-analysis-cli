@@ -1,4 +1,4 @@
-"""Bounded local stdio transport using the MCP 2.0 low-level server."""
+"""Bounded local stdio transport using the MCP 2.x low-level server."""
 
 from __future__ import annotations
 

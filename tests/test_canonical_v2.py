@@ -97,6 +97,20 @@ def test_strict_parser_rejects_duplicate_keys_before_object_construction() -> No
         parse_strict_json_bytes(b'{"analysis_id":"a","analysis_id":"b"}')
 
 
+def test_strict_parser_accepts_one_leading_utf8_bom_only_when_allowed() -> None:
+    value = parse_strict_json_bytes(b"\xef\xbb\xbf" + b'{"a":1}', allow_bom=True)
+
+    assert value == {"a": 1}
+    with pytest.raises(CanonicalizationError):
+        parse_strict_json_bytes(b"\xef\xbb\xbf" + b'{"a":1}')
+
+
+def test_strict_parser_still_rejects_a_second_leading_bom() -> None:
+    for allow_bom in (False, True):
+        with pytest.raises(CanonicalizationError):
+            parse_strict_json_bytes(b"\xef\xbb\xbf\xef\xbb\xbf{}", allow_bom=allow_bom)
+
+
 @pytest.mark.parametrize(
     "raw",
     [

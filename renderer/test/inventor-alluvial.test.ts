@@ -118,6 +118,15 @@ describe("inventor-alluvial rendering", () => {
     for (const label of ["2019", "2020", "2021", "2022", "Group A 2019", "Group B 2019", "Group C 2020", "Group D 2022",
       "New 2019", "Unseen 2021"]) assert.ok(shown.includes(label), label);
   });
+  test("numbers in the chart are never bold, while headings stay bold", () => {
+    const svg = renderAdvancedModelToRawSvg(base(), SPEC);
+    const textTags = [...svg.matchAll(/<text\b([^>]*)>([^<]*)<\/text>/gu)].map(match => ({ tag: match[1]!, text: match[2]! }));
+    const isBold = (tag: string) => /font-weight="(?:bold|[6-9]00)"/u.test(tag);
+    const numbers = textTags.filter(item => /^\d+$/u.test(item.text));
+    assert.ok(numbers.length >= 4 + 3, "year headings and member counts are present");
+    assert.deepEqual(numbers.filter(item => isBold(item.tag)).map(item => item.text), []);
+    assert.ok(textTags.some(item => item.text === "リンク:" && isBold(item.tag)), "legend headings keep their weight");
+  });
   test("box height and link width share one membership scale", () => {
     const svg = renderAdvancedModelToRawSvg(base(), SPEC);
     const heights = nodeBoxes(svg).map(box => box.height);

@@ -1,0 +1,25 @@
+{
+  "analysis_contract_version": "2.0.0",
+  "normalization": {
+    "profiles": []
+  },
+  "population": {
+    "filters": [],
+    "selection_sets": [],
+    "family_mode": "records"
+  },
+  "analysis_id": "matrix.v1",
+  "resolution": {
+    "bindings": {
+      "applicant": "group",
+      "theme": "item",
+      "year": "year"
+    }
+  },
+  "parameters": {
+    "x_role": "applicant",
+    "y_role": "theme",
+    "pie_role": "year",
+    "pie_limit": 3
+  }
+}

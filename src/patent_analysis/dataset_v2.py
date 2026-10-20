@@ -188,7 +188,7 @@ def _flatten_json_record(record: Mapping[str, object]) -> dict[str, str]:
 
 def _read_json_records(raw: bytes) -> tuple[list[str], list[DatasetRow]]:
     try:
-        document = parse_strict_json_bytes(raw)
+        document = parse_strict_json_bytes(raw, allow_bom=True)
     except CanonicalizationError:
         raise DatasetInputError("input is invalid") from None
     raw_records = document if isinstance(document, list) else [document]
@@ -233,8 +233,8 @@ def read_dataset_v2(
         max_bytes=MAX_JSON_BYTES if is_json else MAX_CSV_BYTES,
     )
     if is_json:
+        encoding = "utf-8-sig" if raw.startswith(b"\xef\xbb\xbf") else "utf-8"
         header, data_rows = _read_json_records(raw)
-        encoding = "utf-8"
         preamble = None
     else:
         encoding = _detect_encoding(raw)

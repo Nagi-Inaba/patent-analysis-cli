@@ -265,3 +265,34 @@ describe("categorical renderer wire protocol", () => {
     expect(svg).toContain("<svg");
   });
 });
+
+describe("categorical palettes", () => {
+  type LineSeries = { lineStyle: { color: string; width: number; type?: unknown }; symbol: string };
+
+  it("keeps the standard colours and plain lines by default", () => {
+    const series = buildSeriesOption(seriesModel, lineSpec).series as LineSeries[];
+
+    expect(series.map((item) => item.lineStyle.color)).toEqual(["#0f766e", "#2563eb"]);
+    expect(series.every((item) => item.lineStyle.width === 2 && item.lineStyle.type === undefined)).toBe(true);
+    expect(series.every((item) => item.symbol === "circle")).toBe(true);
+  });
+
+  it("gives each line series its own line type and marker under an alternate palette", () => {
+    const series = buildSeriesOption(seriesModel, { ...lineSpec, palette: "colorblind" }).series as LineSeries[];
+
+    expect(series.map((item) => item.lineStyle.color)).toEqual(["#0072b2", "#009e73"]);
+    expect(series.map((item) => item.lineStyle.type)).toEqual(["solid", "dashed"]);
+    expect(series.map((item) => item.symbol)).toEqual(["circle", "rect"]);
+    expect(series.every((item) => item.lineStyle.width === 3)).toBe(true);
+  });
+
+  it.each(["colorblind", "monochrome", "high-contrast"] as const)(
+    "renders all four categorical marks with the %s palette inside the SVG policy",
+    (palette) => {
+      expect(() => renderCategoricalModelToRawSvg(seriesModel, { ...lineSpec, palette })).not.toThrow();
+      expect(() => renderCategoricalModelToRawSvg(stackedModel, { ...stackedSpec, palette })).not.toThrow();
+      expect(() => renderCategoricalModelToRawSvg(compositionModel, { ...barSpec, palette })).not.toThrow();
+      expect(() => renderCategoricalModelToRawSvg(pieModel, { ...pieSpec, palette })).not.toThrow();
+    }
+  );
+});

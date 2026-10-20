@@ -98,7 +98,35 @@
         "measure": {
           "const": "count",
           "default": "count"
+        },
+        "pie_role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "pie_classification_level": {
+          "enum": [
+            "full",
+            "class",
+            "subclass",
+            "main_group",
+            "subgroup"
+          ]
+        },
+        "pie_limit": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 8,
+          "default": 5
         }
+      },
+      "dependentRequired": {
+        "pie_classification_level": [
+          "pie_role"
+        ],
+        "pie_limit": [
+          "pie_role"
+        ]
       }
     },
     "population": {

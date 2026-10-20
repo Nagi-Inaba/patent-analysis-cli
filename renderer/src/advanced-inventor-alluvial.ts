@@ -63,7 +63,7 @@ export function buildAlluvial(model: AdvancedModel, spec: AdvancedSpec, p: Inven
 
   const elements: Graphic[] = [];
   p.years.forEach(year => {
-    elements.push(textAt(spec, columnX(year) + boxWidth / 2, AREA.top + 8, String(year), { align: "center", size: count > 15 ? 9 : 11, weight: 600 }));
+    elements.push(textAt(spec, columnX(year) + boxWidth / 2, AREA.top + 8, String(year), { align: "center", size: count > 15 ? 9 : 11 }));
   });
 
   // Ribbons stack inside each box in the order of the box they connect to, which limits crossings.

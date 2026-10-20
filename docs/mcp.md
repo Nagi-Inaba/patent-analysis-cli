@@ -16,15 +16,15 @@ New-Item -ItemType Directory -Path $outputRoot | Out-Null
 
 stdio対応クライアントには、上記のPython絶対パスを`command`、`-m`以降を個別の`args`として設定します。単独起動後に通常のプロンプトが返らないのは、MCPメッセージをstdinで受け取るサーバーだからです。HTTPサーバーやremote MCPではありません。
 
-入力・出力は既存のローカルディレクトリで、IDも実パスも重複・包含させません。ツールへ渡す`path`・`output_path`は対応rootからの相対パスです。CLIの`PATENT_ANALYSIS_ALLOWED_ROOT`は、この起動設定の代わりにはなりません。SVGにはWindows x64 / Node22.19.0 x64が必要で、信頼するNode絶対パスを`--node`で指定することもできます。
+入力・出力は既存のローカルディレクトリで、IDも実パスも重複・包含させません。ツールへ渡す`path`・`output_path`は対応rootからの相対パスです。CLIの`PATENT_ANALYSIS_ALLOWED_ROOT`は、この起動設定の代わりにはなりません。SVGにはWindows x64またはmacOS arm64/x86_64と、対応アーキテクチャのNode.js 22.19.0 exactが必要です。Linuxでは集計・JSONを利用できますが、公開SVG経路は非対応です。信頼するNode絶対パスを`--node`で指定することもできます。
 
 ## 発見 → 検証 → 分析 → 描画
 
-公開ツールは次の6件です。
+公開ツールは次の<!--var:mcp_tool_count-->6<!--/var-->件です。
 
 | ツール | 役割 |
 | --- | --- |
-| `patent_analysis.capabilities` | 利用できる18分析・mark・schema名 |
+| `patent_analysis.capabilities` | 利用できる<!--var:mcp_analysis_count-->28<!--/var-->分析・mark・schema名 |
 | `patent_analysis.schema` | 許可されたschema名からJSON Schemaを取得 |
 | `patent_analysis.inspect` | CSV・JSONのメタデータ検査。サンプル行は返さない |
 | `patent_analysis.validate_spec` | JSONオブジェクトとして渡したspecを検証 |

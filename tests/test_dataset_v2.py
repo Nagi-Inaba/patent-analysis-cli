@@ -134,6 +134,22 @@ def test_first_excess_compact_row_is_rejected_before_parsing_later_records(
     assert str(caught.value) == "dataset exceeds row limit"
 
 
+def test_json_reader_accepts_a_utf8_bom_and_reports_it_in_the_manifest(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "input.json"
+    raw = b"\xef\xbb\xbf" + b'[{"Applicants":"A Corp"}]'
+    source.write_bytes(raw)
+
+    dataset = _read(source)
+
+    assert dataset.manifest.encoding == "utf-8-sig"
+    assert dataset.manifest.raw_header == ("Applicants",)
+    assert dataset.manifest.byte_size == len(raw)
+    assert dataset.manifest.source_input_sha256 == hashlib.sha256(raw).hexdigest()
+    assert dataset.rows[0].values == ("A Corp",)
+
+
 def test_blank_records_do_not_bypass_the_parsed_cell_limit(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

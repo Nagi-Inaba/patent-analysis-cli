@@ -65,7 +65,7 @@ def test_prepare_preserves_raw_ids_missing_coverage_and_filters(tmp_path):
                                                               'filters': []})
 
 
-@pytest.mark.parametrize('people', ['A|B', '["A",null]', '["A",1]', '{"A":1}'])
+@pytest.mark.parametrize('people', ['A|B', '["A",null]', '["A",1]', '{"A":1}', '\ufeff["A"]'])
 def test_id_multivalues_require_explicit_json_string_array(tmp_path, people):
     import json
 

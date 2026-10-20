@@ -1,5 +1,6 @@
 import { AREA, MUTED, TEXT, frame, lineAt, rectAt, textAt, shape, type Graphic } from "./advanced-inventor-frame.js";
 import { displayLabel } from "./advanced-text.js";
+import { alternatePalette, inkOn, scaleAt } from "./palette.js";
 import type { AdvancedModel, AdvancedSpec, InventorHeatmapProjection } from "./advanced-types.js";
 
 const LOW = [0xf0, 0xfd, 0xfa], HIGH = [0x0f, 0x76, 0x6e];
@@ -21,6 +22,8 @@ function missingCell(x: number, y: number, width: number, height: number): Graph
 
 export function buildHeatmap(model: AdvancedModel, spec: AdvancedSpec, p: InventorHeatmapProjection): Record<string, unknown> {
   const columns = p.x.length, rows = p.y.length;
+  const alt = alternatePalette(spec.palette);
+  const colorAt = (t: number): string => alt === null ? scale(t) : scaleAt(alt.sequential, t);
   const cellW = columns ? Math.min(110, (AREA.right - GRID_LEFT) / columns) : 0;
   const cellH = rows ? Math.min(30, 300 / rows) : 0;
   const values = new Map(p.cells.map(cell => [`${cell.x}:${cell.y}`, cell.value]));
@@ -47,9 +50,11 @@ export function buildHeatmap(model: AdvancedModel, spec: AdvancedSpec, p: Invent
         continue;
       }
       const t = maximum > 0 ? value / maximum : 0;
-      elements.push(rectAt(left, top, cellW, cellH, scale(t), "#ffffff", 1));
+      const fill = colorAt(t);
+      elements.push(rectAt(left, top, cellW, cellH, fill, "#ffffff", 1));
+      // Dark or white, whichever reads better on this cell's own colour.
       elements.push(textAt(spec, left + cellW / 2, top + cellH / 2, numberText(value),
-        { align: "center", size: 10, color: t > 0.55 ? "#ffffff" : TEXT }));
+        { align: "center", size: 10, color: inkOn(fill, TEXT) }));
     }
   }
 
@@ -57,7 +62,7 @@ export function buildHeatmap(model: AdvancedModel, spec: AdvancedSpec, p: Invent
   const legendY = GRID_TOP + rows * cellH + 36;
   elements.push(textAt(spec, GRID_LEFT, legendY, p.value_label, { weight: 600 }));
   for (let step = 0; step < 5; step++) {
-    elements.push(rectAt(GRID_LEFT + step * 40, legendY + 14, 40, 14, scale(step / 4)));
+    elements.push(rectAt(GRID_LEFT + step * 40, legendY + 14, 40, 14, colorAt(step / 4)));
   }
   elements.push(textAt(spec, GRID_LEFT, legendY + 38, numberText(0), { size: 10 }));
   elements.push(textAt(spec, GRID_LEFT + 200, legendY + 38, numberText(maximum), { size: 10, align: "right" }));

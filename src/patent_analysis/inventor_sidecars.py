@@ -76,9 +76,9 @@ def _bounded_structure(document: object) -> None:
             stack.extend((v, depth + 1) for v in value)
 
 
-def _parse(raw: bytes) -> object:
+def _parse(raw: bytes, *, allow_bom: bool = False) -> object:
     try:
-        document = parse_strict_json_bytes(raw)
+        document = parse_strict_json_bytes(raw, allow_bom=allow_bom)
     except CanonicalizationError:
         raise DatasetInputError('input is invalid') from None
     _bounded_structure(document)
@@ -274,7 +274,7 @@ def read_inventor_sidecar(source: str | Path, *, allowed_root: str | Path,
                           record_ids: tuple[str, ...] = ()) -> SidecarSnapshot:
     path = _relative(str(source))
     raw = read_verified_bytes(path, allowed_root=allowed_root, max_bytes=MAX_SIDECAR_BYTES)
-    return _snapshot(_parse(raw), (('bundle', raw),), format='json',
+    return _snapshot(_parse(raw, allow_bom=True), (('bundle', raw),), format='json',
                      inventor_ids=inventor_ids, record_ids=record_ids)
 
 

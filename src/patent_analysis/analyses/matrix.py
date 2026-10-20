@@ -18,6 +18,10 @@ from patent_analysis.normalization import (
 from patent_analysis.population import apply_population, family_roles
 
 AXIS_OTHER_LABEL = "その他（上位外）"
+PIE_BLANK_LABEL = "(空白)"
+DEFAULT_PIE_LIMIT = 5
+MIN_PIE_LIMIT = 2
+MAX_PIE_LIMIT = 8
 MATRIX_ALGORITHM_VERSION = "1.0.0"
 MAX_VISIBLE_CELLS = 400
 MAX_EXPANDED_CONTRIBUTIONS = 2_000_000
@@ -80,6 +84,9 @@ def _validate_parameters(parameters: Mapping[str, object]) -> dict[str, object]:
         "y_limit",
         "include_axis_other",
         "measure",
+        "pie_role",
+        "pie_classification_level",
+        "pie_limit",
     }
     unknown = sorted(set(parameters) - allowed)
     if unknown:
@@ -104,19 +111,37 @@ def _validate_parameters(parameters: Mapping[str, object]) -> dict[str, object]:
     if parameters.get("measure", "count") != "count":
         raise ValueError("matrix.v1 supports only measure=count")
 
+    pie_role: str | None = None
+    if "pie_role" in parameters:
+        pie_role = parameters["pie_role"]
+        if not isinstance(pie_role, str) or not pie_role.strip():
+            raise ValueError("pie_role must be a non-empty string")
+        pie_role = pie_role.strip()
+    pie_limit = DEFAULT_PIE_LIMIT
+    if "pie_limit" in parameters:
+        pie_limit = parameters["pie_limit"]
+        if type(pie_limit) is not int or not MIN_PIE_LIMIT <= pie_limit <= MAX_PIE_LIMIT:
+            raise ValueError(
+                f"pie_limit must be an integer from {MIN_PIE_LIMIT} through {MAX_PIE_LIMIT}"
+            )
+    if pie_role is None:
+        for option in ("pie_limit", "pie_classification_level"):
+            if option in parameters:
+                raise ValueError(f"{option} requires pie_role")
+
+    axis_roles = {"x": x_role, "y": y_role, **({"pie": pie_role} if pie_role else {})}
     classification_levels: dict[str, str] = {}
-    for axis in ("x", "y"):
+    for axis, role in axis_roles.items():
         value = parameters.get(f"{axis}_classification_level")
         if value is not None:
             if not isinstance(value, str) or value not in CLASSIFICATION_LEVELS:
                 raise ValueError(f"unsupported {axis}_classification_level")
-            role = x_role if axis == "x" else y_role
             existing = classification_levels.get(role)
             if existing is not None and existing != value:
                 raise ValueError("one role cannot use two classification levels")
             classification_levels[role] = value
 
-    return {
+    validated: dict[str, object] = {
         "x_role": x_role.strip(),
         "y_role": y_role.strip(),
         "x_limit": x_limit,
@@ -125,6 +150,10 @@ def _validate_parameters(parameters: Mapping[str, object]) -> dict[str, object]:
         "measure": "count",
         "classification_levels": classification_levels,
     }
+    if pie_role is not None:
+        validated["pie_role"] = pie_role
+        validated["pie_limit"] = pie_limit
+    return validated
 
 
 def _rank_axis(rows: Sequence[tuple[str, ...]], limit: int) -> tuple[str, ...]:
@@ -169,6 +198,69 @@ def _axis_categories(
             }
         )
     return categories
+
+
+def _pie_composition(
+    visible: Sequence[tuple[int, tuple[str, ...], tuple[str, ...]]],
+    pie_values: Sequence[tuple[str, ...]],
+    x_index: Mapping[str, int],
+    y_index: Mapping[str, int],
+    limit: int,
+    role: str,
+) -> tuple[dict[str, object], dict[tuple[int, int], list[dict[str, object]]]]:
+    """Split every visible cell by the pie role's top values.
+
+    Only rows that reach a cell take part. A row with several pie values counts once per
+    value, so a cell's slices can add up to more than its row count. Values outside the top
+    `limit` are folded into one aggregate slice that never reuses a source label.
+    """
+
+    source = [pie_values[position] for position, _, _ in visible]
+    source_labels = {value for values in source for value in values}
+    blank_label = unique_aggregate_label(PIE_BLANK_LABEL, source_labels)
+    rows = [values or (blank_label,) for values in source]
+
+    counts: Counter[str] = Counter()
+    for values in rows:
+        counts.update(values)
+    ranked = tuple(sorted(counts, key=lambda label: (-counts[label], label)))
+    top = frozenset(ranked[:limit])
+    other_label = unique_aggregate_label(AXIS_OTHER_LABEL, counts)
+    has_other = len(ranked) > limit
+    legend = ranked[:limit] + ((other_label,) if has_other else ())
+
+    categories: list[dict[str, object]] = [
+        {"label": label, "count": counts[label], "is_other": False} for label in ranked[:limit]
+    ]
+    if has_other:
+        categories.append(
+            {
+                "label": other_label,
+                "count": sum(any(value not in top for value in values) for values in rows),
+                "is_other": True,
+            }
+        )
+
+    slice_counts: dict[tuple[int, int], Counter[str]] = {}
+    expanded = 0
+    for (_, projected_x, projected_y), values in zip(visible, rows, strict=True):
+        projected = _stable_unique(value if value in top else other_label for value in values)
+        for y_label in projected_y:
+            for x_label in projected_x:
+                bucket = slice_counts.setdefault((y_index[y_label], x_index[x_label]), Counter())
+                for label in projected:
+                    if expanded >= MAX_EXPANDED_CONTRIBUTIONS:
+                        raise MatrixBudgetError(
+                            f"expanded pie contributions exceed limit {MAX_EXPANDED_CONTRIBUTIONS}"
+                        )
+                    expanded += 1
+                    bucket[label] += 1
+
+    slices = {
+        key: [{"label": label, "count": bucket[label]} for label in legend if bucket[label]]
+        for key, bucket in slice_counts.items()
+    }
+    return {"role": role, "categories": categories}, slices
 
 
 def analyze_matrix(
@@ -216,8 +308,11 @@ def analyze_matrix(
     blank_axis_rows = 0
     axis_other_rows = 0
     contributions = 0
+    pie_role = validated.get("pie_role")
+    # (row position, projected x labels, projected y labels) for every row that reaches a cell.
+    visible: list[tuple[int, tuple[str, ...], tuple[str, ...]]] = []
 
-    for x_values, y_values in axis_rows:
+    for position, (x_values, y_values) in enumerate(axis_rows):
         if not x_values or not y_values:
             blank_axis_rows += 1
             continue
@@ -233,6 +328,8 @@ def analyze_matrix(
         if not projected_x or not projected_y:
             continue
         visible_rows += 1
+        if pie_role is not None:
+            visible.append((position, projected_x, projected_y))
         if include_other and has_other:
             axis_other_rows += 1
         for y_label in projected_y:
@@ -244,6 +341,17 @@ def analyze_matrix(
                 contributions += 1
                 cells[(y_index[y_label], x_index[x_label])] += 1
 
+    pie_document: dict[str, object] | None = None
+    slices_by_cell: dict[tuple[int, int], list[dict[str, object]]] = {}
+    if pie_role is not None:
+        pie_document, slices_by_cell = _pie_composition(
+            visible,
+            [_row_values(row, str(pie_role)) for row in rows],
+            x_index,
+            y_index,
+            int(validated["pie_limit"]),
+            str(pie_role),
+        )
     cell_documents = [
         {
             "x_index": x_position,
@@ -252,10 +360,15 @@ def analyze_matrix(
             "y_label": y_labels[y_position],
             "value": count,
             "row_count": count,
+            **(
+                {"slices": slices_by_cell[(y_position, x_position)]}
+                if pie_document is not None
+                else {}
+            ),
         }
         for (y_position, x_position), count in sorted(cells.items())
     ]
-    return {
+    document: dict[str, object] = {
         "schema_version": "1.0.0",
         "analysis_id": "matrix.v1",
         "algorithm_version": MATRIX_ALGORITHM_VERSION,
@@ -292,6 +405,9 @@ def analyze_matrix(
             "max_expanded_contributions": MAX_EXPANDED_CONTRIBUTIONS,
         },
     }
+    if pie_document is not None:
+        document["pie"] = pie_document
+    return document
 
 
 def _stable_roles(values: Iterable[str]) -> tuple[str, ...]:
@@ -326,6 +442,7 @@ def analyze_matrix_csv(
         [
             str(parameters["x_role"]),
             str(parameters["y_role"]),
+            *([str(parameters["pie_role"])] if "pie_role" in parameters else []),
             *filter_roles,
         ]
     )

@@ -7,6 +7,7 @@ import os
 import shutil
 import stat
 import subprocess
+import sys
 import traceback
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -19,8 +20,8 @@ from patent_analysis._version import PACKAGE_VERSION
 from patent_analysis.analysis import _canonical_sha256 as result_sha256
 
 pytestmark = pytest.mark.skipif(
-    os.name != "nt",
-    reason="trusted-local rendering contract is Windows x64-only",
+    sys.platform not in {"win32", "darwin"},
+    reason="trusted-local rendering contract is Windows x64 or macOS",
 )
 
 
@@ -219,7 +220,7 @@ def test_semantic_invalid_precedes_platform_output_and_node_cross_product(
 
         return fail
 
-    monkeypatch.setattr(rendering, "require_windows_x64", forbidden("platform"))
+    monkeypatch.setattr(rendering, "require_supported_platform", forbidden("platform"))
     monkeypatch.setattr(rendering, "validate_local_directory", forbidden("output"))
     monkeypatch.setattr(rendering, "resolve_node_executable", forbidden("node"))
     monkeypatch.setattr(rendering, "launch_trusted_node", forbidden("subprocess"))
@@ -247,7 +248,7 @@ def test_render_spec_semantic_failure_precedes_platform_output_and_node(
         lambda **_kwargs: (_ for _ in ()).throw(rendering.RenderContractError()),
     )
     for name in (
-        "require_windows_x64",
+        "require_supported_platform",
         "validate_local_directory",
         "resolve_node_executable",
         "launch_trusted_node",
@@ -436,7 +437,7 @@ def test_render_composition_uses_existing_builders_and_exact_canonical_frame_onc
         calls.append(("model", (value, overlay)))
         return model, receipt
 
-    def build_spec(*, row_count: int):
+    def build_spec(*, row_count: int, palette: str | None = None):
         calls.append(("spec", row_count))
         return spec
 
@@ -691,11 +692,11 @@ def test_concurrent_publish_winner_is_revalidated_and_own_temp_is_removed(
     final = tmp_path / "ranking-svg-test.svg"
     fsync_calls: list[int] = []
 
-    def concurrent_rename(_source: Path, destination: Path) -> None:
+    def concurrent_publish(_source: Path, destination: Path, **_kwargs: object) -> None:
         Path(destination).write_bytes(winner)
         raise FileExistsError
 
-    monkeypatch.setattr(rendering.os, "rename", concurrent_rename)
+    monkeypatch.setattr(rendering.os, "rename" if os.name == "nt" else "link", concurrent_publish)
     monkeypatch.setattr(rendering.os, "fsync", lambda fd: fsync_calls.append(fd))
     if expected is None:
         with pytest.raises(errors.RenderError) as captured:
@@ -731,7 +732,7 @@ def test_non_windows_platform_wins_before_output_validation(
     assert errors is not None and rendering is not None
     monkeypatch.setattr(
         rendering,
-        "require_windows_x64",
+        "require_supported_platform",
         lambda: (_ for _ in ()).throw(rendering.LocalRendererError()),
     )
 
@@ -752,7 +753,7 @@ def test_receipt_and_errors_never_expose_absolute_path_or_stderr(
 ) -> None:
     errors, rendering = _load_modules()
     assert errors is not None and rendering is not None
-    secret = "secret-label C:\\Users\\Nagi\\private.json"
+    secret = "secret-label C:\\Users\\user\\private.json"
     monkeypatch.setattr(
         rendering,
         "_render_svg",
@@ -766,7 +767,10 @@ def test_receipt_and_errors_never_expose_absolute_path_or_stderr(
     _assert_safe(captured.value, secret)
 
 
-@pytest.mark.skipif(os.name != "nt", reason="trusted-local v1 is Windows x64-only")
+@pytest.mark.skipif(
+    sys.platform not in {"win32", "darwin"},
+    reason="trusted-local v1 is Windows x64 or macOS",
+)
 def test_real_packaged_node_renderer_creates_parseable_svg_and_reuses(tmp_path: Path) -> None:
     errors, rendering = _load_modules()
     assert errors is not None and rendering is not None

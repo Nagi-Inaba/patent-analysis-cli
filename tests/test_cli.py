@@ -167,6 +167,67 @@ def test_analysis_commands_resolve_relative_csv_and_spec_against_allowed_root(
     assert json.loads(captured.out)["ok"] is True
 
 
+def test_json_dataset_and_spec_accept_a_utf8_bom(tmp_path, capsys):
+    dataset = tmp_path / "bom-dataset.json"
+    dataset.write_bytes(
+        b"\xef\xbb\xbf"
+        + json.dumps([{"出願人": "A社"}, {"出願人": "B社"}], ensure_ascii=False).encode("utf-8")
+    )
+    spec_path = tmp_path / "bom-spec.json"
+    spec_path.write_bytes(
+        b"\xef\xbb\xbf" + json.dumps(_valid_analysis_spec(), ensure_ascii=False).encode("utf-8")
+    )
+
+    exit_code = main(["analyze", dataset.name, "--spec", spec_path.name, "--json"])
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert captured.err == ""
+    assert json.loads(captured.out)["ok"] is True
+
+
+def test_validate_plan_accepts_a_utf8_bom(tmp_path, capsys):
+    plan_path = tmp_path / "bom-plan.json"
+    plan_path.write_bytes(
+        b"\xef\xbb\xbf"
+        + json.dumps(
+            {
+                "intent": "applicant ranking",
+                "operations": [
+                    {
+                        "type": "create_analysis",
+                        "params": {"analysis_type": "ranking", "x": "applicant"},
+                    }
+                ],
+            }
+        ).encode("utf-8")
+    )
+
+    exit_code = main(["validate-plan", plan_path.name, "--json"])
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert captured.err == ""
+    assert json.loads(captured.out) == {"contract_version": "1.0.0", "ok": True}
+
+
+def test_top_level_help_lists_capabilities(capsys):
+    assert main(["--help"]) == 0
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    listing = " ".join(captured.out.split("positional arguments:", 1)[1].split())
+    assert "capabilities List implemented analyses, render marks, and schema names" in listing
+
+
+def test_capabilities_help_prints_its_usage(capsys):
+    assert main(["capabilities", "--help"]) == 0
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert captured.out.startswith("usage: patent-analysis capabilities")
+
+
 def test_analysis_spec_file_outside_allowed_root_is_rejected(tmp_path, capsys):
     csv_path, _ = _write_analysis_csv(tmp_path)
     outside = tmp_path.parent / "TASK-5A-OUTSIDE-SPEC.json"

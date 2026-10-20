@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import hashlib
-import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -98,8 +98,8 @@ _CASES = (
 
 
 @pytest.mark.skipif(
-    os.name != "nt" or shutil.which("node") is None,
-    reason="trusted renderer E2E requires Windows and exact local Node",
+    sys.platform not in {"win32", "darwin"} or shutil.which("node") is None,
+    reason="trusted renderer E2E requires Windows x64 or macOS and exact local Node",
 )
 def test_real_node_categorical_marks_create_then_reuse(tmp_path: Path) -> None:
     from patent_analysis.rendering import render_categorical_svg

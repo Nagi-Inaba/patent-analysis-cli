@@ -13,6 +13,7 @@ from patent_analysis.analysis_contracts import (
     AnalysisContractError,
     StrictDraft202012Validator,
 )
+from patent_analysis.render_palettes import apply_render_palette
 from patent_analysis.v2_contracts import validate_analysis_result_v2
 
 
@@ -87,10 +88,12 @@ def build_receipt(
     }
 
 
-def fixed_render_spec(*, renderer_kind: str, render_profile_id: str) -> dict[str, object]:
+def fixed_render_spec(
+    *, renderer_kind: str, render_profile_id: str, palette: str | None = None
+) -> dict[str, object]:
     """Return the immutable trusted-local renderer settings for a closed mark."""
 
-    return {
+    spec: dict[str, object] = {
         "render_spec_contract_version": "1.0.0",
         "renderer_kind": renderer_kind,
         "locale": "ja-JP",
@@ -103,6 +106,7 @@ def fixed_render_spec(*, renderer_kind: str, render_profile_id: str) -> dict[str
         "echarts_version": "6.1.0",
         "render_profile_id": render_profile_id,
     }
+    return apply_render_palette(spec, palette)
 
 
 __all__ = (

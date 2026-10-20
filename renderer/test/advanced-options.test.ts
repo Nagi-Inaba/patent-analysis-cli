@@ -21,6 +21,8 @@ type OptionView<T = PointView> = {
     };
   }[];
 };
+// A heatmap cell carries its own label colour, so it is an item object rather than a bare triple.
+type HeatmapDatum = { value: number[]; label: { color: string } };
 function optionView<T = PointView>(model: AdvancedModel, spec: AdvancedSpec): OptionView<T> {
   const option = buildAdvancedOption(model, spec);
   assert.ok(Array.isArray(option.series));
@@ -57,9 +59,9 @@ test("quadrant retains unknown-rate warning without inventing a point", () => {
 
 test("signed Compara has equal positive and negative scale endpoints", () => {
   const model = fixtures.models.find(m => m.analysis_id === "compara.v1")!;
-  const option = optionView<number[]>(model, fixtures.spec);
+  const option = optionView<HeatmapDatum>(model, fixtures.spec);
   assert.equal(option.visualMap.min, -option.visualMap.max);
-  assert.ok(option.series[0].data.some((p) => p[2] < 0));
+  assert.ok(option.series[0].data.some((p) => p.value[2]! < 0));
 });
 
 test("network uses fixed numeric positions, no force physics", () => {
@@ -114,12 +116,12 @@ test("heatmaps keep their values with bounded non-gradient legends", () => {
     if (model.projection.kind !== "heatmap") throw new Error("fixture");
     const p = model.projection;
     const before = JSON.stringify(model);
-    const option = optionView<number[]>(model, fixtures.spec);
+    const option = optionView<HeatmapDatum>(model, fixtures.spec);
     assert.equal(option.visualMap.type, "piecewise");
     assert.equal(option.visualMap.splitNumber, 5);
     assert.equal(option.visualMap.min, p.signed ? -option.visualMap.max : 0);
     for (const cell of p.cells) {
-      assert.ok(option.series[0].data.some((v: number[]) =>
+      assert.ok(option.series[0].data.some(({ value: v }) =>
         v[0] === cell.x && v[1] === cell.y && v[2] === cell.value));
     }
     assert.equal(JSON.stringify(model), before);
@@ -146,4 +148,53 @@ test("network links preserve endpoints and bound stroke precision", () => {
   });
   assert.ok(nodes.every((n) => n.label.textBorderWidth === 0));
   assert.equal(JSON.stringify(model), before);
+});
+
+type AxisView = {
+  minInterval?: number;
+  axisLine?: { onZero?: boolean };
+  axisLabel?: { rotate?: number; formatter?: (value: number) => string };
+};
+const axesView = (id: string) => {
+  const model = fixtures.models.find(m => m.analysis_id === id)!;
+  return buildAdvancedOption(model, fixtures.spec) as unknown as { xAxis: AxisView; yAxis: AxisView };
+};
+
+test("year axes label ticks as plain years, never grouped quantities", () => {
+  const entryExit = axesView("entry-exit.v1");
+  for (const axis of [entryExit.xAxis, entryExit.yAxis]) {
+    assert.equal(axis.axisLabel?.formatter?.(2018), "2018");
+    assert.equal(axis.minInterval, 1);
+  }
+  const citation = axesView("citation.v1");
+  assert.equal(citation.xAxis.axisLabel?.formatter?.(2024), "2024");
+  assert.equal(citation.yAxis.axisLabel?.formatter, undefined, "a count axis keeps the default number label");
+});
+
+test("value axes keep their line at the plot edge instead of the zero crossing", () => {
+  for (const id of ["growth-quadrant.v1", "citation.v1"]) {
+    const option = axesView(id);
+    assert.equal(option.xAxis.axisLine?.onZero, false, id);
+    assert.equal(option.yAxis.axisLine?.onZero, false, id);
+  }
+  for (const model of fixtures.models.filter(m => m.projection.kind === "bars")) {
+    assert.equal(axesView(model.analysis_id).xAxis.axisLine?.onZero, false, model.analysis_id);
+  }
+});
+
+test("record-count bar axes keep integer ticks", () => {
+  for (const model of fixtures.models.filter(m => m.projection.kind === "bars")) {
+    assert.equal(axesView(model.analysis_id).xAxis.minInterval, 1, model.analysis_id);
+  }
+});
+
+test("heatmap x labels stay upright unless a displayed category is long", () => {
+  for (const source of fixtures.models.filter(m => m.projection.kind === "heatmap")) {
+    assert.equal(axesView(source.analysis_id).xAxis.axisLabel?.rotate, 0, source.analysis_id);
+  }
+  const model = structuredClone(fixtures.models.find(m => m.analysis_id === "cooccurrence.v1")!);
+  if (model.projection.kind !== "heatmap") throw new Error("fixture");
+  model.projection.x[0] = "長すぎる分類カテゴリ名";
+  const tilted = buildAdvancedOption(model, fixtures.spec) as unknown as { xAxis: AxisView };
+  assert.equal(tilted.xAxis.axisLabel?.rotate, 25);
 });

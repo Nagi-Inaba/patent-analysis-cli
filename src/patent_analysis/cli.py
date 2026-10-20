@@ -36,6 +36,7 @@ from patent_analysis.dataset_v2 import (
     read_dataset_v2,
 )
 from patent_analysis.render_errors import RenderError, _make_render_error
+from patent_analysis.render_palettes import RENDER_PALETTES
 from patent_analysis.rendering import (
     MAX_ANALYSIS_DOCUMENT_BYTES,
     MAX_OVERLAY_DOCUMENT_BYTES,
@@ -74,10 +75,10 @@ def _read_bounded_stdin() -> str:
     if isinstance(content, str):
         if len(content.encode("utf-8")) > MAX_INPUT_BYTES:
             raise ValueError("OperationPlan input exceeds the size limit")
-        return content
+        return content.removeprefix("\ufeff")
     if len(content) > MAX_INPUT_BYTES:
         raise ValueError("OperationPlan input exceeds the size limit")
-    return content.decode("utf-8")
+    return content.decode("utf-8-sig")
 
 
 def _read_plan(source: str, *, allowed_root: str | Path | None) -> Any:
@@ -89,7 +90,7 @@ def _read_plan(source: str, *, allowed_root: str | Path | None) -> Any:
             allowed_root=allowed_root,  # type: ignore[arg-type]
             max_bytes=MAX_INPUT_BYTES,
         )
-        text = content.decode("utf-8")
+        text = content.decode("utf-8-sig")
     return json.loads(
         text,
         parse_constant=_reject_json_constant,
@@ -134,6 +135,13 @@ def _build_parser() -> argparse.ArgumentParser:
         allow_abbrev=False,
     )
     contract_parser.add_argument("--json", action="store_true", dest="as_json")
+
+    capabilities_parser = subparsers.add_parser(
+        "capabilities",
+        help="List implemented analyses, render marks, and schema names",
+        allow_abbrev=False,
+    )
+    capabilities_parser.add_argument("--json", action="store_true", dest="as_json")
 
     validate_parser = subparsers.add_parser(
         "validate-plan",
@@ -211,6 +219,20 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         default=argparse.SUPPRESS,
     )
+    render_parser.add_argument(
+        "--value-labels",
+        dest="render_value_labels",
+        choices=("hidden", "shown"),
+        default=argparse.SUPPRESS,
+        help="Count labels on the matrix bubble mark (default: hidden)",
+    )
+    render_parser.add_argument(
+        "--palette",
+        dest="render_palette",
+        choices=RENDER_PALETTES,
+        default=argparse.SUPPRESS,
+        help="Colour palette for every mark (default: standard)",
+    )
     render_parser.add_argument("--json", action="store_true", required=True, dest="as_json")
     return parser
 
@@ -234,24 +256,6 @@ def _write_usage_error(as_json: bool) -> int:
     else:
         print("Invalid patent-analysis command-line arguments", file=sys.stderr)
     return EXIT_USAGE_ERROR
-
-
-def _run_capabilities_cli(arguments: list[str]) -> int:
-    as_json = "--json" in arguments
-    if any(token in {"-h", "--help"} for token in arguments):
-        if as_json:
-            return _write_usage_error(as_json=True)
-        print("usage: patent-analysis capabilities [--json]")
-        return EXIT_OK
-    if arguments not in ([], ["--json"]):
-        return _write_usage_error(as_json)
-    capabilities = describe_capabilities()
-    if as_json:
-        _write_json(capabilities)
-    else:
-        for analysis in capabilities["analyses"]:
-            print(analysis["analysis_id"])
-    return EXIT_OK
 
 
 def _render_failure_payload(error: RenderError) -> dict[str, Any]:
@@ -320,6 +324,15 @@ def _run_render(args: argparse.Namespace) -> int:
     except (DatasetInputError, OSError, UnicodeError, TypeError, ValueError):
         return _write_render_failure(_make_render_error("input.invalid"))
 
+    # Display options are forwarded only when chosen, so the default call is unchanged.
+    options = {
+        name: getattr(args, attribute)
+        for name, attribute in (
+            ("value_labels", "render_value_labels"),
+            ("palette", "render_palette"),
+        )
+        if hasattr(args, attribute)
+    }
     try:
         receipt = render_analysis_svg(
             analysis,
@@ -327,6 +340,7 @@ def _run_render(args: argparse.Namespace) -> int:
             overlay=overlay,
             output_directory=args.output_directory,
             node_executable=args.node_executable,
+            **options,
         )
     except RenderError as error:
         return _write_render_failure(error)
@@ -514,12 +528,10 @@ def _run_analyze(
 
 def main(argv: Sequence[str] | None = None) -> int:
     parse_argv = list(sys.argv[1:] if argv is None else argv)
-    if parse_argv and parse_argv[0] == "capabilities":
-        return _run_capabilities_cli(parse_argv[1:])
     requested_as_json = "--json" in parse_argv
     requested_render = bool(parse_argv and parse_argv[0] == "render")
     if any(token in {"-h", "--help"} for token in parse_argv):
-        if requested_render:
+        if requested_render and requested_as_json:
             return _write_render_failure(_make_render_error("usage.invalid"))
         if requested_as_json:
             return _write_usage_error(as_json=True)
@@ -542,6 +554,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"OperationPlan contract {contract['contract_version']}")
             for operation in contract["operations"]:
                 print(operation)
+        return EXIT_OK
+
+    if args.command == "capabilities":
+        capabilities = describe_capabilities()
+        if args.as_json:
+            _write_json(capabilities)
+        else:
+            for analysis in capabilities["analyses"]:
+                print(analysis["analysis_id"])
         return EXIT_OK
 
     if args.command == "validate-spec":

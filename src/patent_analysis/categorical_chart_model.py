@@ -36,6 +36,7 @@ def build_categorical_render_spec(
     *,
     mark: str,
     chart_model: Mapping[str, object] | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     """Build the fixed family render spec without caller chart configuration."""
 
@@ -51,13 +52,14 @@ def build_categorical_render_spec(
             mark=mark,
             x_count=x_count,
             series_count=series_count,
+            palette=palette,
         )
     if mark in COMPOSITION_MARKS:
         item_count = None
         if chart_model is not None:
             items = chart_model.get("items")
             item_count = len(items) if isinstance(items, list) else None
-        return build_composition_render_spec(mark=mark, item_count=item_count)
+        return build_composition_render_spec(mark=mark, item_count=item_count, palette=palette)
     raise ValueError("unknown categorical renderer mark")
 
 

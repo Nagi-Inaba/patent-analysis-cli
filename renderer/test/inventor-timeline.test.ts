@@ -184,6 +184,26 @@ describe("inventor-timeline rendering", () => {
     assert.equal(attribute(inferredGap!, "stroke-dasharray"), "6 4", "gap must not remove the inferred dash");
     assert.notEqual(attribute(observedGap!, "opacity"), attribute(observedPlain!, "opacity"), "gap is shown separately");
   });
+  test("labels sit on opaque patches so lane links never strike through the text", () => {
+    const svg = renderAdvancedModelToRawSvg(allObserved(activity()), SPEC);
+    // One opaque patch per node label, painted after the links and under every glyph.
+    const patches = tags(svg, "path").filter(tag =>
+      attribute(tag, "fill") === "#ffffff" && attribute(tag, "stroke") === undefined);
+    assert.equal(patches.length, 4, "one patch per node label");
+    const rectangles = patches.map(tag => {
+      // zrender emits the rectangle as M x y l width 0 l 0 height l -width 0 Z.
+      const numbers = attribute(tag, "d")!.match(/[\d.-]+/gu)!.map(Number);
+      return { y: numbers[1]!, width: numbers[2]!, height: numbers[5]! };
+    });
+    for (const patch of rectangles) {
+      assert.equal(patch.height, 10);
+      assert.ok(patch.width > 0);
+    }
+    const circles = tags(svg, "circle").slice(0, 3);
+    const rows = circles.map(tag => Number(attribute(tag, "cy")));
+    for (const row of rows) assert.ok(rectangles.some(patch => patch.y + 5 === row), "patch rows match node rows");
+    assert.ok(svg.indexOf(patches[patches.length - 1]!) < svg.indexOf(circles[0]!), "patches paint under the marks");
+  });
   test("corporate bands are drawn only when supplied and are not employment", () => {
     const withBands = texts(renderAdvancedModelToRawSvg(mobility(), SPEC));
     for (const label of ["Event One", "Event Two"]) assert.ok(withBands.some(text => text.includes(label)), label);

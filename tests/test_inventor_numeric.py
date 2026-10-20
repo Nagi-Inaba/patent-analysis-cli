@@ -1,3 +1,4 @@
+from decimal import ROUND_DOWN, ROUND_UP, Context, Inexact, Rounded, localcontext
 from fractions import Fraction
 
 import pytest
@@ -18,6 +19,32 @@ def test_explicit_exact_rounding_and_safe_json_boundary():
         exact(Fraction(1, 2**129))
     with pytest.raises(DatasetInputError):
         finish({"a": "a" * 204801})
+
+
+@pytest.mark.parametrize(
+    "caller_context",
+    [
+        Context(rounding=ROUND_UP),
+        Context(rounding=ROUND_DOWN),
+        Context(traps=[Inexact]),
+        Context(traps=[Rounded]),
+        Context(prec=2, Emin=0, Emax=0),
+    ],
+    ids=["round-up", "round-down", "inexact-trap", "rounded-trap", "narrow-exponents"],
+)
+def test_exact_rounding_is_independent_of_caller_decimal_context(caller_context):
+    with localcontext(caller_context) as context:
+        before = context.copy()
+        assert exact(Fraction(1, 3))["value"] == 0.333333333333
+        assert exact(Fraction(1, 2 * 10**12))["value"] == 0.0
+        assert exact(Fraction(3, 2 * 10**12))["value"] == 0.000000000002
+        assert exact(Fraction(-3, 2 * 10**12))["value"] == -0.000000000002
+        assert exact(Fraction(1000, 3))["value"] == 333.333333333333
+        assert context.prec == before.prec
+        assert context.rounding == before.rounding
+        assert (context.Emin, context.Emax) == (before.Emin, before.Emax)
+        assert context.traps == before.traps
+        assert context.flags == before.flags
 
 
 def feature(key, values, reason=None):

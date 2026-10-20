@@ -141,6 +141,7 @@ def build_composition_render_spec(
     *,
     mark: str,
     item_count: int,
+    palette: str | None = None,
 ) -> dict[str, object]:
     """Build the fixed categorical render spec for a composition mark."""
 
@@ -155,6 +156,7 @@ def build_composition_render_spec(
     spec = fixed_render_spec(
         renderer_kind=renderer_kind,
         render_profile_id=CATEGORICAL_RENDER_PROFILE_ID,
+        palette=palette,
     )
     validate_schema(spec, "categorical-render-spec-v1.schema.json")
     return deepcopy(spec)

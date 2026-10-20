@@ -1,5 +1,6 @@
 // @ts-expect-error -- generated build-time validators intentionally have no hand-maintained typings.
 import { validateChartModel, validateRendererRequest, validateRendererRuntime, validateRenderSpec } from "./generated/categorical-standalone-validators.js";
+import type { PaletteId } from "./palette.js";
 
 const MAX_REQUEST_BYTES = 3 * 1024 * 1024;
 const MAX_CHART_MODEL_BYTES = 2 * 1024 * 1024;
@@ -77,6 +78,8 @@ export type CategoricalRenderSpec = {
   axis_label_max_graphemes: 28;
   echarts_version: "6.1.0";
   render_profile_id: "categorical-svg-ja-jp-node22-echarts6.v1";
+  // Absent means "standard": each family keeps its own colours.
+  palette?: PaletteId;
 };
 type RendererRequest = {
   protocol_version: "1.0.0";

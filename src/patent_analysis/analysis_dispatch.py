@@ -73,6 +73,8 @@ def _reject_legacy_constant(_value: str) -> None:
 
 
 def _parse_legacy_json_bytes(raw: bytes) -> object:
+    if raw.startswith(b"\xef\xbb\xbf"):
+        raw = raw[3:]
     try:
         return json.loads(raw.decode("utf-8"), parse_constant=_reject_legacy_constant)
     except (UnicodeDecodeError, json.JSONDecodeError, RecursionError, ValueError):
@@ -196,7 +198,7 @@ def dispatch_and_validate_spec_bytes(raw: bytes) -> ValidatedV1Spec | ValidatedV
         return ValidatedV1Spec(validate_analysis_spec(legacy_value))
 
     try:
-        value = parse_strict_json_bytes(raw)
+        value = parse_strict_json_bytes(raw, allow_bom=True)
     except CanonicalizationError:
         _raise_invalid("analysis spec is not strict JSON")
     _validate_spec_size_and_complexity(raw, value)

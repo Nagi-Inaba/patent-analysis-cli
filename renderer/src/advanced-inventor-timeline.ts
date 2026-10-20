@@ -110,6 +110,27 @@ export function buildTimeline(model: AdvancedModel, spec: AdvancedSpec, p: Inven
       elements.push(lineAt(mx + 3, my + 5, mx + 7, my - 5, LINE, 1));
     }
   }
+  // Label geometry is decided before the marks so a white patch can sit under each label: lane links
+  // run along the lane centre where labels sit and must not strike through them.
+  const labels = p.nodes.map((item, index) => {
+    const at = node[index]!;
+    // Labels sit right of the node; where that would run past the canvas edge they sit on its left, right-aligned.
+    let text = displayLabel(item.label, 18);
+    const rightX = at.x + at.e + 3, leftX = at.x - at.e - 3;
+    const rightSpace = spec.width - LABEL_MARGIN - rightX, leftSpace = leftX - LABEL_MARGIN;
+    const onRight = labelWidth(text, spec) <= rightSpace || rightSpace >= leftSpace;
+    const available = onRight ? rightSpace : leftSpace;
+    for (let limit = 17; labelWidth(text, spec) > available && limit >= 1; limit--) {
+      text = displayLabel(item.label, limit);
+    }
+    if (labelWidth(text, spec) > available) text = "…";
+    const width = labelWidth(text, spec);
+    return { at, text, onRight, x: onRight ? rightX : leftX, width };
+  });
+  for (const label of labels) {
+    elements.push(rectAt(label.onRight ? label.x - 2 : label.x - label.width - 2,
+      label.at.y - 5, label.width + 4, 10, "#ffffff"));
+  }
   p.nodes.forEach((item, index) => {
     const at = node[index]!, color = paletteColor(item.category);
     if (item.state === "unknown") {
@@ -138,21 +159,10 @@ export function buildTimeline(model: AdvancedModel, spec: AdvancedSpec, p: Inven
       elements.push(circleAt(at.x, at.y, at.r, color, "#ffffff", 1.5));
     }
   });
-  p.nodes.forEach((item, index) => {
-    const at = node[index]!;
-    // Labels sit right of the node; where that would run past the canvas edge they sit on its left, right-aligned.
-    let text = displayLabel(item.label, 18);
-    const rightX = at.x + at.e + 3, leftX = at.x - at.e - 3;
-    const rightSpace = spec.width - LABEL_MARGIN - rightX, leftSpace = leftX - LABEL_MARGIN;
-    const onRight = labelWidth(text, spec) <= rightSpace || rightSpace >= leftSpace;
-    const available = onRight ? rightSpace : leftSpace;
-    for (let limit = 17; labelWidth(text, spec) > available && limit >= 1; limit--) {
-      text = displayLabel(item.label, limit);
-    }
-    if (labelWidth(text, spec) > available) text = "…";
-    elements.push(textAt(spec, onRight ? rightX : leftX, at.y, text,
-      { size: 9, align: onRight ? "left" : "right" }));
-  });
+  for (const label of labels) {
+    elements.push(textAt(spec, label.x, label.at.y, label.text,
+      { size: 9, align: label.onRight ? "left" : "right" }));
+  }
 
   // Legend rows: marks, then explicit statements about what the picture does not claim.
   let x = AREA.left;

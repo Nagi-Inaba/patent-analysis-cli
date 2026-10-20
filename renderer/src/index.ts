@@ -10,18 +10,22 @@ import {
   type RenderSpec,
   rendererFailure
 } from "./payload.js";
+import { alternatePalette } from "./palette.js";
 import { normalizeEChartsSvg } from "./svg-normalize.js";
 
 echarts.use([BarChart, GridComponent, MarkLineComponent, TitleComponent, SVGRenderer]);
 
-const COLORS = Object.freeze({
+const STANDARD_COLORS = Object.freeze({
   background: "#FFFFFF",
   positive: "#2563EB",
   negative: "#DC2626",
   remainder: "#94A3B8",
   text: "#0F172A",
-  grid: "#E2E8F0"
+  grid: "#E2E8F0",
+  axis: "#E2E8F0"
 });
+
+type RankingColors = { readonly [Role in keyof typeof STANDARD_COLORS]: string };
 
 function measureTitle(model: ChartModel): string {
   const column = model.measure.column;
@@ -59,6 +63,19 @@ function renderConfiguredChart(
   });
   chart.getZr().animation.start = () => {};
   try {
+    const alt = alternatePalette(spec.palette);
+    const COLORS: RankingColors =
+      alt === null
+        ? STANDARD_COLORS
+        : {
+            background: STANDARD_COLORS.background,
+            positive: alt.positive,
+            negative: alt.negative,
+            remainder: alt.remainder,
+            text: alt.text,
+            grid: alt.grid,
+            axis: alt.axis
+          };
     const title = `${model.title}（${measureTitle(model)}）`;
     const seriesData = model.rows.map((row) => {
       const color = row.row_kind === "remainder"
@@ -68,8 +85,8 @@ function renderConfiguredChart(
         value: row.value,
         itemStyle: {
           color,
-          borderColor: row.row_kind === "remainder" ? COLORS.remainder : color,
-          borderWidth: row.row_kind === "remainder" ? 1 : 0,
+          borderColor: row.row_kind === "remainder" ? COLORS.remainder : (alt?.outline ?? color),
+          borderWidth: row.row_kind === "remainder" ? 1 : (alt?.outlineWidth ?? 0),
           borderType: row.row_kind === "remainder" ? "dashed" : "solid",
           borderRadius: row.value < 0 ? [4, 0, 0, 4] : [0, 4, 4, 0]
         }
@@ -90,7 +107,7 @@ function renderConfiguredChart(
       grid: { left: 220, right: 120, top: model.rows.length === 0 ? 150 : 90, bottom: 64 },
       xAxis: {
         type: "value",
-        axisLine: { show: true, lineStyle: { color: COLORS.grid, width: 1 } },
+        axisLine: { show: true, lineStyle: { color: COLORS.axis, width: 1 } },
         axisTick: { show: false },
         axisLabel: { color: COLORS.text, fontFamily: spec.font_family, fontSize: 12 },
         splitLine: { show: true, lineStyle: { color: COLORS.grid, width: 1, type: "solid" } }
@@ -99,7 +116,7 @@ function renderConfiguredChart(
         type: "category",
         inverse: true,
         data: model.rows.map((row) => truncateAxisLabel(row.display_label)),
-        axisLine: { show: true, lineStyle: { color: COLORS.grid, width: 1 } },
+        axisLine: { show: true, lineStyle: { color: COLORS.axis, width: 1 } },
         axisTick: { show: false },
         axisLabel: { color: COLORS.text, fontFamily: spec.font_family, fontSize: 12 }
       },

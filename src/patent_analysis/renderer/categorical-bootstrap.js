@@ -4,7 +4,7 @@
 (() => {
   "use strict";
 
-  const EXPECTED_BUNDLE_SHA256 = "b0ad1fc0f146b37169e8c321d5b31d2d08b15aa3ae2a68e08111fdeeffc1c7e3";
+  const EXPECTED_BUNDLE_SHA256 = "e3ea3b0abec49516faf771022f8fe07c6a28e4932d830fdeb8f9dfe7278e3b45";
   const MAX_BUNDLE_BYTES = 4 * 1024 * 1024;
   const MAX_REQUEST_BYTES = 3 * 1024 * 1024;
   const MAX_FRAME_BYTES = 7 * 1024 * 1024;

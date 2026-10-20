@@ -24,6 +24,7 @@ const APPROVED_RUNTIME_LOCK_PATHS = Object.freeze({
 const APPROVED_RENDERER_MODULES = Object.freeze([
   "src/generated/standalone-validators.js",
   "src/index.ts",
+  "src/palette.ts",
   "src/payload.ts",
   "src/svg-normalize.ts"
 ]);
@@ -176,7 +177,8 @@ function chunkFromBuildResult(result) {
 
 async function main() {
   assert(process.version === "v22.19.0", `Expected Node v22.19.0, received ${process.version}`);
-  assert(process.arch === "x64", `Expected x64 Node, received ${process.arch}`);
+  assert(process.arch === "x64" || (process.platform === "darwin" && process.arch === "arm64"),
+    `Expected x64 or macOS arm64 Node, received ${process.platform}/${process.arch}`);
   const [packageJson, packageLock, bootstrapTemplate] = await Promise.all([
     readFile(resolve(rendererRoot, "package.json"), "utf8").then(JSON.parse),
     readFile(resolve(rendererRoot, "package-lock.json"), "utf8").then(JSON.parse),

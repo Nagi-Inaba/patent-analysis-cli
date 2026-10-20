@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
-import platform
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -75,9 +74,9 @@ def test_cli_rejects_incompatible_mark_or_overlay_for_valid_lifecycle_result(
     assert list(output.iterdir()) == []
 
 
-def _exact_windows_node() -> str | None:
+def _exact_renderer_node() -> str | None:
     node = shutil.which("node")
-    if os.name != "nt" or platform.machine().lower() not in {"amd64", "x86_64"} or not node:
+    if sys.platform not in {"win32", "darwin"} or not node:
         return None
     version = subprocess.run(
         [node, "--version"], capture_output=True, text=True, timeout=10, check=False
@@ -86,18 +85,18 @@ def _exact_windows_node() -> str | None:
 
 
 @pytest.mark.skipif(
-    os.name != "nt" or platform.machine().lower() not in {"amd64", "x86_64"},
-    reason="requires Windows x64",
+    sys.platform not in {"win32", "darwin"},
+    reason="requires Windows x64 or macOS",
 )
 @pytest.mark.parametrize("mark", ["points-bubble-svg.v1", None])
-def test_cli_real_windows_points_created_then_reused(
+def test_cli_real_native_points_created_then_reused(
     mark: str | None,
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    node = _exact_windows_node()
-    assert node is not None, "Windows renderer acceptance requires Node 22.19.0, not a skip"
+    node = _exact_renderer_node()
+    assert node is not None, "Native renderer acceptance requires Node 22.19.0, not a skip"
     analysis = tmp_path / "analysis.json"
     analysis.write_bytes(_lifecycle_result(tmp_path))
     source_bytes = (tmp_path / "input.csv").read_bytes()

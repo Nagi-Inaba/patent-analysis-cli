@@ -8317,7 +8317,7 @@ return errors === 0;
 validate22.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
 export const validateSpecRaw = validate54;
-const schema127 = {"$id":"urn:patent-analysis:advanced-render-spec:1.0.0","type":"object","additionalProperties":false,"required":["render_spec_contract_version","renderer_kind","locale","timezone","width","height","font_family","animation","axis_label_max_graphemes","echarts_version","render_profile_id"],"properties":{"render_spec_contract_version":{"const":"1.0.0"},"renderer_kind":{"const":"advanced.svg"},"locale":{"const":"ja-JP"},"timezone":{"const":"UTC"},"width":{"const":1200},"height":{"const":675},"font_family":{"const":"Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},"animation":{"const":false},"axis_label_max_graphemes":{"const":28},"echarts_version":{"const":"6.1.0"},"render_profile_id":{"const":"advanced-svg-ja-jp-node22-echarts6.v1"}}};
+const schema127 = {"$id":"urn:patent-analysis:advanced-render-spec:1.0.0","type":"object","additionalProperties":false,"required":["render_spec_contract_version","renderer_kind","locale","timezone","width","height","font_family","animation","axis_label_max_graphemes","echarts_version","render_profile_id"],"properties":{"render_spec_contract_version":{"const":"1.0.0"},"renderer_kind":{"const":"advanced.svg"},"locale":{"const":"ja-JP"},"palette":{"enum":["standard","colorblind","monochrome","high-contrast"]},"timezone":{"const":"UTC"},"width":{"const":1200},"height":{"const":675},"font_family":{"const":"Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},"animation":{"const":false},"axis_label_max_graphemes":{"const":28},"echarts_version":{"const":"6.1.0"},"render_profile_id":{"const":"advanced-svg-ja-jp-node22-echarts6.v1"}}};
 
 function validate54(data, {instancePath="", parentData, parentDataProperty, rootData=data, dynamicAnchors={}}={}){
 /*# sourceURL="urn:patent-analysis:advanced-render-spec:1.0.0" */;
@@ -8383,10 +8383,11 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.timezone !== undefined){
+if(data.palette !== undefined){
+let data3 = data.palette;
 const _errs5 = errors;
-if("UTC" !== data.timezone){
-validate54.errors = [{instancePath:instancePath+"/timezone",schemaPath:"#/properties/timezone/const",keyword:"const",params:{allowedValue: "UTC"},message:"must be equal to constant"}];
+if(!((((data3 === "standard") || (data3 === "colorblind")) || (data3 === "monochrome")) || (data3 === "high-contrast"))){
+validate54.errors = [{instancePath:instancePath+"/palette",schemaPath:"#/properties/palette/enum",keyword:"enum",params:{allowedValues: schema127.properties.palette.enum},message:"must be equal to one of the allowed values"}];
 return false;
 }
 var valid0 = _errs5 === errors;
@@ -8395,10 +8396,10 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.width !== undefined){
+if(data.timezone !== undefined){
 const _errs6 = errors;
-if(1200 !== data.width){
-validate54.errors = [{instancePath:instancePath+"/width",schemaPath:"#/properties/width/const",keyword:"const",params:{allowedValue: 1200},message:"must be equal to constant"}];
+if("UTC" !== data.timezone){
+validate54.errors = [{instancePath:instancePath+"/timezone",schemaPath:"#/properties/timezone/const",keyword:"const",params:{allowedValue: "UTC"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs6 === errors;
@@ -8407,10 +8408,10 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.height !== undefined){
+if(data.width !== undefined){
 const _errs7 = errors;
-if(675 !== data.height){
-validate54.errors = [{instancePath:instancePath+"/height",schemaPath:"#/properties/height/const",keyword:"const",params:{allowedValue: 675},message:"must be equal to constant"}];
+if(1200 !== data.width){
+validate54.errors = [{instancePath:instancePath+"/width",schemaPath:"#/properties/width/const",keyword:"const",params:{allowedValue: 1200},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs7 === errors;
@@ -8419,10 +8420,10 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.font_family !== undefined){
+if(data.height !== undefined){
 const _errs8 = errors;
-if("Yu Gothic UI, Yu Gothic, Meiryo, sans-serif" !== data.font_family){
-validate54.errors = [{instancePath:instancePath+"/font_family",schemaPath:"#/properties/font_family/const",keyword:"const",params:{allowedValue: "Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},message:"must be equal to constant"}];
+if(675 !== data.height){
+validate54.errors = [{instancePath:instancePath+"/height",schemaPath:"#/properties/height/const",keyword:"const",params:{allowedValue: 675},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs8 === errors;
@@ -8431,10 +8432,10 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.animation !== undefined){
+if(data.font_family !== undefined){
 const _errs9 = errors;
-if(false !== data.animation){
-validate54.errors = [{instancePath:instancePath+"/animation",schemaPath:"#/properties/animation/const",keyword:"const",params:{allowedValue: false},message:"must be equal to constant"}];
+if("Yu Gothic UI, Yu Gothic, Meiryo, sans-serif" !== data.font_family){
+validate54.errors = [{instancePath:instancePath+"/font_family",schemaPath:"#/properties/font_family/const",keyword:"const",params:{allowedValue: "Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs9 === errors;
@@ -8443,10 +8444,10 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.axis_label_max_graphemes !== undefined){
+if(data.animation !== undefined){
 const _errs10 = errors;
-if(28 !== data.axis_label_max_graphemes){
-validate54.errors = [{instancePath:instancePath+"/axis_label_max_graphemes",schemaPath:"#/properties/axis_label_max_graphemes/const",keyword:"const",params:{allowedValue: 28},message:"must be equal to constant"}];
+if(false !== data.animation){
+validate54.errors = [{instancePath:instancePath+"/animation",schemaPath:"#/properties/animation/const",keyword:"const",params:{allowedValue: false},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs10 === errors;
@@ -8455,10 +8456,10 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.echarts_version !== undefined){
+if(data.axis_label_max_graphemes !== undefined){
 const _errs11 = errors;
-if("6.1.0" !== data.echarts_version){
-validate54.errors = [{instancePath:instancePath+"/echarts_version",schemaPath:"#/properties/echarts_version/const",keyword:"const",params:{allowedValue: "6.1.0"},message:"must be equal to constant"}];
+if(28 !== data.axis_label_max_graphemes){
+validate54.errors = [{instancePath:instancePath+"/axis_label_max_graphemes",schemaPath:"#/properties/axis_label_max_graphemes/const",keyword:"const",params:{allowedValue: 28},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs11 === errors;
@@ -8467,16 +8468,29 @@ else {
 var valid0 = true;
 }
 if(valid0){
-if(data.render_profile_id !== undefined){
+if(data.echarts_version !== undefined){
 const _errs12 = errors;
-if("advanced-svg-ja-jp-node22-echarts6.v1" !== data.render_profile_id){
-validate54.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "advanced-svg-ja-jp-node22-echarts6.v1"},message:"must be equal to constant"}];
+if("6.1.0" !== data.echarts_version){
+validate54.errors = [{instancePath:instancePath+"/echarts_version",schemaPath:"#/properties/echarts_version/const",keyword:"const",params:{allowedValue: "6.1.0"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs12 === errors;
 }
 else {
 var valid0 = true;
+}
+if(valid0){
+if(data.render_profile_id !== undefined){
+const _errs13 = errors;
+if("advanced-svg-ja-jp-node22-echarts6.v1" !== data.render_profile_id){
+validate54.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "advanced-svg-ja-jp-node22-echarts6.v1"},message:"must be equal to constant"}];
+return false;
+}
+var valid0 = _errs13 === errors;
+}
+else {
+var valid0 = true;
+}
 }
 }
 }

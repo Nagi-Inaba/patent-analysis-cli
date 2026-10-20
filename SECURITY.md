@@ -19,7 +19,9 @@ OperationPlanは登録済み操作とstrict schemaだけを受け付け、operat
 
 CLIの `inspect` / `analyze` / `render` とfile-backed `validate-plan` / `validate-spec` は、trusted launcherが絶対pathの既存ローカルdirectoryとして設定した `PATENT_ANALYSIS_ALLOWED_ROOT` とverified root/pathを必須とする。相対dataset（CSV・JSON）/spec/plan/analysis/overlay pathはこのrootを基準に解決し、root配下のregular fileだけを受け付ける。`--spec -`、`validate-plan -`、`validate-spec -`、`render --analysis -`、`render --overlay -`のbounded stdinだけがfile-backed入力の例外であり、analysisとoverlayを同時にstdinから読まない。rootまたはpathが未設定・拒否された場合は `input.invalid`、exit code 3となる。
 
-optionalなlocal stdio MCPは起動時に入力・出力rootを検証し、重複・包含しないrootとして固定する。ツールはこのroot内の相対pathだけを扱い、CLI subprocessを起動せず公開Python APIを直接利用する。`inspect`はセル値を返さない。分析応答は入力由来labelと集計値を含む一方、coreのreceipt・安定hash・絶対pathを除く。描画用のfull documentは同じprocess内に最大4件保持し、opaque handleだけを返す。transport・引数・応答の固定byte上限と6ツールのclosed引数契約は[docs/contracts.md](docs/contracts.md)を参照する。remote transportは提供しない。
+optionalなlocal stdio MCPは起動時に入力・出力rootを検証し、重複・包含しないrootとして固定する。ツールはこのroot内の相対pathだけを扱い、CLI subprocessを起動せず公開Python APIを直接利用する。`inspect`はセル値を返さない。分析応答は入力由来labelと集計値を含む一方、coreのreceipt・安定hash・絶対pathを除く。描画用のfull documentは同じprocess内に最大4件保持し、opaque handleだけを返す。transport・引数・応答の固定byte上限と<!--var:mcp_tool_count-->6<!--/var-->ツールのclosed引数契約は[docs/contracts.md](docs/contracts.md)を参照する。remote transportは提供しない。
+
+optionalなMCP SDKは2.2.0へ固定する。[CVE-2026-59951](https://github.com/advisories/GHSA-84m7-p3x7-pcfv)は旧SDKのstateful Streamable HTTPでsessionが回収されずメモリを消費する問題であり、SDKの告知ではstdio専用serverは対象外とされる。本packageのstdio経路を維持したうえで、依存にも修正版を使う。
 
 OperationPlanの `contract` と `validate-plan -` はこのrootを要求しないが、file-backed `validate-plan <file>` は要求する。OperationPlanとAnalysisSpecのJSON入力は最大2 MiB、render analysisは最大16 MiB、render overlayは最大4 MiBである。render JSONはobject construction前にdepth 64、token/node 250,000、numeric lexeme 128 bytes、decoded string合計2,000,000 code pointsを検査する。違反、duplicate key、NUL、NaN/Infinity、invalid UTF-8、non-objectは`input.invalid` / exit code 3となる。
 
@@ -35,7 +37,7 @@ trusted-local rendererはpackaged bootstrap/bundleだけを使い、Node/ECharts
 
 ## Trusted-local Renderer Security Boundary
 
-trusted-local v1はWindows x64-onlyで、Node 22.19.0 exactとpackaged ECharts 6.1.0から固定profileのSVGを生成する。選択したNode executableはcallerが完全に信頼するlocal softwareであり、malicious executableはuser authorityで動作できる。このprofileはsandboxを主張しない。
+trusted-local v1はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode 22.19.0 exactとpackaged ECharts 6.1.0から固定profileのSVGを生成する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。選択したNode executableはcallerが完全に信頼するlocal softwareであり、malicious executableはuser authorityで動作できる。このprofileはsandboxを主張しない。
 
 analysis/overlayはbounded UTF-8 JSON objectとしてparseし、duplicate keyとNaN/Infinityを拒否する。semantic contractを先に構築し、成功後だけplatform、output、Nodeの順に検証する。file-backed inputは`PATENT_ANALYSIS_ALLOWED_ROOT`配下、outputとNodeはabsolute local non-reparse pathに限定する。childは固定argv、固定最小environment、10秒timeout、bounded concurrent stdout/stderr drainで起動する。
 
@@ -49,7 +51,7 @@ Node runtime自体は`npm audit`の対象外であるため、release時に固�
 
 [2026-06-18](https://nodejs.org/en/blog/vulnerability/june-2026-security-releases)および[2026-07-29](https://nodejs.org/en/blog/vulnerability/july-2026-security-releases)の22.x advisoryも確認している。固定実行経路はWebCrypto encryption、HTTP/HTTP2、TLS、proxy、DNS、SQLite、zlib、`process.report`、trace events、filesystem、UDSを使用せず、filesystem・networkのallow-listも与えない。permission path over-grant、report／trace write、network parser・client、zlib等の問題はその前提を満たさない。将来のadvisoryがこの固定経路から到達でき、process分離と上限で緩和できない場合は、profileのNode versionを更新するまでreleaseを停止する。これらの評価はNode executableをsandboxにするものではなく、callerが完全に信頼するという前提を変更しない。
 
-artifactはsame-directory own tempをfsync/closeし、Windows `os.rename`をno-replace commit pointとして公開する。完全一致する既存fileだけを`reused`とし、異なる既存fileを削除・repair・上書きしない。receiptのpath情報はrelative filenameだけであり、再利用確認用の決定論的hashも返す。
+artifactはsame-directory own tempをfsync/closeし、Windowsでは`os.rename`をno-replace commit pointとして維持する。macOSでは同一directory内で`os.link(..., follow_symlinks=False)`を使い、完全なbytesを既存のwinnerを置き換えずにatomically公開してから、自分のtemporary nameをunlinkする。完全一致する既存fileだけを`reused`とし、異なる既存fileとのconflictでは既存fileを保持して削除・repair・上書きしない。receiptのpath情報はrelative filenameだけであり、再利用確認用の決定論的hashも返す。
 
 SVGは固定allow-listで正規化後、Pythonでtext-onlyの`title`・`desc`と固定ARIA参照を加える。文字列はXML escapeし、制御文字を可視化する。`xml:space="preserve"`はtext/tspanだけに許可する。公開receiptのhashはmetadataを含む最終bytesを対象とする。集計表は`--include-context`でSpec・分析文書全体を添付できる。trusted-local v1は支援技術全般の動作、WCAG適合、advanced Python SVG policy全体の再検証を主張しない。
 

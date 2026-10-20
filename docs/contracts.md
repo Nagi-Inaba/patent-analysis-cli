@@ -2,7 +2,7 @@
 
 ## Version
 
-package versionは `0.2.0`、OperationPlan契約versionは `1.0.0` である。AnalysisSpecは旧Rankingの `1.0.0` と、他の17分析の `2.0.0` を区別する。分析契約versionはOperationPlan契約versionとは別に管理する。OperationPlanはversion付きの説明・検証契約であり、本packageは登録済み15 operationを実行しない。`analyze` が実行する契約はAnalysisSpecであり、現行の実行対象は18分析である。
+package versionは `0.2.0`、OperationPlan契約versionは `1.0.0` である。AnalysisSpecは旧Rankingの `1.0.0` と、他の<!--var:v2_analysis_count-->27<!--/var-->分析の `2.0.0` を区別する。分析契約versionはOperationPlan契約versionとは別に管理する。OperationPlanはversion付きの説明・検証契約であり、本packageは登録済み<!--var:operation_count-->15<!--/var--> operationを実行しない。`analyze` が実行する契約はAnalysisSpecであり、現行の実行対象は<!--var:analysis_count-->28<!--/var-->分析である。
 
 Schema IDは `urn:patent-analysis:operation-plan:1.0.0` とする。OperationPlan v1本体へversion fieldは追加しない。
 
@@ -35,6 +35,8 @@ Legacy Ranking analysis API（v1）:
 
 `inspect_csv` と `analyze_csv` の `allowed_root` はkeyword-onlyで必須である。trusted launcherが用意した絶対pathの既存local directoryを渡す。OperationPlanの `contract` と `validate-plan -` はこのrootを要求しないが、file-backed `validate-plan <file>` は要求する。
 
+AnalysisSpecとOperationPlanのJSON読み込みはUTF-8で行い、先頭のUTF-8 BOM 1個はencoding signatureとして無視する（cell値など、埋め込まれた値の中のBOMは無視しない）。
+
 `validate_analysis_spec` は検証済みのspecを返す。`AnalysisContractError` は `code`、`safe_message`、`retryable`、boundedな `details` を持つ。公開するmessage/detailsには入力値、CSVセル値、prompt、秘密情報、絶対pathを入れない。tracebackのframe localsは別の開示境界として扱う。
 
 `inspect_csv` は列名、行数、列数、byte数、encoding、SHA-256だけを返す。`analyze_csv` の成功envelopeのトップレベルfieldは `analysis_contract_version`、`ok`、`result`、`receipt` の4つであり、`ok` は `true` である。
@@ -49,12 +51,48 @@ Rankingは成功envelopeの`result`、v2は中立な分析documentの`data`が�
 v2で指定した列が存在しない、または列対応が確定できない場合、`run_analysis`は
 `DatasetInputError`を返す。CLIの`analyze --json`は既存の`input.invalid`と終了コード3を返す。
 `inspect <dataset> --profile column-alias.v2 --json`で列名・候補を確認し、specの`resolution.bindings`を修正する。
-`render_analysis_svg(analysis_document, *, mark, output_directory, node_executable=None)`は
+`render_analysis_svg(analysis_document, *, mark, output_directory, node_executable=None, value_labels=None, palette=None)`は
 対応する固定rendererへ振り分ける。各分析の専用schemaと上限はcapabilitiesを参照する。
+`value_labels`（CLIでは`render --value-labels`）は`hidden`（既定）または`shown`で、`matrix-bubble-svg.v1`のバブルに件数を表示するかを選ぶ。他のmarkに指定すると`render.invalid`で拒否する。`hidden`はrender specに含めないため、既定の出力は変わらない。
+
+図中の文字は、すべてのpaletteで次のように描く。
+
+- ヒートマップの件数は、そのセルの色に対して読みやすい方（暗色または白）にする。中間の明るさのセルでは、どちらも約4.2:1が上限になる。
+- 点のラベル（ライフサイクル、初回・最終観測年、被引用数、長期・短期成長四象限）は、既定で点の上に置く。他のラベル、他の点、軸名や目盛りと重なる場合だけ、右、下、左、または上へ積んだ位置に移す。重ならない図の出力は変わらない。座標が同じ点が多く、どの位置も埋まる場合は、最も重なりが少ない位置に置く。
+- 図中の数値は太字にしない。太字はタイトルと凡例の見出しだけである。
+
+### 配色パレット
+
+`palette`（CLIでは`render --palette`、MCP renderの`palette`）は全markに共通で、次の4種から選ぶ。
+未指定または`standard`は従来の配色で、render specに含めないため出力は変わらない。
+`standard`以外は、`standard`と同じ図に色・線種・マーカーだけを変える。
+色そのものはcallerが指定できず、固定の組だけを使う。
+
+| palette | 用途 | 内容 |
+| --- | --- | --- |
+| `standard`（既定） | 通常の画面・資料 | 従来のteal基調 |
+| `colorblind` | 色覚の多様性への配慮 | Okabe-Ito配色。値の大小は青の濃淡、正負は橙と青 |
+| `monochrome` | 白黒印刷 | 黒から灰の4段階。折れ線は線種とマーカーで識別 |
+| `high-contrast` | 低解像度・投影 | 全色が白に対して4.5:1以上。線を太くする |
+
+`standard`以外では、折れ線を系列ごとに実線・破線・点線・一点鎖線とし、マーカーも円・四角・三角・菱形で変える。
+色だけに頼らずに系列を識別するためである。
+棒と円グラフの区画には不透明の輪郭を付ける。
+
+色は白背景に対するWCAGのコントラスト比と、1型・2型・3型色覚の模擬での色差（CIEDE2000）で検証した。
+`colorblind`は全8色の色差が10.9以上、`high-contrast`は全8色が4.5:1以上かつ色差9.1以上である。
+`standard`は2型色覚で`#c2410c`と`#a16207`の色差が0.9しかなく、区別しにくい。
+
+制約は次のとおり。
+
+- `monochrome`で区別できるカテゴリは4つまでで、5つ目以降は同じ灰を繰り返す。凡例とラベルを併用する。
+- advanced系の図は、色だけを一括で置き換える。形や線種は図ごとの既存の表現を使う。
+- 丸いマーカー（バブル・散布図）は輪郭を付けない。拡大変換で描かれるため、輪郭の線幅がSVG規則の小数桁数を超える。
+- 符号付きのヒートマップは、`monochrome`では色で正負を区別できない。数値ラベルの符号で読む。
 
 ## Local stdio MCP adapter
 
-MCP adapterはoptionalな `mcp==2.0.0` dependencyとして提供する統合済み実装である。MCP 2.0 stdioを使い、公開 `patent_analysis.api`（特にbyte-firstの `validate_analysis_spec_bytes()`、`inspect_dataset()`、`run_analysis_csv()`互換入口、`render_analysis_svg()`）を直接呼ぶ。dataset pathはCSV・JSONの両方を受け付ける。CLI subprocess、remote transport、network、hosted transfer、認証は使わない。
+MCP adapterはoptionalな `mcp==2.2.0` dependencyとして提供する統合済み実装である。MCP 2.x stdioを使い、公開 `patent_analysis.api`（特にbyte-firstの `validate_analysis_spec_bytes()`、`inspect_dataset()`、`run_analysis_csv()`互換入口、`render_analysis_svg()`）を直接呼ぶ。dataset pathはCSV・JSONの両方を受け付ける。CLI subprocess、remote transport、network、hosted transfer、認証は使わない。
 
 toolの引数objectはclosedで、`additionalProperties: false` とし、次のexact key setだけを受け付ける。文字列は空でない値で、`spec` はobjectである。renderはanalysis objectではなくhandleを受け取る。
 
@@ -65,7 +103,7 @@ toolの引数objectはclosedで、`additionalProperties: false` とし、次のe
 | `patent_analysis.inspect` | `{"input_root_id": string, "path": string}` |
 | `patent_analysis.validate_spec` | `{"spec": object}` |
 | `patent_analysis.analyze` | `{"input_root_id": string, "path": string, "spec": object}` |
-| `patent_analysis.render` | `{"output_root_id": string, "output_path": string, "analysis_handle": string, "mark": string}` |
+| `patent_analysis.render` | `{"output_root_id": string, "output_path": string, "analysis_handle": string, "mark": string}`に加え、任意の`"value_labels": "hidden" \| "shown"`と`"palette": "standard" \| "colorblind" \| "monochrome" \| "high-contrast"` |
 
 adapterのbyte境界は次のとおりである。
 
@@ -86,7 +124,7 @@ adapterのbyte境界は次のとおりである。
 | `output.conflict` | `Render output conflicts with an existing artifact` |
 | `internal.failed` | `Internal MCP adapter failure` |
 
-MCP公開対象はanalysis registryの `mcp_public=true` から導出し、現在は18分析と対応する固定mark・公開schemaだけである。詳細な一覧は[分析カタログ](analysis-catalog.md)に記載する。非公開analysisは実行前に `analysis.unknown` として拒否する。
+MCP公開対象はanalysis registryの `mcp_public=true` から導出し、現在は<!--var:mcp_analysis_count-->28<!--/var-->分析と対応する固定mark・公開schemaだけである。詳細な一覧は[分析カタログ](analysis-catalog.md)に記載する。非公開analysisは実行前に `analysis.unknown` として拒否する。
 
 rootはserver起動時の `--input-root <root_id>=<absolute-local-directory>` と `--output-root <root_id>=<absolute-local-directory>` で承認する。各rootは既存のlocal directoryで、reparse componentを含まず、input/outputのroot IDは異なり、directoryは互いにdisjoint（同一・包含なし）でなければならない。toolの `path` / `output_path` は相対pathだけを受け付け、`..`、drive/UNC/device path、絶対path、reparse pathを拒否する。入力はroot配下のverified regular file、出力はroot配下のdirectoryに限定する。
 
@@ -175,7 +213,7 @@ CSV入力の上限は次のとおりである。
 
 ## JSON Input
 
-拡張子が大文字小文字を問わず`.json`の入力だけをdataset JSONとして扱う。strict UTF-8 JSONで、top-levelは1件のobject、または1件以上のobjectからなる配列とする。元JSONは変更しない。
+拡張子が大文字小文字を問わず`.json`の入力だけをdataset JSONとして扱う。UTF-8 JSONで、先頭のUTF-8 BOM 1個はencoding signatureとして無視する。top-levelは1件のobject、または1件以上のobjectからなる配列とする。元JSONは変更しない。
 
 各objectを1行へ変換する規則は次のとおりである。
 
@@ -246,17 +284,17 @@ schema fileは `analysis-result.schema.json`、IDは `urn:patent-analysis:analys
 | 5 | trusted local rendererを利用できない |
 | 6 | render outputが既存artifactまたはpublication境界と競合 |
 
-JSON modeのstdoutにはJSON以外を出力しない。human modeは短い要約をstdoutへ出し、診断をstderrへ出す。`--json` と `-h` / `--help` の併用も `usage.invalid`、exit code 4とする。
+JSON modeのstdoutにはJSON以外を出力しない。human modeは短い要約をstdoutへ出し、診断をstderrへ出す。`--json` と `-h` / `--help` の併用も `usage.invalid`、exit code 4とする。`-h` / `--help` 単独ではコマンドのテキストヘルプを表示し、exit code 0とする（`render`も同じ）。
 
 ## Privacy And Non-goals
 
 source CSVはローカルに留まり、read-onlyで扱う。package自身はmodel、network、cloud、外部特許DB、外部API、インターネット検索、任意Python、任意SQL、任意shellを呼ばない。`inspect` はcell valueを含まないmetadataだけを返す。`analyze` はデータ由来のdimension label、集計値、count、shareを返し、unique labelがsource cell文字列と一致する場合もある。結果を外部AIやserviceへ送るかどうかはcaller policyであり、本packageの責務外である。UI、remote MCP、遠隔実行はこのpackageの提供範囲外である。local stdio adapterはoptionalなthin adapterとしてこの契約に従う。
 
-AnalysisSpec 1.0.0は旧Rankingを維持し、AnalysisSpec 2.0.0は他の17分析を提供する。利用可能なID・schema・markは`capabilities --json`と[分析カタログ](analysis-catalog.md)を参照する。
+AnalysisSpec 1.0.0は旧Rankingを維持し、AnalysisSpec 2.0.0は他の<!--var:v2_analysis_count-->27<!--/var-->分析を提供する。利用可能なID・schema・markは`capabilities --json`と[分析カタログ](analysis-catalog.md)を参照する。
 
 `validate-spec <file|-> --json`は公開Python APIの`validate_analysis_spec_bytes()`を使い、CSVを開かずにSchemaと実行条件を検証する。成功応答は`valid`、`analysis_id`、`spec_variant`を持つ。年範囲の逆転、必要な列割り当ての欠落・重複、同一roleを許さない分析パラメータを実行前に拒否する。Schemaの語彙だけでは実行可能性を保証しない。実データの列の存在・集計上限は`analyze`時に検査する。契約違反は`analysis.invalid`／終了コード2、読込・parse失敗は`input.invalid`／終了コード3。ファイル入力はtrusted root配下、標準入力はroot不要で、2 MiB上限は共通。
 
-17 native v2分析の`population.filters`は`exact`、`one_of`、`year`、`year_range`、`outside_year_range`に対応する。年は1800〜2199の整数、範囲は両端を含む。正規化後の4桁の十進年を判定し、単年は同じ始年・終年の範囲と等価となる。`outside_year_range`は範囲内判定の否定なので、欠損年・無効年も含む。各filterの`effect: exclude`はその判定を反転する。
+<!--var:population_analysis_count-->17<!--/var--> native v2分析の`population.filters`は`exact`、`one_of`、`year`、`year_range`、`outside_year_range`に対応する。年は1800〜2199の整数、範囲は両端を含む。正規化後の4桁の十進年を判定し、単年は同じ始年・終年の範囲と等価となる。`outside_year_range`は範囲内判定の否定なので、欠損年・無効年も含む。各filterの`effect: exclude`はその判定を反転する。
 
 `selection_sets`は`dimension_role`の値が`values`のいずれかに一致する行を選ぶ。`source_date_role`・`start_year`・`end_year`を併記した場合は、その行の年範囲も満たす必要がある。これは行の条件であり、期間内に登場する主体の全期間の行を選ぶ指定ではない。`mode: exclude`は値と任意の年範囲を合わせた条件全体を反転する。値の集合内はOR、filtersとselection_setsの間はAND。同じdimensionの選択集合を重複させない。全条件で絞り込んだ後に`earliest`の代表行を選ぶ。
 
@@ -274,9 +312,9 @@ Matrix・Timeline・Composition・Growth・Concentration・Lifecycleの分析固
 
 v2の母集団は`family_mode=records|earliest`を選択できる。`earliest`は`family_role`が必須、`date_role`は任意。フィルター後の明示IDから代表を選び、family結果だけに`family_selection`を付加する。元入力件数と選択後件数を混同しない。詳細は[ファミリー仕様](family-population.md)に記載する。既存records結果にはこのフィールドを追加しない。
 
-local MCPはregistryの公開対象18分析を扱う。起動と呼び出し形式は[MCPガイド](mcp.md)を参照する。`verify`・`report`という新しい公開コマンドは追加しない。
+local MCPはregistryの公開対象<!--var:mcp_analysis_count-->28<!--/var-->分析を扱う。起動と呼び出し形式は[MCPガイド](mcp.md)を参照する。`verify`・`report`という新しい公開コマンドは追加しない。
 
-trusted-local v1はWindows x64-onlyで、callerが選択したNode executableを完全に信頼する。sandbox、Authenticode、AppContainer、Job Object、private namespace、WCAG適合、advanced Python SVG policy全体の再検証を主張しない。最終SVGは`role="img"`、`aria-labelledby`、`aria-describedby`と、検証済みmodelに由来するtext-onlyのtitle/descを持つ。表示用label、overlay、分析結果label、SVGはcaller-controlled sensitive outputであり、package自身は外部へ送信しない。`run_analysis_table(..., include_context=True)`と`analyze --format csv|text --include-context`はSpec・分析文書全体を添付する。詳細は[表出力](table-export.md)を参照する。
+trusted-local v1はWindows x64またはmacOS arm64/x86_64で、callerが選択した対応アーキテクチャのNode.js 22.19.0 exactを完全に信頼する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。sandbox、Authenticode、AppContainer、Job Object、private namespace、WCAG適合、advanced Python SVG policy全体の再検証を主張しない。最終SVGは`role="img"`、`aria-labelledby`、`aria-describedby`と、検証済みmodelに由来するtext-onlyのtitle/descを持つ。表示用label、overlay、分析結果label、SVGはcaller-controlled sensitive outputであり、package自身は外部へ送信しない。`run_analysis_table(..., include_context=True)`と`analyze --format csv|text --include-context`はSpec・分析文書全体を添付する。詳細は[表出力](table-export.md)を参照する。
 
 ## Compatibility
 

@@ -1,3 +1,4 @@
+import type { PaletteId } from "./palette.js";
 /** Closed renderer input types. No option objects or executable input are accepted. */
 export type AdvancedPoint = {
   id: string; label: string; x: number; y: number; size: number; category: string;
@@ -77,6 +78,8 @@ export type AdvancedSpec = {
   font_family: "Yu Gothic UI, Yu Gothic, Meiryo, sans-serif";
   animation: false; axis_label_max_graphemes: 28; echarts_version: "6.1.0";
   render_profile_id: "advanced-svg-ja-jp-node22-echarts6.v1";
+  // Absent means "standard": each family keeps its own colours.
+  palette?: PaletteId;
 };
 export type AdvancedRuntime = {
   node_version: "22.19.0"; echarts_version: "6.1.0";

@@ -1,5 +1,9 @@
 import { buildInventorOption, isInventorProjection } from "./advanced-inventor-options.js";
-import { truncateAdvancedLabel } from "./advanced-text.js";
+import { graphemeLength, truncateAdvancedLabel } from "./advanced-text.js";
+import type { LabelSlot } from "./label-layout.js";
+import {
+  HEATMAP_PIECES, advancedColorMap, alternatePalette, inkOn, pieceColor, pieceIndexOf, recolor
+} from "./palette.js";
 import type { AdvancedModel, AdvancedSpec, LegacyProjection } from "./advanced-types.js";
 
 const TEXT = "#0f172a";
@@ -11,10 +15,12 @@ const PALETTE: Readonly<Record<string, string>> = Object.freeze({
   sustained_growth: TEAL, recovery: "#2563eb", slowing: "#a16207", decline: "#b45309"
 });
 export { truncateAdvancedLabel };
+/** Font size of the labels beside scatter and quadrant points. */
+export const POINT_LABEL_SIZE = 11;
 function number(value: number): string {
   return value.toLocaleString("ja-JP", { maximumFractionDigits: 2 });
 }
-function symbolSize(value: number, maximum: number): number {
+export function symbolSize(value: number, maximum: number): number {
   // Fixed minimum makes zero-valued citation records visible without changing data.
   return maximum <= 0 ? 12 : 12 + 24 * Math.sqrt(Math.max(0, value) / maximum);
 }
@@ -30,14 +36,36 @@ function axis(label: string, spec: AdvancedSpec, year: boolean): Record<string, 
   return {
     type: "value", name: label, scale: year,
     ...(year ? { minInterval: 1 } : {}),
-    axisLabel: { color: TEXT, fontFamily: spec.font_family },
-    axisLine: { lineStyle: { color: MUTED } },
+    // Years are identifiers, not quantities: no thousands separators ("2018", never "2,018").
+    axisLabel: { color: TEXT, fontFamily: spec.font_family,
+      ...(year ? { formatter: (value: number) => String(value) } : {}) },
+    // A negative-only range must not drag the axis line to the zero crossing, away from its labels.
+    axisLine: { onZero: false, lineStyle: { color: MUTED } },
     splitLine: { lineStyle: { color: GRID } }
   };
 }
 
-export function buildAdvancedOption(model: AdvancedModel, spec: AdvancedSpec): Record<string, unknown> {
+/**
+ * The standard colours are literals spread over many chart modules, so an alternate palette is
+ * applied in one pass over the finished option instead of being threaded through each of them.
+ */
+export function buildAdvancedOption(
+  model: AdvancedModel,
+  spec: AdvancedSpec,
+  placement: readonly LabelSlot[] | "hidden" = []
+): Record<string, unknown> {
+  const option = buildStandardAdvancedOption(model, spec, placement);
+  const alt = alternatePalette(spec.palette);
+  return alt === null ? option : recolor(option, advancedColorMap(alt));
+}
+
+function buildStandardAdvancedOption(
+  model: AdvancedModel,
+  spec: AdvancedSpec,
+  placement: readonly LabelSlot[] | "hidden"
+): Record<string, unknown> {
   const p = model.projection;
+  const alt = alternatePalette(spec.palette);
   if (isInventorProjection(p)) return buildInventorOption(model, spec, p);
   const omitted = p.kind === "quadrant" && p.unplottable.length > 0
     ? `増減率未定義: 座標表示対象外 ${p.unplottable.length} 件 (${p.unplottable.slice(0, 3).map(v => truncateAdvancedLabel(v.label, 12)).join("、")}${p.unplottable.length > 3 ? " ほか" : ""})` : "";
@@ -57,11 +85,13 @@ export function buildAdvancedOption(model: AdvancedModel, spec: AdvancedSpec): R
     const maximum = Math.max(0, ...p.points.map(v => v.size));
     option.xAxis = axis(p.x_label, spec, p.kind === "scatter" && p.x_year);
     option.yAxis = axis(p.y_label, spec, p.kind === "scatter" && p.y_year);
-    const data = p.points.map(point => ({
+    const data = p.points.map((point, index) => ({
       id: point.id, name: point.label, value: [point.x, point.y, point.size],
       symbolSize: symbolSize(point.size, maximum),
       itemStyle: { color: PALETTE[point.category] ?? TEAL, opacity: 0.82 },
-      label: { show: true, position: "top", color: TEXT, fontSize: 11,
+      label: placement === "hidden" ? { show: false } : {
+        show: true, position: placement[index]?.position ?? "top", color: TEXT, fontSize: POINT_LABEL_SIZE,
+        ...(placement[index]?.offset ? { offset: placement[index]!.offset } : {}),
         fontFamily: spec.font_family,
         formatter: () => truncateAdvancedLabel(point.label, spec.axis_label_max_graphemes) }
     }));
@@ -78,22 +108,32 @@ export function buildAdvancedOption(model: AdvancedModel, spec: AdvancedSpec): R
       axisLabel: { color: TEXT, fontFamily: spec.font_family,
         formatter: (value: string) => truncateAdvancedLabel(value, 14) }
     });
+    // Short category labels stay upright; only long ones tilt so their columns stay readable.
+    const rotate = p.x.some(value => graphemeLength(truncateAdvancedLabel(value, 12)) > 6) ? 25 : 0;
     option.xAxis = { ...categories(p.x), name: p.x_label, axisLabel: {
-      color: TEXT, fontFamily: spec.font_family, rotate: 25,
+      color: TEXT, fontFamily: spec.font_family, rotate,
       formatter: (value: string) => truncateAdvancedLabel(value, 12) } };
     option.yAxis = { ...categories(p.y), inverse: true, name: p.y_label };
-    option.visualMap = { type: "piecewise", min: p.signed ? -maximum : 0, max: maximum,
-      splitNumber: 5, calculable: false,
+    const lowest = p.signed ? -maximum : 0;
+    const stops: readonly [string, string, string] = alt !== null ? (p.signed ? alt.diverging : alt.sequential)
+      : p.signed ? ["#2563eb", "#f8fafc", "#b45309"] : ["#f0fdfa", "#5eead4", TEAL];
+    option.visualMap = { type: "piecewise", min: lowest, max: maximum,
+      splitNumber: HEATMAP_PIECES, calculable: false,
       orient: "horizontal", left: "center", bottom: 10, precision: 0,
       text: p.signed ? ["A優位", "B優位"] : ["多", "少"],
-      inRange: { color: p.signed ? ["#2563eb", "#f8fafc", "#b45309"] : ["#f0fdfa", "#5eead4", TEAL] } };
-    option.series = [{ type: "heatmap", data, animation: false,
+      inRange: { color: [...stops] } };
+    // Each count is drawn in whichever of dark and white reads better on its piece's colour.
+    const cellInk = (value: number): string => inkOn(
+      pieceColor(stops, pieceIndexOf(value, lowest, maximum)), alt?.text ?? TEXT);
+    option.series = [{ type: "heatmap", animation: false,
+      data: data.map(point => ({ value: point, label: { color: cellInk(point[2]!) } })),
       itemStyle: { borderColor: "#ffffff", borderWidth: 1 }, emphasis: { disabled: true },
       label: { show: true, fontSize: 10, fontFamily: spec.font_family, color: TEXT,
         formatter: (params: { value: number[] }) => number(params.value[2]!) } }];
   } else if (p.kind === "bars") {
     option.grid = { left: 180, right: 300, top: 158, bottom: 55, containLabel: true };
-    option.xAxis = axis(p.value_label, spec, false);
+    // The value axis counts records: half steps like "1.5 件" would be meaningless.
+    option.xAxis = { ...axis(p.value_label, spec, false), minInterval: 1 };
     option.yAxis = { type: "category", inverse: true, data: p.items.map(v => v.label),
       axisLabel: { color: TEXT, fontFamily: spec.font_family,
         formatter: (value: string) => truncateAdvancedLabel(value, 18) } };

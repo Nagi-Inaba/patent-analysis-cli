@@ -27,7 +27,7 @@ def verifier(name="verify_installed_release"):
 @pytest.mark.parametrize(
     ("platform", "interpreter_dir", "scripts_dir"),
     (("win32", ".", "Scripts"), ("win32", "Scripts", "Scripts"),
-     ("linux", "bin", "bin")),
+     ("linux", "bin", "bin"), ("darwin", "bin", "bin")),
 )
 def test_console_resolves_current_interpreter_install_scheme(
     tmp_path, monkeypatch, platform, interpreter_dir, scripts_dir
@@ -84,7 +84,10 @@ def test_native_installed_verifier_compares_all_ten_real_api_console_results(tmp
     assert report["svg"] == {}
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="native SVG gate is Windows-only")
+@pytest.mark.skipif(
+    sys.platform not in {"win32", "darwin"},
+    reason="native SVG requires Windows x64 or macOS",
+)
 def test_native_verifier_requires_nine_api_console_default_explicit_svg_paths(
     tmp_path, monkeypatch
 ):
@@ -147,7 +150,10 @@ def test_native_mcp_acceptance_uses_real_stdio_for_all_ten_analyses(tmp_path, mo
     assert report["m10_has_no_render_handle"] is True
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="native SVG gate is Windows-only")
+@pytest.mark.skipif(
+    sys.platform not in {"win32", "darwin"},
+    reason="native SVG requires Windows x64 or macOS",
+)
 def test_native_mcp_svg_acceptance_compares_real_stdio_receipts(tmp_path, monkeypatch):
     import anyio
     from mcp.client.session import ClientSession

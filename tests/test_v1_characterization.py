@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -35,8 +36,8 @@ def _canonical_v1_bytes(value: object) -> bytes:
 
 
 def _trusted_renderer_node() -> Path:
-    if os.name != "nt":
-        pytest.skip("trusted-local v1 is Windows x64-only")
+    if sys.platform not in {"win32", "darwin"}:
+        pytest.skip("trusted-local v1 requires Windows x64 or macOS")
     candidate = os.environ.get("PATENT_ANALYSIS_TEST_NODE") or shutil.which("node")
     if candidate is None:
         pytest.skip("exact Node installation is unavailable")

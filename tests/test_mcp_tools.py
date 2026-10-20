@@ -372,3 +372,64 @@ def test_replaced_output_root_is_rejected_before_creating_outside_directories(
     with pytest.raises(RootError):
         roots.resolve_output_directory("out", "session/nested")
     assert sorted(str(p.relative_to(outside)) for p in outside.rglob("*")) == before
+
+
+def test_render_value_labels_is_an_optional_closed_choice(tmp_path: Path) -> None:
+    from patent_analysis_mcp.tool_handlers import ToolHandlers
+
+    roots, _input_root, _output_root = _registry(tmp_path)
+    calls: list[dict[str, object]] = []
+
+    def render(_document: bytes, **kwargs: object) -> dict[str, object]:
+        calls.append(kwargs)
+        return {"render_contract_version": "1.0.0", "ok": True, "status": "created"}
+
+    analysis = {
+        "analysis_contract_version": "1.0.0",
+        "ok": True,
+        "result": {"analysis_type": "ranking", "rows": []},
+        "receipt": {"algorithm_id": "ranking.v1"},
+    }
+    handlers = ToolHandlers(
+        roots=roots,
+        api=SimpleNamespace(
+            validate_analysis_spec_bytes=lambda _raw: {
+                "valid": True,
+                "analysis_id": "ranking.v1",
+                "spec_variant": "versionless-ranking",
+            },
+            run_analysis_csv=lambda *_a, **_k: analysis,
+            render_analysis_svg=render,
+        ),
+    )
+    handle = handlers.call(
+        "patent_analysis.analyze",
+        {"input_root_id": "input", "path": "input.csv", "spec": RANKING_SPEC},
+    )["content"]["render_handle"]
+    base = {
+        "output_root_id": "output",
+        "output_path": "session-1",
+        "analysis_handle": handle,
+        "mark": "ranking-svg.v1",
+    }
+
+    assert handlers.call("patent_analysis.render", base)["ok"] is True
+    assert handlers.call("patent_analysis.render", {**base, "value_labels": "shown"})["ok"] is True
+    assert (
+        handlers.call("patent_analysis.render", {**base, "palette": "colorblind"})["ok"] is True
+    )
+    assert "value_labels" not in calls[0] and "palette" not in calls[0]
+    assert calls[1]["value_labels"] == "shown"
+    assert calls[2]["palette"] == "colorblind"
+    bad_options = (
+        {"value_labels": "loud"},
+        {"value_labels": 1},
+        {"palette": "neon"},
+        {"palette": None},
+        {"theme": "dark"},
+    )
+    for bad in bad_options:
+        result = handlers.call("patent_analysis.render", {**base, **bad})
+        assert result["ok"] is False
+        assert result["error"]["code"] == "input.invalid"
+    assert len(calls) == 3

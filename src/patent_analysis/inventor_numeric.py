@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import math
-from decimal import Decimal, localcontext
+from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
 from fractions import Fraction
 
 from patent_analysis.errors import DatasetInputError
@@ -31,8 +31,8 @@ def checked(value: Fraction) -> Fraction:
 def number(value: float | Fraction | int) -> float:
     if isinstance(value, Fraction):
         checked(value)
-        with localcontext() as context:
-            context.prec = 160
+        # Keep rounding, traps and exponent limits independent of the caller's context.
+        with localcontext(Context(prec=160, rounding=ROUND_HALF_EVEN)):
             result = float(round(Decimal(value.numerator) / Decimal(value.denominator), PRECISION))
     else:
         result = round(float(value), PRECISION)

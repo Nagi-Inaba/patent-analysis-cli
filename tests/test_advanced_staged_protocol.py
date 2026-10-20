@@ -12,6 +12,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -45,7 +46,9 @@ def staged_runtime():
         [node, "-p", "process.versions.node + '/' + process.arch"],
         capture_output=True, text=True, timeout=10, check=True,
     )
-    if probe.stdout.strip() != "22.19.0/x64":
+    if probe.stdout.strip() not in (
+        {"22.19.0/x64", "22.19.0/arm64"} if sys.platform == "darwin" else {"22.19.0/x64"}
+    ):
         pytest.skip("requires exact Node 22.19.0 x64")
     pins = json.loads(candidate.read_bytes())
     bootstrap = (RESOURCES / "advanced-bootstrap.js").read_bytes()

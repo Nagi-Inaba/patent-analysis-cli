@@ -7,7 +7,7 @@
 | 分析ID | 調べたいこと | spec（examples/からの相対パス） | local MCP |
 | --- | --- | --- | --- |
 | `ranking.v1` | 項目別の件数・数値の順位 | `basic/ranking.json` | 対応 |
-| `matrix.v1` | 2軸の組み合わせ件数 | `basic/matrix.json` | 対応 |
+| `matrix.v1` | 2軸の組み合わせ件数（`pie_role`でバブル内に構成比） | `basic/matrix.json`、円グラフ入りは`basic/matrix-pie.json` | 対応 |
 | `timeline.v1` | 年ごとの系列推移 | `basic/timeline.json` | 対応 |
 | `composition.v1` | 項目別の構成比 | `basic/composition.json` | 対応 |
 | `growth.v1` | 指定した2年の増減 | `basic/growth.json` | 対応 |
@@ -25,7 +25,7 @@
 | `shared-involvement.v1` | グループ間で共有される項目への関与 | `advanced/shared-involvement.json` | 対応 |
 | `inventor-tracking.v1` | 共発明クラスタと出願人の年次変化 | `inventor-tracking/spec.json` | 対応 |
 
-既存17例は同じ10行の`examples/advanced/patents.csv`を利用します。発明者追跡は専用の12行の`examples/inventor-tracking/patents.csv`を使います。実データや外部DBへの接続は不要です。[analysis-catalog.json](../examples/analysis-catalog.json)にはCSV・spec・mark・MCP対応・入力hash、[expected-aggregates.json](../examples/expected-aggregates.json)には期待する集計JSON本体があります。
+既存<!--var:shared_example_count-->17<!--/var-->例は同じ10行の`examples/advanced/patents.csv`を利用します。発明者追跡は専用の12行の`examples/inventor-tracking/patents.csv`を使います。実データや外部DBへの接続は不要です。[analysis-catalog.json](../examples/analysis-catalog.json)にはCSV・spec・mark・MCP対応・入力hash、[expected-aggregates.json](../examples/expected-aggregates.json)には期待する集計JSON本体があります。
 
 ```bash
 # リポジトリルート。利用するvenvを有効化済みの場合。
@@ -37,7 +37,7 @@ MCPの呼び出しには[共通手順](mcp.md)で該当specのJSONオブジェ�
 
 ## 人物ID・根拠を保持する発明者分析
 
-次の10分析は`inventor` extraが必要です。全件local MCPに対応し、[専用の入力条件・解釈・合成例](inventor-analysis.md)があります。各Specは`examples/`からの相対パスです。
+次の<!--var:inventor_analysis_count-->10<!--/var-->分析は`inventor` extraが必要です。全件local MCPに対応し、[専用の入力条件・解釈・合成例](inventor-analysis.md)があります。各Specは`examples/`からの相対パスです。
 
 | 分析ID | 調べたいこと | spec |
 | --- | --- | --- |
@@ -56,15 +56,30 @@ MCPの呼び出しには[共通手順](mcp.md)で該当specのJSONオブジェ�
 
 ## 結果を読むときの注意
 
-Rankingは契約v1、その他はv2です。前者の集計本体は応答の`result`、後者は`data`です。既存17種類のv2分析の外側の`population`は元入力の件数、`data.population`はフィルター・代表選択後の母集団を表すため、同じ意味の件数とは限りません。新しい発明者分析は上記の専用出力契約を使います。
+Rankingは契約v1、その他はv2です。前者の集計本体は応答の`result`、後者は`data`です。既存<!--var:population_analysis_count-->17<!--/var-->種類のv2分析の外側の`population`は元入力の件数、`data.population`はフィルター・代表選択後の母集団を表すため、同じ意味の件数とは限りません。新しい発明者分析は上記の専用出力契約を使います。
 
 複数値の項目は1レコードから複数の所属・組み合わせを生む場合があります。レコード数、所属件数、ペア件数、構成比の分母を混同しないでください。成長の基準年や窓はspecで明示します。ゼロ分母・欠損・上位外の扱いは各閉じた分析仕様に従います。
 
+### マトリクスのバブルの中に円グラフを描く
+
+`matrix.v1`の`parameters`に`pie_role`（バブルを分ける項目）を指定すると、各セルに`slices`（円グラフの区分と件数）が付き、結果の`pie`に凡例の区分が入ります。`matrix-bubble-svg.v1`ではバブルの中がその構成比になり、右に凡例が並びます。ヒートマップは円グラフを描きません。
+
+| parameter | 意味 |
+| --- | --- |
+| `pie_role` | バブルを分ける項目。指定しなければ従来どおりで、結果も変わりません |
+| `pie_limit` | 区分として残す上位件数。2〜8、既定5。残りは1つの「その他（上位外）」にまとめます |
+| `pie_classification_level` | 分類項目を丸める粒度（`x_classification_level`と同じ値） |
+
+- 区分は、いずれかのセルに入った行全体での出現数の順（同数は文字コード順）に決め、全セルで同じ凡例・順序・色を使います。軸と同じ順位づけです。
+- 値が空の行は「(空白)」の区分になります。
+- 1行が複数の値を持つとき、値ごとに数えます。区分の合計がセルの`row_count`を超えることがあります。バブルの大きさは`row_count`です。
+- 円の中の順序は12時の位置から時計回りで、凡例と同じ順です。モノクロ配色では、区分を明るさの段階で区別します。
+
 `year_range`フィルターは正規化後の値を比較します。4桁の十進数字を年として扱い、上付き数字・空欄・年として読めない値は範囲に一致しません。`effect: "exclude"`では、範囲に一致する値を持たない行が残ります。
 
-Matrix Compositionは全セルに円グラフを並べる機能ではなく**選択1セル**です。Comparaは**count-only**です。被引用数は外部サービスから取得せず、CSVに記録された値だけを使います。
+Matrix Compositionは**選択1セル**の内訳です。全セルの構成比を一度に見るには、`matrix.v1`の`pie_role`を使います。Comparaは**count-only**です。被引用数は外部サービスから取得せず、CSVに記録された値だけを使います。
 
-既存v2の17分析は[ファミリー代表単位](family-population.md)を選べます。代表以外の出願人・分類・引用数を合算しないため、「ファミリー全構成員の属性集合」とは別の結果です。Rankingは従来のレコード単位を維持します。
+既存v2の<!--var:population_analysis_count-->17<!--/var-->分析は[ファミリー代表単位](family-population.md)を選べます。代表以外の出願人・分類・引用数を合算しないため、「ファミリー全構成員の属性集合」とは別の結果です。Rankingは従来のレコード単位を維持します。
 
 ## SVG
 

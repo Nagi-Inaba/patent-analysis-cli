@@ -1,5 +1,6 @@
 // @ts-expect-error -- generated build-time validators intentionally have no hand-maintained typings.
 import { validateChartModel, validateRendererRequest, validateRendererRuntime, validateRenderSpec } from "./generated/matrix-standalone-validators.js";
+import type { PaletteId } from "./palette.js";
 
 const MAX_REQUEST_BYTES = 3 * 1024 * 1024;
 const MAX_CHART_MODEL_BYTES = 2 * 1024 * 1024;
@@ -37,6 +38,12 @@ export type MatrixAxis = {
   categories: readonly MatrixCategory[];
 };
 
+export type MatrixSlice = {
+  index: number;
+  label: string;
+  count: number;
+};
+
 export type MatrixCell = {
   x_index: number;
   y_index: number;
@@ -44,6 +51,21 @@ export type MatrixCell = {
   y_label: string;
   value: number;
   row_count: number;
+  // Present on every cell exactly when the model has a pie.
+  slices?: readonly MatrixSlice[];
+};
+
+export type MatrixPieCategory = {
+  id: string;
+  index: number;
+  label: string;
+  count: number;
+  is_other: boolean;
+};
+
+export type MatrixPie = {
+  role: string;
+  categories: readonly MatrixPieCategory[];
 };
 
 export type MatrixChartModel = {
@@ -55,6 +77,8 @@ export type MatrixChartModel = {
   x_axis: MatrixAxis;
   y_axis: MatrixAxis;
   cells: readonly MatrixCell[];
+  // Splits each bubble of the bubble mark into slices; the heatmap ignores it.
+  pie?: MatrixPie;
   population: { input_rows: number; analyzed_rows: number; excluded_rows: number };
   warnings: readonly string[];
 };
@@ -71,6 +95,10 @@ export type MatrixRenderSpec = {
   axis_label_max_graphemes: 28;
   echarts_version: "6.1.0";
   render_profile_id: "matrix-svg-ja-jp-node22-echarts6.v1";
+  // Absent means "hidden"; only the bubble mark draws count labels.
+  value_labels?: "hidden" | "shown";
+  // Absent means "standard": each family keeps its own colours.
+  palette?: PaletteId;
 };
 
 export type ChartModel = MatrixChartModel;

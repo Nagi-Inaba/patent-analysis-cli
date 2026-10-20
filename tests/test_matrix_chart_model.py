@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import hashlib
 
 import pytest
@@ -146,3 +147,71 @@ def test_matrix_render_specs_are_closed_and_profile_bound() -> None:
             y_count=2,
             echarts_options={"formatter": "caller code"},
         )
+
+
+def _pie_result() -> dict:
+    result = copy.deepcopy(MATRIX_RESULT)
+    data = result["data"]
+    data["pie"] = {
+        "role": "year",
+        "categories": [
+            {"label": "2020", "count": 2, "is_other": False},
+            {"label": "その他（上位外）", "count": 1, "is_other": True},
+        ],
+    }
+    data["cells"][0]["slices"] = [
+        {"label": "2020", "count": 1},
+        {"label": "その他（上位外）", "count": 1},
+    ]
+    data["cells"][1]["slices"] = [{"label": "2020", "count": 1}]
+    data["cells"][2]["slices"] = [{"label": "その他（上位外）", "count": 1}]
+    return result
+
+
+def test_matrix_chart_model_without_a_pie_has_no_pie_fields() -> None:
+    from patent_analysis.chart_models.matrix import build_matrix_chart_model
+
+    model, _receipt = build_matrix_chart_model(MATRIX_RESULT, mark="matrix-bubble-svg.v1")
+
+    assert "pie" not in model
+    assert all("slices" not in cell for cell in model["cells"])
+
+
+@pytest.mark.parametrize("mark", ["matrix-bubble-svg.v1", "matrix-heatmap-svg.v1"])
+def test_matrix_chart_model_carries_the_pie_by_category_index(mark: str) -> None:
+    from patent_analysis.chart_models.matrix import build_matrix_chart_model
+
+    model, receipt = build_matrix_chart_model(_pie_result(), mark=mark)
+
+    assert model["pie"] == {
+        "role": "year",
+        "categories": [
+            {"id": "p:0", "index": 0, "label": "2020", "count": 2, "is_other": False},
+            {"id": "p:1", "index": 1, "label": "その他（上位外）", "count": 1, "is_other": True},
+        ],
+    }
+    assert model["cells"][0]["slices"] == [
+        {"index": 0, "label": "2020", "count": 1},
+        {"index": 1, "label": "その他（上位外）", "count": 1},
+    ]
+    assert receipt["chart_model_sha256"] == hashlib.sha256(canonical_json_bytes(model)).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "damage",
+    [
+        lambda data: data["cells"][0].pop("slices"),
+        lambda data: data.pop("pie"),
+        lambda data: data["cells"][0]["slices"][0].update(label="unknown"),
+        lambda data: data["cells"][0]["slices"].append({"label": "2020", "count": 1}),
+    ],
+    ids=["missing-slices", "missing-pie", "unknown-label", "duplicate-label"],
+)
+def test_matrix_chart_model_rejects_inconsistent_pie_documents(damage) -> None:
+    from patent_analysis.chart_models.matrix import build_matrix_chart_model
+
+    result = _pie_result()
+    damage(result["data"])
+
+    with pytest.raises(ValueError):
+        build_matrix_chart_model(result, mark="matrix-bubble-svg.v1")

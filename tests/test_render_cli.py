@@ -51,7 +51,6 @@ def test_render_entrypoint_rejects_deep_json_with_fixed_error(
         ["render", "--output", r"C:\out", "--json"],
         ["render", "--analysis", "a.json", "--json"],
         ["render", "--analysis", "a.json", "--output", r"C:\out"],
-        ["render", "--help"],
         ["render", "--help", "--json"],
         [
             "render",
@@ -82,6 +81,18 @@ def test_render_usage_errors_are_exact_json_and_exit_four(
             "details": {},
         },
     }
+
+
+def test_render_help_without_json_prints_text_help(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    assert cli.main(["render", "--help"]) == 0
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert captured.out.startswith("usage: patent-analysis render")
+    assert "--analysis" in captured.out
+    assert "--output" in captured.out
 
 
 def test_render_auto_detection_rejects_oversized_integer_without_side_effects(
@@ -278,3 +289,75 @@ def test_render_cli_dispatches_registered_categorical_marks(
     assert received["document"] == analysis.read_bytes()
     assert received["mark"] == mark
     assert json.loads(capsys.readouterr().out)["mark"] == mark
+
+
+def test_render_cli_forwards_the_value_labels_choice_only_when_given(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    tmp_path: Path,
+) -> None:
+    received: list[dict[str, object]] = []
+    monkeypatch.setenv("PATENT_ANALYSIS_ALLOWED_ROOT", str(tmp_path))
+    (tmp_path / "analysis.json").write_bytes(b'{"analysis":true}')
+    monkeypatch.setattr(
+        cli,
+        "render_analysis_svg",
+        lambda _document, **kwargs: received.append(kwargs) or {"ok": True, "status": "created"},
+    )
+    base = [
+        "render",
+        "--analysis",
+        str(tmp_path / "analysis.json"),
+        "--output",
+        str(tmp_path),
+        "--json",
+    ]
+
+    assert cli.main([*base, "--value-labels", "shown"]) == 0
+    assert cli.main(base) == 0
+    capsys.readouterr()
+
+    assert received[0]["value_labels"] == "shown"
+    assert "value_labels" not in received[1]
+
+
+def test_render_cli_rejects_an_unknown_value_labels_choice(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    argv = ["render", "--analysis", "-", "--output", "x", "--value-labels", "loud", "--json"]
+
+    assert cli.main(argv) == 4
+    assert json.loads(capsys.readouterr().out)["error"]["code"] == "usage.invalid"
+
+
+def test_render_cli_forwards_the_palette_choice_only_when_given(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    tmp_path: Path,
+) -> None:
+    received: list[dict[str, object]] = []
+    monkeypatch.setenv("PATENT_ANALYSIS_ALLOWED_ROOT", str(tmp_path))
+    (tmp_path / "analysis.json").write_bytes(b'{"analysis":true}')
+    monkeypatch.setattr(
+        cli,
+        "render_analysis_svg",
+        lambda _document, **kwargs: received.append(kwargs) or {"ok": True, "status": "created"},
+    )
+    analysis = str(tmp_path / "analysis.json")
+    base = ["render", "--analysis", analysis, "--output", str(tmp_path), "--json"]
+    chosen = ["--palette", "high-contrast", "--value-labels", "shown"]
+
+    assert cli.main([*base, *chosen]) == 0
+    assert cli.main(base) == 0
+    capsys.readouterr()
+
+    assert received[0]["palette"] == "high-contrast"
+    assert received[0]["value_labels"] == "shown"
+    assert "palette" not in received[1]
+
+
+def test_render_cli_rejects_an_unknown_palette(capsys: pytest.CaptureFixture[str]) -> None:
+    argv = ["render", "--analysis", "-", "--output", "x", "--palette", "neon", "--json"]
+
+    assert cli.main(argv) == 4
+    assert json.loads(capsys.readouterr().out)["error"]["code"] == "usage.invalid"

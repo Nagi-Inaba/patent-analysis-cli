@@ -9,6 +9,7 @@ from typing import Any
 
 from patent_analysis import api as public_api
 from patent_analysis.canonical_v2 import CanonicalizationError, canonical_json_bytes
+from patent_analysis.render_palettes import RENDER_PALETTES
 from patent_analysis_mcp.contracts import (
     MAX_TOOL_ARGUMENT_BYTES,
     MAX_TOOL_RESPONSE_BYTES,
@@ -46,6 +47,12 @@ _ARGUMENT_KEYS = {
         {"output_root_id", "output_path", "analysis_handle", "mark"}
     ),
 }
+# Optional keys are display choices; omitting them keeps the default rendering.
+_OPTIONAL_ARGUMENT_KEYS = {
+    "patent_analysis.render": frozenset({"value_labels", "palette"}),
+}
+_VALUE_LABEL_CHOICES = ("hidden", "shown")
+_PALETTE_CHOICES = RENDER_PALETTES
 _MAX_RENDER_HANDLES = 4
 
 
@@ -98,7 +105,10 @@ class ToolHandlers:
                 raw_arguments,
                 maximum_bytes=self.argument_maximum_bytes,
             )
-            if frozenset(arguments) != _ARGUMENT_KEYS[tool_name]:
+            required_keys = _ARGUMENT_KEYS[tool_name]
+            allowed_keys = required_keys | _OPTIONAL_ARGUMENT_KEYS.get(tool_name, frozenset())
+            supplied_keys = frozenset(arguments)
+            if not required_keys <= supplied_keys <= allowed_keys:
                 raise McpContractError("input.invalid")
             result = self._dispatch(tool_name, arguments)
             if tool_name == "patent_analysis.schema":
@@ -119,6 +129,13 @@ class ToolHandlers:
     def _required_string(arguments: Mapping[str, Any], name: str) -> str:
         value = arguments.get(name)
         if not isinstance(value, str) or not value:
+            raise McpContractError("input.invalid")
+        return value
+
+    @staticmethod
+    def _choice(arguments: Mapping[str, Any], name: str, choices: tuple[str, ...]) -> str:
+        value = arguments.get(name)
+        if not isinstance(value, str) or value not in choices:
             raise McpContractError("input.invalid")
         return value
 
@@ -240,12 +257,18 @@ class ToolHandlers:
         definition = require_visible_analysis(analysis_id)
         if mark not in definition.compatible_render_marks:
             raise ExposureError("analysis.unknown")
+        options: dict[str, str] = {}
+        if "value_labels" in arguments:
+            options["value_labels"] = self._choice(arguments, "value_labels", _VALUE_LABEL_CHOICES)
+        if "palette" in arguments:
+            options["palette"] = self._choice(arguments, "palette", _PALETTE_CHOICES)
         output_directory = self.roots.resolve_output_directory(root_id, output_path)
         return self._api_callable("render_analysis_svg")(
             analysis_document,
             mark=mark,
             output_directory=output_directory,
             node_executable=self.node_executable,
+            **options,
         )
 
 

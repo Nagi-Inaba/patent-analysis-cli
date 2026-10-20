@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import csv
-import os
 import shutil
+import sys
 from pathlib import Path
 
 import pytest
@@ -128,8 +128,8 @@ def test_points_builder_rejects_duplicate_labels(tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(
-    os.name != "nt" or shutil.which("node") is None,
-    reason="trusted-local SVG E2E requires Windows and exact Node",
+    sys.platform not in {"win32", "darwin"} or shutil.which("node") is None,
+    reason="trusted-local SVG E2E requires Windows x64 or macOS and exact Node",
 )
 @pytest.mark.parametrize(
     "analysis_id,mark",

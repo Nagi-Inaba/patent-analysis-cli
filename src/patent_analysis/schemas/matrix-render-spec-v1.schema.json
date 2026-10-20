@@ -21,6 +21,14 @@
     "locale": {
       "const": "ja-JP"
     },
+    "palette": {
+      "enum": [
+        "standard",
+        "colorblind",
+        "monochrome",
+        "high-contrast"
+      ]
+    },
     "render_profile_id": {
       "const": "matrix-svg-ja-jp-node22-echarts6.v1"
     },
@@ -35,6 +43,12 @@
     },
     "timezone": {
       "const": "UTC"
+    },
+    "value_labels": {
+      "enum": [
+        "hidden",
+        "shown"
+      ]
     },
     "width": {
       "const": 1200

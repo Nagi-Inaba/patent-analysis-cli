@@ -25,7 +25,7 @@ def _server_parameters(input_root: Path, output_root: Path) -> StdioServerParame
         f"output={output_root}",
     ]
     node = shutil.which("node")
-    if sys.platform == "win32" and node:
+    if sys.platform in {"win32", "darwin"} and node:
         args.extend(("--node", node))
     return StdioServerParameters(command=sys.executable, args=args, cwd=Path.cwd())
 
@@ -77,7 +77,7 @@ def test_real_stdio_initializes_lists_and_calls_the_shared_core(tmp_path: Path) 
                     render_handle = analysis.structured_content["content"]["render_handle"]
 
                     node = shutil.which("node")
-                    if sys.platform == "win32" and node:
+                    if sys.platform in {"win32", "darwin"} and node:
                         rendered = await session.call_tool(
                             "patent_analysis.render",
                             {

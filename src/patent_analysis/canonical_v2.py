@@ -99,11 +99,20 @@ def _normalize_parsed_strings(value: Any) -> Any:
     return value
 
 
-def parse_strict_json_bytes(raw: bytes) -> object:
-    """Parse UTF-8 JSON while retaining duplicate-key and number-lexeme checks."""
+def parse_strict_json_bytes(raw: bytes, *, allow_bom: bool = False) -> object:
+    """Parse UTF-8 JSON while retaining duplicate-key and number-lexeme checks.
+
+    ``allow_bom`` belongs to document boundaries (dataset files, spec files,
+    sidecar files): a single leading UTF-8 BOM is tolerated there as an
+    encoding signature and ignored, matching the CSV reader ("UTF-8 with
+    BOM"). Cell values and other embedded documents stay strict, so a BOM
+    inside data is never silently dropped.
+    """
 
     if type(raw) is not bytes:
         _fail("strict JSON input must be bytes")
+    if allow_bom and raw.startswith(b"\xef\xbb\xbf"):
+        raw = raw[3:]
     try:
         text = raw.decode("utf-8", errors="strict")
         parsed = json.loads(

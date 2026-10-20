@@ -13,10 +13,11 @@ import {
   type SeriesChartModel
 } from "./categorical-payload.js";
 import { normalizeEChartsSvg } from "./categorical-svg-normalize.js";
+import { alternatePalette, cycle } from "./palette.js";
 
 echarts.use([BarChart, LineChart, PieChart, GridComponent, LegendComponent, TitleComponent, SVGRenderer]);
 
-const COLORS = Object.freeze([
+const STANDARD_COLORS: readonly string[] = Object.freeze([
   "#0f766e",
   "#2563eb",
   "#9333ea",
@@ -28,9 +29,9 @@ const COLORS = Object.freeze([
   "#a16207",
   "#0891b2"
 ]);
-const TEXT = "#0f172a";
-const SECONDARY_TEXT = "#475569";
-const GRID = "#cbd5e1";
+const STANDARD_TEXT = "#0f172a";
+const STANDARD_SECONDARY_TEXT = "#475569";
+const STANDARD_GRID = "#cbd5e1";
 const EMPTY_SERIES = "表示できる年次推移データがありません";
 const EMPTY_COMPOSITION = "表示できる構成比データがありません";
 const segmenter = new Intl.Segmenter("ja-JP", { granularity: "grapheme" });
@@ -54,25 +55,51 @@ function truncateLabel(value: string, maximum: number): string {
   return parts.join("");
 }
 
-function title(model: CategoricalChartModel, empty: boolean, emptyText: string, fontFamily: string) {
+type Ink = {
+  text: string;
+  secondaryText: string;
+  grid: string;
+  fills: readonly string[];
+  lines: readonly string[];
+};
+
+function inkFor(spec: CategoricalRenderSpec): Ink {
+  const alt = alternatePalette(spec.palette);
+  if (alt === null) {
+    return {
+      text: STANDARD_TEXT,
+      secondaryText: STANDARD_SECONDARY_TEXT,
+      grid: STANDARD_GRID,
+      fills: STANDARD_COLORS,
+      lines: STANDARD_COLORS
+    };
+  }
+  return { text: alt.text, secondaryText: alt.muted, grid: alt.grid, fills: alt.categorical, lines: alt.lineColors };
+}
+
+function title(model: CategoricalChartModel, empty: boolean, emptyText: string, fontFamily: string, ink: Ink) {
   return {
     text: model.title,
     subtext: empty ? emptyText : "",
     left: "center",
     top: 16,
-    textStyle: { color: TEXT, fontFamily, fontSize: 22, fontWeight: 600 },
-    subtextStyle: { color: SECONDARY_TEXT, fontFamily, fontSize: 14 }
+    textStyle: { color: ink.text, fontFamily, fontSize: 22, fontWeight: 600 },
+    subtextStyle: { color: ink.secondaryText, fontFamily, fontSize: 14 }
   };
 }
 
 export function buildSeriesOption(model: SeriesChartModel, spec: CategoricalRenderSpec): EChartsOption {
+  const alt = alternatePalette(spec.palette);
+  const ink = inkFor(spec);
+  const { text: TEXT, secondaryText: SECONDARY_TEXT, grid: GRID } = ink;
+  const outline = alt === null ? {} : { borderColor: alt.outline, borderWidth: alt.outlineWidth };
   const empty = model.x.length === 0 || model.series.length === 0;
   const stacked = spec.renderer_kind === "series.stacked-bar.svg";
   return {
     animation: false,
     backgroundColor: "#ffffff",
     textStyle: { fontFamily: spec.font_family, color: TEXT },
-    title: title(model, empty, EMPTY_SERIES, spec.font_family),
+    title: title(model, empty, EMPTY_SERIES, spec.font_family, ink),
     legend: {
       type: "plain",
       top: 66,
@@ -95,19 +122,26 @@ export function buildSeriesOption(model: SeriesChartModel, spec: CategoricalRend
       axisLabel: { color: TEXT, fontFamily: spec.font_family },
       splitLine: { lineStyle: { color: GRID } }
     },
-    series: model.series.map((item, index) => ({
-      name: item.label,
-      type: stacked ? "bar" : "line",
-      stack: stacked ? "total" : undefined,
-      data: item.values,
-      symbol: stacked ? undefined : "circle",
-      symbolSize: stacked ? undefined : 6,
-      showSymbol: stacked ? undefined : true,
-      lineStyle: stacked ? undefined : { width: 2, color: COLORS[index % COLORS.length] },
-      itemStyle: { color: COLORS[index % COLORS.length] },
-      emphasis: { disabled: true },
-      animation: false
-    }))
+    series: model.series.map((item, index) => {
+      // Alternate palettes add a colour-independent line style and marker per series.
+      const style = alt === null ? null : cycle(alt.lineStyles, index);
+      const stroke = cycle(ink.lines, index);
+      return {
+        name: item.label,
+        type: stacked ? "bar" : "line",
+        stack: stacked ? "total" : undefined,
+        data: item.values,
+        symbol: stacked ? undefined : (style?.symbol ?? "circle"),
+        symbolSize: stacked ? undefined : style === null ? 6 : 9,
+        showSymbol: stacked ? undefined : true,
+        lineStyle: stacked
+          ? undefined
+          : { width: alt?.lineWidth ?? 2, color: stroke, ...(style === null ? {} : { type: style.type }) },
+        itemStyle: stacked ? { color: cycle(ink.fills, index), ...outline } : { color: stroke },
+        emphasis: { disabled: true },
+        animation: false
+      };
+    })
   };
 }
 
@@ -115,13 +149,17 @@ export function buildCompositionOption(
   model: CompositionChartModel,
   spec: CategoricalRenderSpec
 ): EChartsOption {
+  const alt = alternatePalette(spec.palette);
+  const ink = inkFor(spec);
+  const { text: TEXT, secondaryText: SECONDARY_TEXT, grid: GRID } = ink;
+  const outline = alt === null ? {} : { borderColor: alt.outline, borderWidth: alt.outlineWidth };
   const empty = model.items.length === 0;
   if (spec.renderer_kind === "composition.pie.svg") {
     return {
       animation: false,
       backgroundColor: "#ffffff",
       textStyle: { fontFamily: spec.font_family, color: TEXT },
-      title: title(model, empty, EMPTY_COMPOSITION, spec.font_family),
+      title: title(model, empty, EMPTY_COMPOSITION, spec.font_family, ink),
       legend: {
         type: "plain",
         orient: "vertical",
@@ -138,7 +176,7 @@ export function buildCompositionOption(
         data: model.items.map((item, index) => ({
           name: item.label,
           value: item.share,
-          itemStyle: { color: COLORS[index % COLORS.length] }
+          itemStyle: { color: cycle(ink.fills, index), ...outline }
         })),
         label: {
           show: true,
@@ -156,7 +194,7 @@ export function buildCompositionOption(
     animation: false,
     backgroundColor: "#ffffff",
     textStyle: { fontFamily: spec.font_family, color: TEXT },
-    title: title(model, empty, EMPTY_COMPOSITION, spec.font_family),
+    title: title(model, empty, EMPTY_COMPOSITION, spec.font_family, ink),
     grid: { left: 180, right: 64, top: 100, bottom: 56, containLabel: false },
     xAxis: {
       type: "value",
@@ -173,7 +211,10 @@ export function buildCompositionOption(
     },
     series: [{
       type: "bar",
-      data: model.items.map((item, index) => ({ value: item.value, itemStyle: { color: COLORS[index % COLORS.length] } })),
+      data: model.items.map((item, index) => ({
+        value: item.value,
+        itemStyle: { color: cycle(ink.fills, index), ...outline }
+      })),
       label: { show: true, position: "right", color: TEXT, fontFamily: spec.font_family },
       emphasis: { disabled: true },
       animation: false

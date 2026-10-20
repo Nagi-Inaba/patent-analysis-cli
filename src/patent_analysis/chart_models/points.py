@@ -53,7 +53,9 @@ def build_points_chart_model(
     return deepcopy(model), deepcopy(receipt)
 
 
-def build_points_render_spec(*, mark: str, point_count: int) -> dict[str, object]:
+def build_points_render_spec(
+    *, mark: str, point_count: int, palette: str | None = None
+) -> dict[str, object]:
     if mark != POINTS_BUBBLE_MARK:
         raise ValueError("unknown points renderer mark")
     if type(point_count) is not int or not 0 <= point_count <= 20:
@@ -61,6 +63,7 @@ def build_points_render_spec(*, mark: str, point_count: int) -> dict[str, object
     spec = fixed_render_spec(
         renderer_kind="points.bubble.svg",
         render_profile_id=POINTS_RENDER_PROFILE_ID,
+        palette=palette,
     )
     validate_schema(spec, "points-render-spec-v1.schema.json")
     return deepcopy(spec)

@@ -42,7 +42,7 @@ def analyze_csv(source: str | Path, spec: object, *, allowed_root: str | Path) -
 
 `validate_analysis_spec`は検証済みのspecを返す。失敗時は`AnalysisContractError`を送出する。公開するmessage/detailsは`code`、`safe_message`、`retryable`、boundedな`details`に限定し、入力値、セル値、prompt、絶対pathを入れない。tracebackのframe localsは別の開示境界として扱う。
 
-`inspect_csv`と`analyze_csv`の`allowed_root`はkeyword-onlyで必須であり、trusted launcherが用意した絶対pathの既存local directoryを受け取る。OperationPlanの`contract`と`validate-plan -`はこのrootを要求しないが、file-backed `validate-plan <file>`は要求する。OperationPlanとAnalysisSpecのJSON入力はfileまたはstdinのいずれもUTF-8 bytesで最大2 MiBであり、超過は`input.invalid`/exit code 3となる。
+`inspect_csv`と`analyze_csv`の`allowed_root`はkeyword-onlyで必須であり、trusted launcherが用意した絶対pathの既存local directoryを受け取る。OperationPlanの`contract`と`validate-plan -`はこのrootを要求しないが、file-backed `validate-plan <file>`は要求する。OperationPlanとAnalysisSpecのJSON入力はfileまたはstdinのいずれもUTF-8 bytes（先頭のUTF-8 BOM 1個は許容）で最大2 MiBであり、超過は`input.invalid`/exit code 3となる。
 
 ## AnalysisSpec
 
@@ -88,7 +88,7 @@ v1はcomma区切りCSVまたは`.json` datasetを読み取る。CSV encodingはB
 
 空のheader、重複header、CSV行ごとの列数不一致、および公開されたfile size・columns・rows・cells・cell length上限の違反は`input.invalid`として拒否する。`inspect_dataset`は列名、行数、列数、byte数、encoding等のmetadataだけを返し、file name、絶対path、sample value、cell valueを返さない。
 
-CLIの`inspect`/`analyze`とfile-backed `validate-plan`は、trusted launcherが絶対pathの既存ローカルdirectoryとして設定した`PATENT_ANALYSIS_ALLOWED_ROOT`とverified root/pathを必須とする。相対dataset/spec/plan pathはこのrootを基準に解決し、dataset・spec・planはroot配下のregular fileだけを受け付ける。`--spec -`と`validate-plan -`のbounded stdinだけがfile-backed入力の例外である。rootまたはpathが未設定・拒否された場合は`input.invalid`、exit code 3となる。CLIにもAnalysisSpecにもrootを変更するfieldやoptionはない。OperationPlanとAnalysisSpecのJSON入力はfileまたはstdinのいずれもUTF-8 bytesで最大2 MiBであり、超過は`input.invalid`/exit code 3となる。
+CLIの`inspect`/`analyze`とfile-backed `validate-plan`は、trusted launcherが絶対pathの既存ローカルdirectoryとして設定した`PATENT_ANALYSIS_ALLOWED_ROOT`とverified root/pathを必須とする。相対dataset/spec/plan pathはこのrootを基準に解決し、dataset・spec・planはroot配下のregular fileだけを受け付ける。`--spec -`と`validate-plan -`のbounded stdinだけがfile-backed入力の例外である。rootまたはpathが未設定・拒否された場合は`input.invalid`、exit code 3となる。CLIにもAnalysisSpecにもrootを変更するfieldやoptionはない。OperationPlanとAnalysisSpecのJSON入力はfileまたはstdinのいずれもUTF-8 bytes（先頭のUTF-8 BOM 1個は許容）で最大2 MiBであり、超過は`input.invalid`/exit code 3となる。
 
 WindowsではUNC/device/NT namespace/ADS、remoteまたはmapped drive、SUBST、symlink/junction/mount/reparse component、identity/final-handle escapeを拒否する。component swap、hard-link、host privilegeによる残余境界は残る。このcontrolはsandboxではなく、modelがenvironment variableを変更できる、またはarbitrary shellを実行できる運用ではroot境界を迂回できる。
 

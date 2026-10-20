@@ -119,9 +119,11 @@ def build_advanced_chart_model(
     return model, receipt
 
 
-def build_advanced_render_spec() -> dict[str, object]:
+def build_advanced_render_spec(palette: str | None = None) -> dict[str, object]:
     spec = fixed_render_spec(
-        renderer_kind="advanced.svg", render_profile_id=ADVANCED_RENDER_PROFILE_ID
+        renderer_kind="advanced.svg",
+        render_profile_id=ADVANCED_RENDER_PROFILE_ID,
+        palette=palette,
     )
     validate_schema(spec, "advanced-render-spec-v1.schema.json")
     return spec

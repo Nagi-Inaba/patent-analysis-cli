@@ -97,6 +97,8 @@ def render_analysis_svg(
     overlay: bytes | Mapping[str, object] | None = None,
     output_directory: str | Path,
     node_executable: str | Path | None = None,
+    value_labels: str | None = None,
+    palette: str | None = None,
 ) -> dict[str, object]:
     if overlay is not None and type(overlay) is not bytes:
         raise ValueError("render overlay must be bytes")
@@ -117,7 +119,7 @@ def render_analysis_svg(
     is_advanced = isinstance(analysis_id, str) and analysis_id in ADVANCED_PRESENTATIONS
     is_advanced_mark = isinstance(mark, str) and mark in ADVANCED_MARK_TO_ID
     if is_advanced or is_advanced_mark:
-        if not is_advanced:
+        if not is_advanced or value_labels is not None:
             raise _make_render_error("render.invalid")
         return render_advanced_svg(
             analysis_document,
@@ -126,6 +128,7 @@ def render_analysis_svg(
             overlay_document=overlay,
             output_directory=output_directory,
             node_executable=node_executable,
+            palette=palette,
         )
 
     return rendering_module.render_analysis_svg(
@@ -134,6 +137,8 @@ def render_analysis_svg(
         overlay_document=overlay,
         output_directory=output_directory,
         node_executable=node_executable,
+        value_labels=value_labels,
+        palette=palette,
     )
 
 

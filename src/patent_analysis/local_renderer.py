@@ -5,6 +5,7 @@ import platform
 import shutil
 import stat
 import subprocess
+import sys
 import threading
 import time
 from dataclasses import dataclass
@@ -47,8 +48,12 @@ def _raise_local_error() -> None:
     raise LocalRendererError() from None
 
 
-def require_windows_x64() -> None:
-    if os.name != "nt" or platform.machine().casefold() not in {"amd64", "x86_64"}:
+def require_supported_platform() -> None:
+    machine = platform.machine().casefold()
+    if not (
+        (sys.platform == "win32" and machine in {"amd64", "x86_64"})
+        or (sys.platform == "darwin" and machine in {"arm64", "x86_64"})
+    ):
         _raise_local_error()
 
 
@@ -212,7 +217,7 @@ def launch_trusted_node(
     bootstrap_bytes: bytes,
     frame: bytes,
 ) -> LocalProcessResult:
-    require_windows_x64()
+    require_supported_platform()
     if type(bootstrap_bytes) is not bytes or type(frame) is not bytes:
         _raise_local_error()
     node = resolve_node_executable(node_executable)
@@ -232,7 +237,7 @@ def launch_trusted_node(
             stderr=subprocess.PIPE,
             shell=False,
             close_fds=True,
-            creationflags=subprocess.CREATE_NO_WINDOW,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             env=_minimal_environment(),
         )
     except Exception:

@@ -29,11 +29,11 @@ def build_categorical_chart_model(
     raise ValueError("unknown categorical render mark")
 
 
-def build_categorical_render_spec(*, mark: str) -> dict[str, object]:
+def build_categorical_render_spec(*, mark: str, palette: str | None = None) -> dict[str, object]:
     """Return the fixed RenderSpec for one exact categorical mark."""
 
     if mark in _SERIES_MARKS:
-        return build_series_render_spec(mark=mark)
+        return build_series_render_spec(mark=mark, palette=palette)
     if mark in _COMPOSITION_MARKS:
-        return build_composition_render_spec(mark=mark)
+        return build_composition_render_spec(mark=mark, palette=palette)
     raise ValueError("unknown categorical render mark")

@@ -1,4 +1,4 @@
-"""Console entry point and MCP 2.0 low-level server wiring."""
+"""Console entry point and MCP 2.x low-level server wiring."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ import mcp_types as types
 from mcp.server.lowlevel import Server
 
 from patent_analysis import PACKAGE_VERSION
+from patent_analysis.render_palettes import RENDER_PALETTES
 from patent_analysis_mcp.contracts import MAX_MCP_SERIALIZED_RESPONSE_BYTES
 from patent_analysis_mcp.roots import ApprovedRoot, RootRegistry
 from patent_analysis_mcp.tool_handlers import ToolHandlers
@@ -65,6 +66,8 @@ _INPUT_SCHEMAS: Mapping[str, dict[str, Any]] = {
             "output_path": {"type": "string", "minLength": 1},
             "analysis_handle": {"type": "string", "minLength": 32},
             "mark": {"type": "string", "minLength": 1},
+            "value_labels": {"enum": ["hidden", "shown"]},
+            "palette": {"enum": list(RENDER_PALETTES)},
         },
         "required": ["output_root_id", "output_path", "analysis_handle", "mark"],
     },

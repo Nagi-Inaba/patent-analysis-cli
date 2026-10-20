@@ -29,6 +29,8 @@ const APPROVED_RENDERER_MODULES = Object.freeze([
   "src/generated/points-standalone-validators.js",
   "src/points-index.ts",
   "src/points-payload.ts",
+  "src/label-layout.ts",
+  "src/palette.ts",
   "src/categorical-svg-normalize.ts"
 ]);
 const SAFE_NAMESPACE_URIS = Object.freeze([
@@ -231,7 +233,8 @@ async function main() {
     process.version === "v22.19.0",
     `Expected Node v22.19.0, received ${process.version}`
   );
-  assert(process.arch === "x64", `Expected x64 Node, received ${process.arch}`);
+  assert(process.arch === "x64" || (process.platform === "darwin" && process.arch === "arm64"),
+    `Expected x64 or macOS arm64 Node, received ${process.platform}/${process.arch}`);
   const [packageJson, packageLock, bootstrapTemplate] = await Promise.all([
     readFile(resolve(rendererRoot, "package.json"), "utf8").then(JSON.parse),
     readFile(resolve(rendererRoot, "package-lock.json"), "utf8").then(JSON.parse),

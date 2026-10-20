@@ -4,14 +4,15 @@ import io
 import os
 import shutil
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 import pytest
 
 pytestmark = pytest.mark.skipif(
-    os.name != "nt",
-    reason="trusted-local renderer process contract is Windows x64-only",
+    sys.platform not in {"win32", "darwin"},
+    reason="trusted-local renderer requires Windows x64 or macOS",
 )
 
 
@@ -130,7 +131,7 @@ def test_launcher_uses_exact_trusted_local_process_contract(
         "stderr": subprocess.PIPE,
         "shell": False,
         "close_fds": True,
-        "creationflags": subprocess.CREATE_NO_WINDOW,
+        "creationflags": subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
         "env": {
             "SystemRoot": r"C:\Windows",
             "TZ": "UTC",
@@ -226,13 +227,14 @@ def test_node_path_must_be_exact_absolute_local_regular_non_reparse() -> None:
             module.resolve_node_executable(invalid)
 
 
-def test_platform_gate_is_windows_x64_only(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_platform_gate_rejects_windows_arm64(monkeypatch: pytest.MonkeyPatch) -> None:
     module = _load_module()
     assert module is not None
+    monkeypatch.setattr(sys, "platform", "win32")
     monkeypatch.setattr(module.platform, "machine", lambda: "ARM64")
 
     with pytest.raises(module.LocalRendererError):
-        module.require_windows_x64()
+        module.require_supported_platform()
 
 
 @pytest.mark.parametrize("failing_pipe", ["stdin", "stdout", "stderr"])

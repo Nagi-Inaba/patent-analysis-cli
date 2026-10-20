@@ -1,6 +1,6 @@
 # 発明者の協働・技術・活動・関係先を分析する
 
-既存の `inventor-tracking.v1` とは別に、人物IDと観測根拠を保持する10種類の分析を用意しています。すべて同じPython API・CLI・local stdio MCPで分析でき、JSONとCSV／テキスト表を出力します。描画可能なmarkは、インストールした配布物の `capabilities --json` で確認してください。宣言されたmarkがあるだけではSVGは有効になりません。
+既存の `inventor-tracking.v1` とは別に、人物IDと観測根拠を保持する<!--var:inventor_analysis_count-->10<!--/var-->種類の分析を用意しています。すべて同じPython API・CLI・local stdio MCPで分析でき、JSONとCSV／テキスト表を出力します。描画可能なmarkは、インストールした配布物の `capabilities --json` で確認してください。宣言されたmarkがあるだけではSVGは有効になりません。
 
 ## 分析を選ぶ
 

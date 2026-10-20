@@ -18,6 +18,7 @@ prune renderer/coverage
 include scripts/verify_installed_release.py
 include scripts/verify_installed_inventor_release.py
 include scripts/benchmark_csv.py
+include scripts/sync_doc_vars.py
 
 prune .ai
 global-exclude *.pyc *.pyo .env .env.*

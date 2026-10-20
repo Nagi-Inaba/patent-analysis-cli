@@ -18,6 +18,8 @@ classifiers = [
   "Environment :: Console",
   "Intended Audience :: Science/Research",
   "Operating System :: Microsoft :: Windows :: Windows 11",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering :: Information Analysis",
@@ -47,8 +49,9 @@ dev = [
   "ruff>=0.6",
 ]
 mcp = [
-  "mcp==2.0.0",
+  "mcp==2.2.0",
   "pyjwt==2.15.1",
+  "cryptography>=50.0.1",
 ]
 
 [tool.pytest.ini_options]

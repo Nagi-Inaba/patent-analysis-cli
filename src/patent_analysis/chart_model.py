@@ -30,6 +30,7 @@ from patent_analysis.analysis_contracts import (
     StrictDraft202012Validator,
     validate_analysis_result,
 )
+from patent_analysis.render_palettes import apply_render_palette
 
 T = TypeVar("T")
 
@@ -410,7 +411,9 @@ def build_ranking_chart_model(
     )
 
 
-def _build_ranking_render_spec_impl(*, row_count: int) -> dict[str, Any]:
+def _build_ranking_render_spec_impl(
+    *, row_count: int, palette: str | None = None
+) -> dict[str, Any]:
     if isinstance(row_count, bool) or not isinstance(row_count, int) or not 0 <= row_count <= 101:
         raise ValueError
     spec = {
@@ -426,8 +429,11 @@ def _build_ranking_render_spec_impl(*, row_count: int) -> dict[str, Any]:
         "echarts_version": "6.1.0",
         "render_profile_id": "ranking-svg-ja-jp-node22-echarts6.v1",
     }
+    apply_render_palette(spec, palette)
     return validate_render_spec(spec, row_count=row_count)
 
 
-def build_ranking_render_spec(*, row_count: int) -> dict[str, Any]:
-    return _translate_contract_failure(lambda: _build_ranking_render_spec_impl(row_count=row_count))
+def build_ranking_render_spec(*, row_count: int, palette: str | None = None) -> dict[str, Any]:
+    return _translate_contract_failure(
+        lambda: _build_ranking_render_spec_impl(row_count=row_count, palette=palette)
+    )

@@ -1,16 +1,16 @@
 """Real trusted-local SVG entrypoints for each approved advanced analysis.
 
 Nothing here mocks calculation, CLI routing, Node rendering or publication.
-The Windows-only cases must be reported separately from portable model tests.
+Native rendering cases must be reported separately from portable model tests.
 """
 from __future__ import annotations
 
 import hashlib
 import json
-import os
 import platform
 import shutil
 import subprocess
+import sys
 from functools import lru_cache
 from pathlib import Path
 from xml.etree import ElementTree
@@ -32,8 +32,8 @@ EXAMPLES = Path(__file__).resolve().parents[1] / "examples" / "advanced"
 
 
 @lru_cache(maxsize=1)
-def _exact_windows_node() -> str | None:
-    if os.name != "nt" or platform.machine().lower() not in {"amd64", "x86_64"}:
+def _exact_renderer_node() -> str | None:
+    if sys.platform not in {"win32", "darwin"}:
         return None
     node = shutil.which("node")
     if node is None:
@@ -45,12 +45,14 @@ def _exact_windows_node() -> str | None:
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
-    return node if probe.returncode == 0 and probe.stdout.strip() == "22.19.0/x64" else None
+    return node if probe.returncode == 0 and probe.stdout.strip() == (
+        "22.19.0/arm64" if platform.machine().lower() == "arm64" else "22.19.0/x64"
+    ) else None
 
 
-requires_windows_node = pytest.mark.skipif(
-    _exact_windows_node() is None or ADVANCED_BUILD is None,
-    reason="requires a built advanced bundle, Windows x64 and exact Node22.19.0",
+requires_renderer_node = pytest.mark.skipif(
+    _exact_renderer_node() is None or ADVANCED_BUILD is None,
+    reason="requires a built advanced bundle, Windows x64 or macOS and exact Node22.19.0",
 )
 
 
@@ -97,7 +99,7 @@ def _assert_svg(receipt: dict, output: Path) -> bytes:
 
 
 @pytest.mark.parametrize("analysis_id", ANALYSES)
-@requires_windows_node
+@requires_renderer_node
 @pytest.mark.parametrize("explicit", [False, True])
 def test_real_advanced_api_and_cli_render_same_svg_and_reuse(
     analysis_id: str, explicit: bool, tmp_path: Path,
@@ -121,7 +123,7 @@ def test_real_advanced_api_and_cli_render_same_svg_and_reuse(
     api_output, cli_output = tmp_path / "api-output", tmp_path / "cli-output"
     api_output.mkdir()
     cli_output.mkdir()
-    node = _exact_windows_node()
+    node = _exact_renderer_node()
     assert node is not None
     first = api.render_analysis_svg(
         document, mark=mark, output_directory=api_output, node_executable=node,
@@ -155,7 +157,7 @@ def test_real_advanced_api_and_cli_render_same_svg_and_reuse(
 
 
 @pytest.mark.parametrize("analysis_id", ANALYSES)
-@requires_windows_node
+@requires_renderer_node
 def test_real_mcp_advanced_analysis_handle_renders_the_same_public_result(
     analysis_id: str, tmp_path: Path,
 ) -> None:
@@ -172,7 +174,7 @@ def test_real_mcp_advanced_analysis_handle_renders_the_same_public_result(
     output_root.mkdir()
     direct_output = tmp_path / "direct-output"
     direct_output.mkdir()
-    node = _exact_windows_node()
+    node = _exact_renderer_node()
     assert node is not None
     definition = get_analysis_definition(analysis_id)
     assert definition.mcp_public and definition.compatible_render_marks

@@ -245,7 +245,7 @@ def verify_core(cases: list[dict], expected: dict, input_root: Path, output_root
         result = run_json("analyze", case["csv"], "--spec", case["spec"], "--json")
         aggregate = result["result" if aid == "ranking.v1" else "data"]
         assert aggregate == expected[aid], f"aggregate mismatch: {aid}"
-        if sys.platform == "win32" and aid in SVG_CASES:
+        if sys.platform in {"win32", "darwin"} and aid in SVG_CASES:
             target = output_root / aid
             target.mkdir()
             rendered[aid] = render_cli(result, case["mark"], target, input_root)
@@ -259,7 +259,7 @@ def verify_core(cases: list[dict], expected: dict, input_root: Path, output_root
         "analysis_ids": [c["analysis_id"] for c in cases],
         "family_example": "passed",
         "svg": rendered,
-        "svg_platform_supported": sys.platform == "win32",
+        "svg_platform_supported": sys.platform in {"win32", "darwin"},
     }
 
 
@@ -307,7 +307,7 @@ async def verify_mcp(
                         aid
                     )
                     assert str(input_root) not in repr(content) and "receipt" not in content
-                    if sys.platform == "win32" and aid in MCP_SVG_CASES:
+                    if sys.platform in {"win32", "darwin"} and aid in MCP_SVG_CASES:
                         (output_root / aid).mkdir()
                         request = {
                             "output_root_id": "output",
@@ -330,7 +330,7 @@ async def verify_mcp(
     return {
         "analysis_ids": sorted(public),
         "svg": rendered,
-        "svg_platform_supported": sys.platform == "win32",
+        "svg_platform_supported": sys.platform in {"win32", "darwin"},
         "mcp_version": metadata.version("mcp"),
     }
 

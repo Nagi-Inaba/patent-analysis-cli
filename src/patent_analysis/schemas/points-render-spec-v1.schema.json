@@ -21,6 +21,7 @@
     "render_spec_contract_version": {"const": "1.0.0"},
     "renderer_kind": {"const": "points.bubble.svg"},
     "locale": {"const": "ja-JP"},
+    "palette": {"enum": ["standard", "colorblind", "monochrome", "high-contrast"]},
     "timezone": {"const": "UTC"},
     "width": {"const": 1200},
     "height": {"const": 675},

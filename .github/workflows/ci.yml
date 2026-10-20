@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     env:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --require-hashes -r requirements/mcp-2.0.0.lock
+          python -m pip install --require-hashes -r requirements/mcp-2.2.0.lock
           python -m pip install -e ".[dev,inventor]" build "setuptools>=77.0.3"
 
       - name: Install renderer dependencies
@@ -60,12 +60,12 @@ jobs:
           load_verified_advanced_renderer_resources;
           load_verified_advanced_renderer_resources()"
 
-      # The full suite already includes native Windows SVG and numeric parity tests.
+      # The full suite includes native Windows/macOS SVG and numeric parity tests.
       - name: Verify Python
         run: python -m pytest -q -p no:cacheprovider --junitxml="${{ runner.temp }}/pytest-results.xml"
 
-      - name: Require executed Windows tests
-        if: runner.os == 'Windows'
+      - name: Require executed native renderer tests
+        if: runner.os == 'Windows' || runner.os == 'macOS'
         shell: python
         run: |
           import os
@@ -77,7 +77,12 @@ jobs:
           svg_ids = (*inventory["ADVANCED_IDS"], *inventory["INVENTOR_IDS"][:-1])
           report = ElementTree.parse(Path(os.environ["RUNNER_TEMP"]) / "pytest-results.xml")
           assert list(report.iter("testcase")), "No Python tests executed"
-          assert not list(report.iter("skipped")), "Windows tests must execute, not skip"
+          skipped = [case for case in report.iter("testcase") if case.find("skipped") is not None]
+          if os.name == "nt":
+              assert not skipped, "Windows tests must execute, not skip"
+          else:
+              assert all(case.get("classname") == "tests.test_access" for case in skipped), \
+                  "Only Windows handle/drive access tests may skip on macOS"
           api_case = "test_real_advanced_api_and_cli_render_same_svg_and_reuse"
           mcp_case = "test_real_mcp_advanced_analysis_handle_renders_the_same_public_result"
           expected = Counter(
@@ -212,7 +217,10 @@ jobs:
               temp = Path(temp).resolve()
               wheels = temp / "wheels"
               wheels.mkdir()
-              run([sys.executable, "-m", "pip", "download", "--only-binary=:all:", "--dest", wheels, str(wheel) + "[mcp,inventor]"], temp)
+              # Build a dependency wheel when its current safe release has no
+              # native binary (e.g. cryptography on Intel macOS). Never downgrade
+              # solely to satisfy binary-only availability.
+              run([sys.executable, "-m", "pip", "wheel", "--wheel-dir", wheels, str(wheel) + "[mcp,inventor]"], temp)
               dependency_hashes = {p.name: sha(p) for p in wheels.glob("*.whl")}
               target = temp / "venv"
               venv.EnvBuilder(with_pip=True).create(target)
@@ -248,7 +256,7 @@ jobs:
           native = json.loads((report_dir / "inventor.json").read_text(encoding="utf-8"))
           native_mcp = json.loads((report_dir / "inventor-mcp.json").read_text(encoding="utf-8"))
           ids = runpy.run_path(str(verifier))["INVENTOR_IDS"]
-          expected_svg = set(ids[:-1]) if sys.platform == "win32" else set()
+          expected_svg = set(ids[:-1]) if sys.platform in {"win32", "darwin"} else set()
           assert set(native["svg"]) == set(native_mcp["svg"]) == set(native_mcp["mcp"]["svg"]) == expected_svg
           assert native_mcp["mcp"]["analysis_ids"] == list(ids)
           for aid in ids:
@@ -281,7 +289,7 @@ jobs:
           reports = Path("dist/verification")
           subprocess.run([sys.executable, "-m", "pip", "install", "pip-audit==2.10.1"], check=True)
           for source, output in (
-              (Path("requirements/mcp-2.0.0.lock"), reports / "python-lock-audit.json"),
+              (Path("requirements/mcp-2.2.0.lock"), reports / "python-lock-audit.json"),
               (reports / "dependencies.txt", reports / "python-audit.json"),
           ):
               subprocess.run([

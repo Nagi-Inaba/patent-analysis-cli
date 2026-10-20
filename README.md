@@ -4,10 +4,10 @@
 
 | 入口 | 現在の範囲 |
 | --- | --- |
-| Python API / CLI | 28分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
-| local stdio MCP | 28分析・6ツール。[設定と呼び出し例](docs/mcp.md) |
-| SVG | 固定形式。利用可能なmarkは`capabilities --json`を参照。Windows x64 / **Node.js 22.19.0 x64**のみ |
-| 集計単位 | 既存17種類のv2分析で`records` / `earliest`。新しい発明者分析は[専用仕様](docs/inventor-analysis.md)。旧Rankingはレコード単位のみ |
+| Python API / CLI | <!--var:analysis_count-->28<!--/var-->分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
+| local stdio MCP | <!--var:mcp_analysis_count-->28<!--/var-->分析・<!--var:mcp_tool_count-->6<!--/var-->ツール。[設定と呼び出し例](docs/mcp.md) |
+| SVG | 固定形式の<!--var:mark_count-->28<!--/var-->種類。[収録しているSVGグラフ](#収録しているsvgグラフ)と`capabilities --json`を参照。配色は4種から選択。Windows x64 / macOS arm64/x86_64、**Node.js 22.19.0（対応アーキテクチャ）** |
+| 集計単位 | 既存<!--var:population_analysis_count-->17<!--/var-->種類のv2分析で`records` / `earliest`。新しい発明者分析は[専用仕様](docs/inventor-analysis.md)。旧Rankingはレコード単位のみ |
 
 Python 3.14で動作するローカル実行専用のパッケージです。入力・出力契約と安全性の境界は[SECURITY.md](SECURITY.md)、配布物の検証方法は[リリース手順](docs/release.md)を参照してください。
 
@@ -31,7 +31,7 @@ $pythonExe = (Resolve-Path .venv\Scripts\python.exe).Path
 & $pythonExe -m patent_analysis capabilities --json
 ```
 
-### Linux
+### macOS / Linux
 
 ```bash
 python3.14 -m venv .venv
@@ -39,15 +39,17 @@ python3.14 -m venv .venv
 .venv/bin/python -m patent_analysis capabilities --json
 ```
 
-通常利用に`[dev]`、editable install、rendererの`node_modules`は不要です。wheelから導入する場合も、Windowsでは`& $pythonExe -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`、Linuxでは`.venv/bin/python -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`のように作成したvenvを指定します。既存の同名versionを更新するときは、新しいvenvを使い、releaseのcommitとwheelのSHA-256を確認してください。
+通常利用に`[dev]`、editable install、rendererの`node_modules`は不要です。wheelから導入する場合も、Windowsでは`& $pythonExe -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`、macOS / Linuxでは`.venv/bin/python -m pip install ./patent_analysis_cli-0.2.0-py3-none-any.whl`のように作成したvenvを指定します。既存の同名versionを更新するときは、新しいvenvを使い、releaseのcommitとwheelのSHA-256を確認してください。
 
-MCPを使う場合だけ、Windowsでは`& $pythonExe -m pip install ".[mcp]"`、Linuxでは`.venv/bin/python -m pip install ".[mcp]"`を実行します。利用するクライアントには、そのvenvのPythonまたは`patent-analysis-mcp`の絶対パスを設定します。
+MCPを使う場合だけ、Windowsでは`& $pythonExe -m pip install ".[mcp]"`、macOS / Linuxでは`.venv/bin/python -m pip install ".[mcp]"`を実行します。利用するクライアントには、そのvenvのPythonまたは`patent-analysis-mcp`の絶対パスを設定します。
 
-新しい発明者分析10種類には`.[inventor]`、MCPと併用する場合には`.[inventor,mcp]`をインストールします。人物ID、技術構成、協働グループ、引用、関係先変化の根拠を扱います。[全10種類の合成例と入力条件](docs/inventor-analysis.md)を参照してください。
+Intel MacでMCPを導入する場合、`cryptography`のソースビルドが必要になることがあります。その場合は[公式のmacOSビルド要件](https://cryptography.io/en/latest/installation/#building-cryptography-on-macos)に従い、Xcode Command Line Tools、Rust、OpenSSLを用意してください。必要なバージョンのwheelがない環境で、`--only-binary`を指定して旧版へ戻さないでください。
+
+新しい発明者分析<!--var:inventor_analysis_count-->10<!--/var-->種類には`.[inventor]`、MCPと併用する場合には`.[inventor,mcp]`をインストールします。人物ID、技術構成、協働グループ、引用、関係先変化の根拠を扱います。[全<!--var:inventor_analysis_count-->10<!--/var-->種類の合成例と入力条件](docs/inventor-analysis.md)を参照してください。
 
 ## 最初の集計
 
-すべて合成データです。既存17分析は`examples/advanced/patents.csv`を共用し、発明者追跡は専用の合成CSVを使います。[例の一覧](examples/analysis-catalog.json)がCSV・spec・期待結果との対応を管理します。
+すべて合成データです。既存<!--var:shared_example_count-->17<!--/var-->分析は`examples/advanced/patents.csv`を共用し、発明者追跡は専用の合成CSVを使います。[例の一覧](examples/analysis-catalog.json)がCSV・spec・期待結果との対応を管理します。
 
 ```powershell
 $env:PATENT_ANALYSIS_ALLOWED_ROOT = (Resolve-Path examples).Path
@@ -56,7 +58,7 @@ $env:PATENT_ANALYSIS_ALLOWED_ROOT = (Resolve-Path examples).Path
 & $pythonExe -m patent_analysis analyze advanced/patents.csv --spec advanced/collaboration-network.json --json
 ```
 
-Linuxでは`export PATENT_ANALYSIS_ALLOWED_ROOT="$(pwd)/examples"`と設定し、`$pythonExe`の代わりに`.venv/bin/python`を使います。
+macOS / Linuxでは`export PATENT_ANALYSIS_ALLOWED_ROOT="$(pwd -P)/examples"`と設定し、`$pythonExe`の代わりに`.venv/bin/python`を使います。
 
 `inspect`は列名・件数等のメタデータだけを返し、セル値・サンプル行・絶対パスは返しません。`analyze`の結果には入力由来のラベルと集計値が含まれます。外部AIへ渡す範囲は利用者側で判断してください。元のCSV・JSONは変更しません。
 
@@ -125,7 +127,7 @@ SVGには`inventor-tracking-svg.v1`を指定します。横軸は年、縦軸は
 
 ## CSV・テキストの集計表を出力する
 
-28分析すべてで`--format csv`または`--format text`を使えます。Nodeは不要です。
+<!--var:analysis_count-->28<!--/var-->分析すべてで`--format csv`または`--format text`を使えます。Nodeは不要です。
 
 ```powershell
 & $pythonExe -m patent_analysis analyze advanced/patents.csv --spec basic/timeline.json --format csv
@@ -149,9 +151,61 @@ $result | & $pythonExe -m patent_analysis render --analysis - --mark ranking-svg
 
 同じ`$result`・mark・出力先で最後のコマンドを再実行すると、同一SVGを`reused`として返します。異なる内容で既存ファイルを上書きしません。成功応答の`svg`は出力先からの相対ファイル名です。
 
+## macOSでSVGを作る
+
+Python 3.14がインストール済みで、SVGにはNode.js 22.19.0（実行するmacOSアーキテクチャに対応）が必要です。`node -p 'process.execPath'`でNodeの実体を解決するため、Homebrew・asdf・nvmのsymlinkを含む環境でも使用できます。入力・出力・Nodeのpathにsymlink componentがある場合は拒否されるため、出力先は`pwd -P`で物理pathへ正規化します。この例は既に作成した`.venv`を使い、global toolをインストールしません。
+
+```bash
+nodeExe="$(node -p 'process.execPath')"
+output="$(mktemp -d -t patent-svg)"
+output="$(cd "$output" && pwd -P)"
+export PATENT_ANALYSIS_ALLOWED_ROOT="$(pwd -P)/examples"
+result=$(.venv/bin/python -m patent_analysis analyze advanced/patents.csv --spec basic/ranking.json --json) || exit $?
+printf '%s' "$result" | .venv/bin/python -m patent_analysis render --analysis - --mark ranking-svg.v1 --output "$output" --node "$nodeExe" --json
+```
+
 SVGは読み上げ用のタイトルと、入力行数・分析対象件数・警告件数を持ちます。数値と条件の詳細には`--include-context`付きの集計表を添えてください。すべての支援技術での操作やWCAG適合を保証するものではありません。
 
-Linuxでは集計・JSONを利用できますが、公開SVG経路は非対応です。Nodeのバージョンやプラットフォーム検査を迂回しないでください。LifecycleのCLI描画も接続済みです。mark一覧は`capabilities --json`にあり、11分析の詳細は[SVG仕様](docs/advanced-rendering.md)にあります。
+配色は`render --palette`で`standard`（既定）・`colorblind`・`monochrome`・`high-contrast`から選べます。未指定なら従来と同じ出力です。`matrix-bubble-svg.v1`だけは`--value-labels shown`でバブルに件数を表示できます。MCPのrenderでは`palette`・`value_labels`を指定します。各paletteの内容と制約は[配色パレット](docs/contracts.md#配色パレット)を参照してください。
+
+Linuxでは集計・JSONを利用できますが、公開SVG経路は引き続き非対応です。Nodeのバージョンやプラットフォーム検査を迂回しないでください。mark一覧は次節と`capabilities --json`にあります。応用11分析の詳細は[SVG仕様](docs/advanced-rendering.md)、発明者分析の描画は[発明者分析](docs/inventor-analysis.md)を参照してください。
+
+## 収録しているSVGグラフ
+
+`render --mark`に指定できるmarkは<!--var:mark_count-->28<!--/var-->種類です。分析ごとに描けるグラフは固定で、任意のEChartsオプションは渡せません。正本は`capabilities --json`の`render_marks`です。`series-line-svg.v1`はTimeline・Growth・Concentrationの3分析が共用し、`inventor-mobility-evidence.v1`はJSON・表のみでmarkがありません。発明者の`inventor-tracking`以外の9種には`.[inventor]`が必要です。
+
+| 分類 | グラフ | mark | 分析ID |
+| --- | --- | --- | --- |
+| 基本 | ランキング | `ranking-svg.v1` | `ranking.v1` |
+| 基本 | マトリクス（バブル） | `matrix-bubble-svg.v1` | `matrix.v1` |
+| 基本 | マトリクス（ヒートマップ） | `matrix-heatmap-svg.v1` | `matrix.v1` |
+| 基本 | 折れ線 | `series-line-svg.v1` | `timeline.v1`・`growth.v1`・`concentration.v1` |
+| 基本 | 積み上げ棒 | `series-stacked-bar-svg.v1` | `timeline.v1` |
+| 基本 | 構成比（横棒） | `composition-bar-svg.v1` | `composition.v1` |
+| 基本 | 構成比（円） | `composition-pie-svg.v1` | `composition.v1` |
+| 基本 | ライフサイクル | `points-bubble-svg.v1` | `lifecycle.v1` |
+| 応用 | 成長四象限 | `growth-quadrant-svg.v1` | `growth-quadrant.v1` |
+| 応用 | 初回・最終観測年 | `entry-exit-svg.v1` | `entry-exit.v1` |
+| 応用 | 被引用マップ | `citation-svg.v1` | `citation.v1` |
+| 応用 | 選択セルの内訳 | `matrix-composition-svg.v1` | `matrix-composition.v1` |
+| 応用 | 新規参入者 | `new-entrants-svg.v1` | `new-entrants.v1` |
+| 応用 | グループ間の差分 | `compara-svg.v1` | `compara.v1` |
+| 応用 | 共起マトリクス | `cooccurrence-svg.v1` | `cooccurrence.v1` |
+| 応用 | 協業ネットワーク | `collaboration-network-svg.v1` | `collaboration-network.v1` |
+| 応用 | 固有項目 | `uniqueness-svg.v1` | `uniqueness.v1` |
+| 応用 | 共有項目 | `shared-involvement-svg.v1` | `shared-involvement.v1` |
+| 発明者 | 年次追跡 | `inventor-tracking-svg.v1` | `inventor-tracking.v1` |
+| 発明者 | 共発明ネットワーク | `inventor-network-svg.v1` | `inventor-network.v1` |
+| 発明者 | 発明者中心の関係図 | `inventor-ego-network-svg.v1` | `inventor-ego-network.v1` |
+| 発明者 | 発明者×技術分野 | `inventor-technology-svg.v1` | `inventor-technology.v1` |
+| 発明者 | 活動履歴 | `inventor-activity-svg.v1` | `inventor-activity.v1` |
+| 発明者 | 協働グループの変遷 | `inventor-cluster-flow-svg.v1` | `inventor-cluster-flow.v1` |
+| 発明者 | 技術類似度 | `inventor-similarity-svg.v1` | `inventor-similarity.v1` |
+| 発明者 | 活動量と引用 | `inventor-impact-svg.v1` | `inventor-impact.v1` |
+| 発明者 | 出願人との関係変化 | `inventor-mobility-svg.v1` | `inventor-mobility.v1` |
+| 発明者 | 法人間フロー | `inventor-mobility-flow-svg.v1` | `inventor-mobility-flow.v1` |
+
+マトリクス（バブル）は2軸の組み合わせ件数を円の大きさで表します。specの`pie_role`を指定すると、バブルの中がその項目の構成比の円グラフになり、右に凡例が付きます（例: `basic/matrix-pie.json`）。選択した1セルの内訳だけを見るには`matrix-composition.v1`を使います。[分析の選び方](docs/analysis-catalog.md)も参照してください。
 
 ## Python API
 
@@ -188,7 +242,7 @@ flowchart TB
         validate[Spec検証・分析registry]
         input[許可root配下のCSV・JSON読込]
         population[列対応・正規化・フィルター・代表選択]
-        analysis[分析コア：発明者分析など28分析]
+        analysis[分析コア：発明者分析を含む全分析]
         result[JSON結果・receipt / CSV・テキスト表]
         model[固定ChartModel・内容整合性検証]
         runtime[固定Node・同梱ECharts bundle]
@@ -203,7 +257,7 @@ flowchart TB
     result --> model --> runtime --> svg --> use
 ```
 
-次はUMLシーケンス図です。分析結果を保存・再利用でき、SVG生成は必要なときだけ呼び出します。描画runtimeはWindows x64・Node 22.19.0に固定しています。
+次はUMLシーケンス図です。分析結果を保存・再利用でき、SVG生成は必要なときだけ呼び出します。描画runtimeはWindows x64またはmacOS arm64/x86_64と、Node 22.19.0を使います。
 
 ```mermaid
 sequenceDiagram
@@ -296,7 +350,7 @@ erDiagram
 
 CLIのファイル入力は、信頼した起動側が指定する`PATENT_ANALYSIS_ALLOWED_ROOT`配下に限定します。dataset・specの相対パスは現在の作業ディレクトリではなく、このrootが基準です。MCPの承認済みrootは別設定で、入力・出力rootを互いに重ならない既存ディレクトリとして指定します。
 
-CSVはカンマ区切りのUTF-8、UTF-8 BOM、UTF-16 LE/BE BOMに対応し、file size上限は300 MiBです。dataset JSONはstrict UTF-8に対応し、whole-document parseのためfile size上限は32 MiBです。両形式とも100,000行、1,000列、2,000,000セルが上限です。上限は推奨メモリ容量の保証ではありません。AnalysisSpecのJSONは最大2 MiBで、各分析に別の展開件数・文字列上限があります。
+CSVはカンマ区切りのUTF-8、UTF-8 BOM、UTF-16 LE/BE BOMに対応し、file size上限は300 MiBです。dataset JSONはUTF-8（先頭のUTF-8 BOM 1個は許容）に対応し、whole-document parseのためfile size上限は32 MiBです。両形式とも100,000行、1,000列、2,000,000セルが上限です。上限は推奨メモリ容量の保証ではありません。AnalysisSpecのJSONは最大2 MiBで、各分析に別の展開件数・文字列上限があります。dataset JSONと同様、AnalysisSpecとOperationPlanのJSONも先頭のUTF-8 BOM 1個をencoding signatureとして無視し、値の中のBOMは対象外です。
 
 | CLI終了コード | 意味 |
 | --- | --- |
@@ -312,14 +366,14 @@ JSON出力はstdoutに1オブジェクトです。エラーを成功結果とし
 ## 開発・配布準備
 
 ```bash
-python -m pip install --require-hashes -r requirements/mcp-2.0.0.lock
+python -m pip install --require-hashes -r requirements/mcp-2.2.0.lock
 python -m pip install -e '.[dev,inventor]' build
 python -m pytest -q -p no:cacheprovider
 python -m ruff check --no-cache src tests scripts
 python -m build
 ```
 
-CIはWindowsとLinuxでtest、lint、renderer build、dependency auditを実行します。配布確認では別venvへwheelを非editable installし、source tree外からCLIとMCPを検証します。
+CIは既存のWindowsとLinuxに加えて`macos-15`（arm64）と`macos-15-intel`でtest、lint、renderer build、dependency auditを実行します。Windowsはskip 0件、macOSはWindows固有の`tests/test_access.py`に限ってskipを許可し、native SVG testsはすべて実行します。配布確認では別venvへwheelを非editable installし、source tree外からCLIとMCPを検証します。
 
 ## ライセンス
 
