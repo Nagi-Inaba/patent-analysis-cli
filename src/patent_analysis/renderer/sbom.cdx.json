@@ -8437,9 +8437,9 @@
     {
       "type": "library",
       "name": "vite",
-      "version": "8.3.4",
-      "bom-ref": "pkg:npm/vite@8.3.4",
-      "purl": "pkg:npm/vite@8.3.4",
+      "version": "8.3.5",
+      "bom-ref": "pkg:npm/vite@8.3.5",
+      "purl": "pkg:npm/vite@8.3.5",
       "licenses": [
         {
           "license": {
@@ -8450,13 +8450,13 @@
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/vite/-/vite-8.3.4.tgz"
+          "url": "https://registry.npmjs.org/vite/-/vite-8.3.5.tgz"
         }
       ],
       "properties": [
         {
           "name": "npm:integrity",
-          "value": "sha512-IftLE8phJhdNRIGNEV4JCCvfNScoZQVfcXaN8TQropWGJtOHcu+iAB9pHcuGvmEb/kddw0LBe/jS8ztdC6xdiQ=="
+          "value": "sha512-z1YpjieJ9g0ebTmQpLBv/oq9E3F9EIlOe+7LahW8SrE3LTiG3udBRUXQOlYXP9b+IC2q2phHeVxj9xGlw34OEQ=="
         },
         {
           "name": "patent-analysis:direct",

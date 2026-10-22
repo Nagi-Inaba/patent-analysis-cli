@@ -12,7 +12,7 @@ def test_mcp_dependencies_are_exact_and_core_import_stays_independent() -> None:
     project = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]
 
     assert project["optional-dependencies"]["mcp"] == [
-        "mcp==2.2.0", "pyjwt==2.15.1", "cryptography>=50.0.1"
+        "mcp==2.2.0", "opentelemetry-api>=1.45.1", "pyjwt==2.15.1", "cryptography>=50.0.1"
     ]
     assert project["scripts"]["patent-analysis-mcp"] == "patent_analysis_mcp.server:main"
     completed = subprocess.run(

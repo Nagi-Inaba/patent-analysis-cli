@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Security
+
+- MCP依存の`opentelemetry-api`を1.45.1以降に制限し、hash固定lockも更新。`tracestate`解析の過剰なCPU消費を修正した版を使用する（CVE-2026-114603 / GHSA-xcq7-p3pf-p88h）。
+
 ### Added
 
 - `matrix.v1`に任意の`pie_role`（`pie_limit`、`pie_classification_level`）を追加。`matrix-bubble-svg.v1`のバブルの中を、その項目の構成比の円グラフにして、右に凡例を表示する。指定しない場合は結果もSVGも変わらない。例は`examples/basic/matrix-pie.json`。
@@ -19,6 +23,8 @@
 - macOS（Apple Silicon／Intel）でのCLI・MCP・SVG生成と、両アーキテクチャのCI検証を追加。
 
 ### Changed
+
+- rendererのViteを8.3.5へ更新し、lock・依存一覧・SBOMを同期。
 
 - MCP SDKと`mcp-types`を2.2.0へ更新し、CVE-2026-59951を解消。ハッシュ付き依存ロックとCI・導入手順を同期。
 - MCPの`cryptography`を検証済みの50.0.1以上へ制限。Intel Macでも安全な版のwheelを必要に応じてビルドし、binary-only解決による旧版の選択を防止。
