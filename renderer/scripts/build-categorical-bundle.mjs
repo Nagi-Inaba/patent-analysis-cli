@@ -229,8 +229,8 @@ function chunkFromBuildResult(result) {
 
 async function main() {
   assert(
-    process.version === "v22.19.0",
-    `Expected Node v22.19.0, received ${process.version}`
+    process.version === "v22.23.4",
+    `Expected Node v22.23.4, received ${process.version}`
   );
   assert(process.arch === "x64" || (process.platform === "darwin" && process.arch === "arm64"),
     `Expected x64 or macOS arm64 Node, received ${process.platform}/${process.arch}`);

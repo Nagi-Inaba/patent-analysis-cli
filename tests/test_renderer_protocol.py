@@ -26,7 +26,7 @@ def _protocol_module():
 
 def _runtime(module):
     return module.RendererRuntimeBinding(
-        node_version="22.19.0",
+        node_version="22.23.4",
         echarts_version="6.1.0",
         renderer_build_digest="1b6378efd6155f306f74c79199e69ba2613a5f72aa52ee97a1c1514417cdc1a9",
         render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",

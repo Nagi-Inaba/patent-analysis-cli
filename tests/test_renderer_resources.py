@@ -34,16 +34,16 @@ def test_python_trust_anchors_are_exact_reviewed_values() -> None:
     module = _resources_module()
 
     assert getattr(module, "PINNED_RENDERER_BUILD_MANIFEST_SHA256", None) == (
-        "7fd1b1faae80dd48fafbd11f22774baec1681c9781199f42a3135b9c64573a0f"
+        "e8d3ce622f2fd018c12f821eb8680c2bf6ca296b0c21ea97c78d4baa22d8fe41"
     )
     assert getattr(module, "PINNED_RENDERER_BUILD_DIGEST", None) == (
-        "7148882cf54591e805ec941907834c395e3283c8de64aabfbddadca44d4dbcb3"
+        "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
     )
     assert getattr(module, "PINNED_RENDERER_BOOTSTRAP_SHA256", None) == (
-        "78bef3003d9e99519a06c9d1684c399a8a1a864a5bc51ee582652bcde1afe4a7"
+        "6dec5126cec4ab7f9792c17b3513825d093318a995b614de217ab5567b2b6c0f"
     )
     assert getattr(module, "PINNED_RENDERER_BUNDLE_SHA256", None) == (
-        "d9ec2822aa39b247be4b28049e703b77ad4eea421c2c99ae4be6cd9e291effe3"
+        "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb"
     )
 
 
@@ -57,7 +57,7 @@ def test_schema_trust_anchors_are_exact_and_discoverable() -> None:
         "cefcb2c0e7bfb295d99b9a284078917e2aa7234fd881ba725b69eef19a8ba0cd"
     )
     assert getattr(module, "RENDERER_RESPONSE_SCHEMA_SHA256", None) == (
-        "ce39d618d39ca29b0451a58fa6fda2c5da1c3de874b7a6da99f71c6df075e72b"
+        "3d04889677d44d6c9a37af843f290281921931d59664b3bc5a0dd6bbb0a8102f"
     )
 
 
@@ -67,22 +67,22 @@ def test_packaged_renderer_resources_have_exact_current_digests() -> None:
     resources = module.load_verified_renderer_resources()
 
     assert hashlib.sha256(resources.manifest_bytes).hexdigest() == (
-        "7fd1b1faae80dd48fafbd11f22774baec1681c9781199f42a3135b9c64573a0f"
+        "e8d3ce622f2fd018c12f821eb8680c2bf6ca296b0c21ea97c78d4baa22d8fe41"
     )
     assert hashlib.sha256(resources.bootstrap_bytes).hexdigest() == (
-        "78bef3003d9e99519a06c9d1684c399a8a1a864a5bc51ee582652bcde1afe4a7"
+        "6dec5126cec4ab7f9792c17b3513825d093318a995b614de217ab5567b2b6c0f"
     )
     assert hashlib.sha256(resources.bundle_bytes).hexdigest() == (
-        "d9ec2822aa39b247be4b28049e703b77ad4eea421c2c99ae4be6cd9e291effe3"
+        "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb"
     )
     assert resources.renderer_build_digest == (
-        "7148882cf54591e805ec941907834c395e3283c8de64aabfbddadca44d4dbcb3"
+        "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
     )
     assert resources.runtime == module.RendererRuntimeBinding(
-        node_version="22.19.0",
+        node_version="22.23.4",
         echarts_version="6.1.0",
         renderer_build_digest=(
-            "7148882cf54591e805ec941907834c395e3283c8de64aabfbddadca44d4dbcb3"
+            "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
         ),
         render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",
     )
@@ -207,7 +207,7 @@ def test_coordinated_manifest_bootstrap_bundle_substitution_fails_closed(
         ),
         (
             "renderer-response.schema.json",
-            "ce39d618d39ca29b0451a58fa6fda2c5da1c3de874b7a6da99f71c6df075e72b",
+            "3d04889677d44d6c9a37af843f290281921931d59664b3bc5a0dd6bbb0a8102f",
         ),
     ],
 )

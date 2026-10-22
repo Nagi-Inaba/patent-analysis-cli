@@ -37,7 +37,7 @@ trusted-local rendererはpackaged bootstrap/bundleだけを使い、Node/ECharts
 
 ## Trusted-local Renderer Security Boundary
 
-trusted-local v1はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode 22.19.0 exactとpackaged ECharts 6.1.0から固定profileのSVGを生成する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。選択したNode executableはcallerが完全に信頼するlocal softwareであり、malicious executableはuser authorityで動作できる。このprofileはsandboxを主張しない。
+trusted-local v1はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode 22.23.4 exactとpackaged ECharts 6.1.0から固定profileのSVGを生成する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。選択したNode executableはcallerが完全に信頼するlocal softwareであり、malicious executableはuser authorityで動作できる。このprofileはsandboxを主張しない。
 
 analysis/overlayはbounded UTF-8 JSON objectとしてparseし、duplicate keyとNaN/Infinityを拒否する。semantic contractを先に構築し、成功後だけplatform、output、Nodeの順に検証する。file-backed inputは`PATENT_ANALYSIS_ALLOWED_ROOT`配下、outputとNodeはabsolute local non-reparse pathに限定する。childは固定argv、固定最小environment、10秒timeout、bounded concurrent stdout/stderr drainで起動する。
 
@@ -47,9 +47,11 @@ runtimeはverified self-contained bundleと固定bootstrapだけを使い、npm�
 
 Node runtime自体は`npm audit`の対象外であるため、release時に固定versionへ影響するNode security advisoryを別途確認する。[2026-01-13のNode 22.x advisory](https://nodejs.org/en/blog/vulnerability/december-2025-security-releases)のうち、固定bootstrapは`node:vm`を利用するが、allocation問題のtriggerとなるVM timeoutは指定しない。permission modelはdefense in depthとして有効にするが、固定実行経路はfilesystem・UDS・networkのallow-listを受け取らず、それらへアクセスしないため、symlink／`fs.futimes` bypassとHTTP/2・TLS・UDS問題の前提を満たさない。`async_hooks`も利用しない。
 
-[2026-03-24のadvisory](https://nodejs.org/en/blog/vulnerability/march-2026-security-releases)にあるCVE-2026-21717は22.19.0に影響し、caller由来文字列を含むpayloadの`JSON.parse()`は実行経路にある。入力bytes・depth・node・文字列長をPython側で制限し、renderごとに独立childを起動して10秒後にbest-effort killし、parent APIがboundedに復帰する設計である。ただし、制限内でのHashDoSや反復呼び出しによる可用性低下を否定するものではないため、rendererをuntrusted multi-tenant serviceへ公開しない。
+[2026-03-24のadvisory](https://nodejs.org/en/blog/vulnerability/march-2026-security-releases)にあるCVE-2026-21717は従来の固定version 22.19.0に影響していたが、固定versionを22.23.4へ更新し、このadvisory以降のreleaseに含まれる修正を取り込んだ。それでもcaller由来文字列を含むpayloadの`JSON.parse()`は実行経路にあるため、入力bytes・depth・node・文字列長をPython側で制限し、renderごとに独立childを起動して10秒後にbest-effort killし、parent APIがboundedに復帰する設計である。ただし、制限内でのHashDoSや反復呼び出しによる可用性低下を否定するものではないため、rendererをuntrusted multi-tenant serviceへ公開しない。
 
 [2026-06-18](https://nodejs.org/en/blog/vulnerability/june-2026-security-releases)および[2026-07-29](https://nodejs.org/en/blog/vulnerability/july-2026-security-releases)の22.x advisoryも確認している。固定実行経路はWebCrypto encryption、HTTP/HTTP2、TLS、proxy、DNS、SQLite、zlib、`process.report`、trace events、filesystem、UDSを使用せず、filesystem・networkのallow-listも与えない。permission path over-grant、report／trace write、network parser・client、zlib等の問題はその前提を満たさない。将来のadvisoryがこの固定経路から到達でき、process分離と上限で緩和できない場合は、profileのNode versionを更新するまでreleaseを停止する。これらの評価はNode executableをsandboxにするものではなく、callerが完全に信頼するという前提を変更しない。
+
+[2026-10-21](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)の22.x advisory（DNS、TLS証明書のhostname検証、Brotli decoder、HTTP keep-alive、`crypto.randomUUID()`・`randomInt()`のstartup snapshot、ZIP、permission modelのfilesystem over-grantと`fs.realpathSync`）も、advisory一覧の各項目で確認している。固定実行経路はDNS、TLS、zlib・Brotli、HTTP、snapshot・SEA、ZIP、filesystem APIを使わず、`node:crypto`は`createHash`だけを使う。filesystem allow-listも与えないため、permission modelの問題はその前提を満たさない。固定versionはこのadvisoryで修正された22.23.4であり、従来の22.19.0はこれらの修正を含まない。
 
 artifactはsame-directory own tempをfsync/closeし、Windowsでは`os.rename`をno-replace commit pointとして維持する。macOSでは同一directory内で`os.link(..., follow_symlinks=False)`を使い、完全なbytesを既存のwinnerを置き換えずにatomically公開してから、自分のtemporary nameをunlinkする。完全一致する既存fileだけを`reused`とし、異なる既存fileとのconflictでは既存fileを保持して削除・repair・上書きしない。receiptのpath情報はrelative filenameだけであり、再利用確認用の決定論的hashも返す。
 

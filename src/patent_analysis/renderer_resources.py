@@ -17,62 +17,62 @@ MAX_RENDERER_BUNDLE_BYTES = 4 * 1024 * 1024
 MAX_RENDERER_SCHEMA_BYTES = 16 * 1024
 
 PINNED_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "7fd1b1faae80dd48fafbd11f22774baec1681c9781199f42a3135b9c64573a0f"
+    "e8d3ce622f2fd018c12f821eb8680c2bf6ca296b0c21ea97c78d4baa22d8fe41"
 )
-PINNED_RENDERER_BUILD_DIGEST = "7148882cf54591e805ec941907834c395e3283c8de64aabfbddadca44d4dbcb3"
+PINNED_RENDERER_BUILD_DIGEST = "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
 PINNED_RENDERER_BOOTSTRAP_SHA256 = (
-    "78bef3003d9e99519a06c9d1684c399a8a1a864a5bc51ee582652bcde1afe4a7"
+    "6dec5126cec4ab7f9792c17b3513825d093318a995b614de217ab5567b2b6c0f"
 )
-PINNED_RENDERER_BUNDLE_SHA256 = "d9ec2822aa39b247be4b28049e703b77ad4eea421c2c99ae4be6cd9e291effe3"
+PINNED_RENDERER_BUNDLE_SHA256 = "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb"
 PINNED_MATRIX_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "59e0d4ccc2c31d57bc7c18286b3885cc50757429b8909b20c3e4265742dfa9ee"
+    "263c7585920b0b5b64c7bcd8160be98aaf6e13d03dc5f42919ebb622240c95dc"
 )
 PINNED_MATRIX_RENDERER_BUILD_DIGEST = (
-    "4f7213a38891bd22407a092751c31839197f41a9edadfc1be01e4b5012fa71da"
+    "5b40d87ed38ada463bb6e180adc33f017bb782b0be1e02d6a1e15e9e75df7cc2"
 )
 PINNED_MATRIX_RENDERER_BOOTSTRAP_SHA256 = (
-    "06d5a99c74414ef0308e675bcdd521e970c0ca468420c57dd7fdcfaa40734eeb"
+    "eac2ce045474fafe87eff03c9ed807357a990d05b4ccfe738fcc613e96627cea"
 )
 PINNED_MATRIX_RENDERER_BUNDLE_SHA256 = (
-    "9063e199b83ab0e5970b9f181279f3ae2a79282656977e494bc8943a7ed509d9"
+    "6606fe8683a6502c5b61867f988fbbdb79667ab4fafd8bb7c87b98aeb5655700"
 )
 PINNED_CATEGORICAL_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "ed29ac1f0d852fe1af2a445c4d82c311c12a6edacd22352692d7ce0e6ea6edf4"
+    "5e9305b5e221eed623834a2ba6f96960ba4a668fa4e2d209207934c190a31aab"
 )
 PINNED_CATEGORICAL_RENDERER_BUILD_DIGEST = (
-    "9d8597ad0d4426656b618a52f90a567d4fddb71d43e487b4d0cedbbe05a52beb"
+    "0c0c0949e46a55bf0a349b4e8ca80c3acf5d379a38ca93671e1c309974ed25d6"
 )
 PINNED_CATEGORICAL_RENDERER_BOOTSTRAP_SHA256 = (
-    "9064602a41f9ba966e8e69cb83beaa441f5700f1b13265d9223007fd4e0acb40"
+    "71b57253de1c13b25ed9f027462173aef663045903bc88c1a5273eb1290f7ca2"
 )
 PINNED_CATEGORICAL_RENDERER_BUNDLE_SHA256 = (
-    "f7780884ca17e73cb030fea39c77c1602977a8c529150bc939f8aaa3520d9c55"
+    "8b86b969e8b176713dedbcac13912680e444f5859f9ee6d6dc5343d419f42571"
 )
 PINNED_POINTS_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "472e198886ffba563d60a22dc8e00616f0587a33ffc2af52f4cd46898afcf984"
+    "bfad40fd19b2d90ab2cfd9d2dae3758e5c818305b0fd9453a319d551718cd1a0"
 )
 PINNED_POINTS_RENDERER_BUILD_DIGEST = (
-    "5cc530082ca979988efa457c257272b883e7862b52a567a0f22bb94cb1d29060"
+    "a7724a3aff9a213a2f7e3fc0655858e5205adb95489d5b3481020a5e8cf95ac6"
 )
 PINNED_POINTS_RENDERER_BOOTSTRAP_SHA256 = (
-    "529e4cc35bd1d6e2bdcc42d62a33f6308b7a50cb37f2803d1450cf6101ea42e6"
+    "190e4f246407d8839416586027c5983ce0fcf95ca00a95e449c358e6899a8569"
 )
 PINNED_POINTS_RENDERER_BUNDLE_SHA256 = (
-    "8f8f2cdedff327241500ab2a59027c4c3e04bd1c076e369bc7066ddb0e53f169"
+    "b34e506ae66973d9da2e537d2be206df3be86e7bfdac28656e15977e608ffd4f"
 )
 RENDERER_BUILD_MANIFEST_SCHEMA_SHA256 = (
     "c9c0cf2581b5467fe5941672093ab26ebacf9f5d33d4c218c9ee0e61077f8b2b"
 )
 RENDERER_REQUEST_SCHEMA_SHA256 = "cefcb2c0e7bfb295d99b9a284078917e2aa7234fd881ba725b69eef19a8ba0cd"
-RENDERER_RESPONSE_SCHEMA_SHA256 = "ce39d618d39ca29b0451a58fa6fda2c5da1c3de874b7a6da99f71c6df075e72b"
+RENDERER_RESPONSE_SCHEMA_SHA256 = "3d04889677d44d6c9a37af843f290281921931d59664b3bc5a0dd6bbb0a8102f"
 MATRIX_RENDERER_RESPONSE_SCHEMA_SHA256 = (
-    "5304fb063e8974bac76b7cdffd2ff4b0ab981bec86caa48eb9aa88bea57e9a30"
+    "9dd7fdb8910638cca47d6640d038f2ebf6d7e9547858a6fd48651aca009ba0a7"
 )
 PINNED_CATEGORICAL_RENDERER_RESPONSE_SCHEMA_SHA256 = (
-    "3fd635d3b42fef23fcc9f52006439566a4340eef629dac25ce7527847d469d43"
+    "0b1f394e469799d0b5a68b5d351375f22875b1b6fdcebeae43e929a0fbe92245"
 )
 PINNED_POINTS_RENDERER_RESPONSE_SCHEMA_SHA256 = (
-    "cfc140058855b1f03a2a785cf4a01dc3db0f53a6a84c1b7427fec7b6d141308d"
+    "16df3f0755684690d2bdb2528962dae75844e8ff9ca81ddccb1f1c6b1c6d87b9"
 )
 
 _RENDER_PROFILE_IDS = frozenset(
@@ -127,7 +127,7 @@ class RendererRuntimeBinding:
 
     def __post_init__(self) -> None:
         if (
-            self.node_version != "22.19.0"
+            self.node_version != "22.23.4"
             or self.echarts_version != "6.1.0"
             or _LOWER_SHA256.fullmatch(self.renderer_build_digest) is None
             or self.render_profile_id not in _RENDER_PROFILE_IDS
@@ -209,7 +209,7 @@ def _read_verified_resource(path: Path, limit: int) -> bytes:
 
 _SCHEMA_DIGESTS = {
     "advanced-renderer-response.schema.json": (
-        "c457d43440f01c861f876ae921ac830d31b113a1183c17b6a184506f86a8d3a8"
+        "edbc5ab7250792142321de799fa76aa4a139adf330c42b4a4f1beb29f109d1ed"
     ),
     "renderer-build-manifest.schema.json": RENDERER_BUILD_MANIFEST_SCHEMA_SHA256,
     "renderer-request.schema.json": RENDERER_REQUEST_SCHEMA_SHA256,
@@ -328,7 +328,7 @@ def _load_verified_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.19.0",
+        node_version="22.23.4",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
         render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",
@@ -413,7 +413,7 @@ def _load_verified_matrix_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.19.0",
+        node_version="22.23.4",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
         render_profile_id="matrix-svg-ja-jp-node22-echarts6.v1",
@@ -504,7 +504,7 @@ def _load_verified_categorical_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.19.0",
+        node_version="22.23.4",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
         render_profile_id="categorical-svg-ja-jp-node22-echarts6.v1",
@@ -591,7 +591,7 @@ def _load_verified_points_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.19.0",
+        node_version="22.23.4",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
         render_profile_id="points-svg-ja-jp-node22-echarts6.v1",

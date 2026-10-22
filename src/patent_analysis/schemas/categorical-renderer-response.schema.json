@@ -27,7 +27,7 @@
         "render_profile_id"
       ],
       "properties": {
-        "node_version": {"const": "22.19.0"},
+        "node_version": {"const": "22.23.4"},
         "echarts_version": {"const": "6.1.0"},
         "renderer_build_digest": {
           "type": "string",

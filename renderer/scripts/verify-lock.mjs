@@ -5,8 +5,8 @@ import { resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-const EXPECTED_NODE_VERSION = "v22.19.0";
-const EXPECTED_NPM_VERSION = "10.9.3";
+const EXPECTED_NODE_VERSION = "v22.23.4";
+const EXPECTED_NPM_VERSION = "10.9.9";
 const EXPECTED_PRODUCTION_DEPENDENCIES = Object.freeze({
   "@xmldom/xmldom": "0.9.12",
   ajv: "8.20.0",

@@ -59,7 +59,7 @@ def test_malformed_variant_returns_safe_error(monkeypatch, capsys, tmp_path, var
 
 def _runtime():
     return RendererRuntimeBinding(
-        node_version="22.19.0", echarts_version="6.1.0",
+        node_version="22.23.4", echarts_version="6.1.0",
         renderer_build_digest="a" * 64, render_profile_id=ADVANCED_RENDER_PROFILE_ID,
     )
 

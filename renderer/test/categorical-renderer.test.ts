@@ -106,7 +106,7 @@ const pieSpec = {
 } as const;
 
 const runtime = {
-  node_version: "22.19.0",
+  node_version: "22.23.4",
   echarts_version: "6.1.0",
   renderer_build_digest: "c".repeat(64),
   render_profile_id: "categorical-svg-ja-jp-node22-echarts6.v1"

@@ -46,7 +46,7 @@ $env:PATENT_ANALYSIS_ALLOWED_ROOT = (Resolve-Path examples).Path
 & $pythonExe -m patent_analysis analyze inventor-tracking/patents.csv --spec inventor-tracking/spec.json --format text --include-context
 $result = & $pythonExe -m patent_analysis analyze inventor-tracking/patents.csv --spec inventor-tracking/spec.json --json
 if ($LASTEXITCODE -ne 0) { throw "Analysis failed" }
-# $outputは既存ディレクトリの絶対パス。$nodeExeは信頼するNode 22.19.0 x64。
+# $outputは既存ディレクトリの絶対パス。$nodeExeは信頼するNode 22.23.4 x64。
 $result | & $pythonExe -m patent_analysis render --analysis - --mark inventor-tracking-svg.v1 --output $output --node $nodeExe --json
 ```
 

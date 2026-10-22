@@ -48,8 +48,8 @@ def _trusted_renderer_node() -> Path:
         ).stdout.strip()
     except OSError:
         pytest.skip("exact Node installation is unavailable")
-    if version != "v22.19.0":
-        pytest.skip("exact Node 22.19.0 installation is unavailable")
+    if version != "v22.23.4":
+        pytest.skip("exact Node 22.23.4 installation is unavailable")
     return node
 
 

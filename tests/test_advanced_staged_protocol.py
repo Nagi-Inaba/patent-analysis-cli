@@ -41,15 +41,15 @@ def staged_runtime():
         pytest.skip("requires explicit advanced --stage-only build")
     node = shutil.which("node")
     if node is None:
-        pytest.skip("requires Node 22.19.0 x64 in the build workspace")
+        pytest.skip("requires Node 22.23.4 x64 in the build workspace")
     probe = subprocess.run(
         [node, "-p", "process.versions.node + '/' + process.arch"],
         capture_output=True, text=True, timeout=10, check=True,
     )
     if probe.stdout.strip() not in (
-        {"22.19.0/x64", "22.19.0/arm64"} if sys.platform == "darwin" else {"22.19.0/x64"}
+        {"22.23.4/x64", "22.23.4/arm64"} if sys.platform == "darwin" else {"22.23.4/x64"}
     ):
-        pytest.skip("requires exact Node 22.19.0 x64")
+        pytest.skip("requires exact Node 22.23.4 x64")
     pins = json.loads(candidate.read_bytes())
     bootstrap = (RESOURCES / "advanced-bootstrap.js").read_bytes()
     archive = (RESOURCES / "advanced-renderer.bundle.js.gz").read_bytes()
@@ -64,7 +64,7 @@ def staged_runtime():
     ]
     bundle = decode_advanced_bundle(archive, pins["bundle_sha256"])
     binding = RendererRuntimeBinding(
-        node_version="22.19.0", echarts_version="6.1.0",
+        node_version="22.23.4", echarts_version="6.1.0",
         renderer_build_digest=pins["build_digest"], render_profile_id=ADVANCED_RENDER_PROFILE_ID,
     )
     return node, bootstrap.decode("utf-8"), bundle, binding

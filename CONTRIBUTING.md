@@ -35,7 +35,7 @@ python3.14 -m venv .venv
 .venv/bin/python -m ruff check --no-cache src tests scripts
 ```
 
-SVG rendererの開発には、`renderer/package-lock.json`に従うNode.js 22.19.0のx64（Windows/Linux）またはarm64/x86_64（macOS）環境が必要です。
+SVG rendererの開発には、`renderer/package-lock.json`に従うNode.js 22.23.4のx64（Windows/Linux）またはarm64/x86_64（macOS）環境が必要です。
 
 CIは既存のWindowsとLinuxに加えて`macos-15`（arm64）と`macos-15-intel`で検証します。Windowsはskip 0件、macOSはWindows固有の`tests/test_access.py`に限ってskipを許可し、native SVG testsはすべて実行します。
 

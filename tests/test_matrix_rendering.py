@@ -160,7 +160,7 @@ def test_render_rejects_value_labels_outside_the_matrix_bubble(
     assert list(tmp_path.iterdir()) == []
 
 
-# --- pie bubbles (real renders with the exact Node 22.19.0) -----------------------------------
+# --- pie bubbles (real renders with the exact Node 22.23.4) -----------------------------------
 
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
@@ -180,12 +180,12 @@ def _exact_renderer_node() -> str | None:
         check=False,
     )
     arch = "arm64" if platform.machine().lower() == "arm64" else "x64"
-    return node if probe.returncode == 0 and probe.stdout.strip() == f"22.19.0/{arch}" else None
+    return node if probe.returncode == 0 and probe.stdout.strip() == f"22.23.4/{arch}" else None
 
 
 requires_renderer_node = pytest.mark.skipif(
     _exact_renderer_node() is None,
-    reason="requires Windows x64 or macOS and the exact Node 22.19.0",
+    reason="requires Windows x64 or macOS and the exact Node 22.23.4",
 )
 
 

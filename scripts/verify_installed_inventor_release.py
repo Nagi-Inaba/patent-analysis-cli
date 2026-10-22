@@ -107,7 +107,7 @@ def exact_renderer_node() -> str:
         timeout=10,
     )
     assert probe.stdout.strip() in (
-        {"22.19.0/x64", "22.19.0/arm64"} if sys.platform == "darwin" else {"22.19.0/x64"}
+        {"22.23.4/x64", "22.23.4/arm64"} if sys.platform == "darwin" else {"22.23.4/x64"}
     )
     return node
 

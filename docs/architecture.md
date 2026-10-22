@@ -71,14 +71,14 @@ validated analysis result
   -> ranking / matrix / categorical / points / advanced chart-model builder
   -> ChartModel + ChartModelBuildReceipt
   -> fixed RenderSpec + PARSVG01 frame
-  -> trusted local Node 22.19.0 + packaged ECharts 6.1.0
+  -> trusted local Node 22.23.4 + packaged ECharts 6.1.0
   -> normalized SVG + fixed text-only accessibility metadata
   -> final SVG + relative receipt
 ```
 
 package rootは既存builderに加え、`render_ranking_svg(...)`、`render_analysis_svg(...)`、`RenderError`を公開する。Matrix、Series、Compositionはcanonical bytes、renderer resources、frame/response protocolを再利用し、analysisの意味を複製しない。
 
-`render`はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode.js 22.19.0 exactを使う。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。analysis 16 MiB、overlay 4 MiB、stdout 12 MiB、stderr 64 KiB、cooperative childのwall 10秒を上限とする。Node path、output directory、file-backed inputsは既存local/non-reparse boundaryを通す。artifactは同一directoryのown tempをflush/fsync/closeし、Windowsでは`os.rename`をno-replace commit pointとして維持する。macOSでは同一directory内で`os.link(..., follow_symlinks=False)`を使って完全なbytesを既存のwinnerを置き換えずにatomically公開し、その後に自分のtemporary nameをunlinkする。同一bytesだけを`reused`とし、異なる既存fileとのconflictでは既存fileを保持して上書きしない。10秒timeoutはmalicious Node/descendantへのcontainmentではない。parent APIはbest-effort kill、pipe close、bounded wait/joinで復帰するが、trusted executableとdescendantの終了は保証しない。
+`render`はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode.js 22.23.4 exactを使う。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。analysis 16 MiB、overlay 4 MiB、stdout 12 MiB、stderr 64 KiB、cooperative childのwall 10秒を上限とする。Node path、output directory、file-backed inputsは既存local/non-reparse boundaryを通す。artifactは同一directoryのown tempをflush/fsync/closeし、Windowsでは`os.rename`をno-replace commit pointとして維持する。macOSでは同一directory内で`os.link(..., follow_symlinks=False)`を使って完全なbytesを既存のwinnerを置き換えずにatomically公開し、その後に自分のtemporary nameをunlinkする。同一bytesだけを`reused`とし、異なる既存fileとのconflictでは既存fileを保持して上書きしない。10秒timeoutはmalicious Node/descendantへのcontainmentではない。parent APIはbest-effort kill、pipe close、bounded wait/joinで復帰するが、trusted executableとdescendantの終了は保証しない。
 
 ## Trusted-local Renderer Boundary
 
@@ -102,7 +102,7 @@ public Python APIは `render_ranking_svg(analysis_document: bytes, *, overlay_do
 
 runtime dependencyはwheel内のverified self-contained bundleと固定bootstrapだけである。ECharts 6.1.0を含むexact dependencyを許可するのはrenderer build workspaceだけとし、Python core/public adapterはEChartsをimportしない。runtimeはnpm、`node_modules`、CDN、network、path importを使わない。
 
-trusted-local v1はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode.js 22.19.0 exactを使う。選択したNode executableはcallerが完全に信頼するsoftwareであり、sandbox、Authenticode pinning、AppContainer、Job Object、private namespace、handle-relative publicationを保証しない。
+trusted-local v1はWindows x64またはmacOS arm64/x86_64で、対応アーキテクチャのNode.js 22.23.4 exactを使う。選択したNode executableはcallerが完全に信頼するsoftwareであり、sandbox、Authenticode pinning、AppContainer、Job Object、private namespace、handle-relative publicationを保証しない。
 
 Pythonは正規化済みSVGへ固定ARIA参照とtext-onlyのtitle/descを加え、その最終bytesからhashとrelative receiptを作る。titleは検証済みchart modelに従い、descは入力行数・分析対象件数・警告件数と集計表への案内を含む。table APIの`include_context=True`はSpec・分析文書全体をJSON Pointer/value行で添付する。trusted-local v1はWCAG適合やadvanced Python SVG policy全体の再検証を主張しない。
 

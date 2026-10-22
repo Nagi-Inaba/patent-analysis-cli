@@ -159,7 +159,7 @@ analyze success envelope
   -> ChartModel + ChartModelBuildReceipt
 ```
 
-`ChartModel`と`RenderSpec`のgrapheme処理は`regex==2026.4.4`、Unicode data 16.0.0へ固定する。rendererはpackaged ECharts 6.1.0 bundleとNode 22.19.0 exactを使用する。
+`ChartModel`と`RenderSpec`のgrapheme処理は`regex==2026.4.4`、Unicode data 16.0.0へ固定する。rendererはpackaged ECharts 6.1.0 bundleとNode 22.23.4 exactを使用する。
 
 Rankingのrender success receiptは`render_contract_version`、`ok`、`status`、`artifact_id`、`svg`、`svg_sha256`、`renderer_build_digest`のexact 7 fieldsを持つ。`svg`は`ranking-svg-<artifact_id>.svg`というrelative filenameで、`status`は`created`または`reused`である。absolute path、username、environment、raw input、stderrは含めない。
 
@@ -314,7 +314,7 @@ v2の母集団は`family_mode=records|earliest`を選択できる。`earliest`�
 
 local MCPはregistryの公開対象<!--var:mcp_analysis_count-->28<!--/var-->分析を扱う。起動と呼び出し形式は[MCPガイド](mcp.md)を参照する。`verify`・`report`という新しい公開コマンドは追加しない。
 
-trusted-local v1はWindows x64またはmacOS arm64/x86_64で、callerが選択した対応アーキテクチャのNode.js 22.19.0 exactを完全に信頼する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。sandbox、Authenticode、AppContainer、Job Object、private namespace、WCAG適合、advanced Python SVG policy全体の再検証を主張しない。最終SVGは`role="img"`、`aria-labelledby`、`aria-describedby`と、検証済みmodelに由来するtext-onlyのtitle/descを持つ。表示用label、overlay、分析結果label、SVGはcaller-controlled sensitive outputであり、package自身は外部へ送信しない。`run_analysis_table(..., include_context=True)`と`analyze --format csv|text --include-context`はSpec・分析文書全体を添付する。詳細は[表出力](table-export.md)を参照する。
+trusted-local v1はWindows x64またはmacOS arm64/x86_64で、callerが選択した対応アーキテクチャのNode.js 22.23.4 exactを完全に信頼する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。sandbox、Authenticode、AppContainer、Job Object、private namespace、WCAG適合、advanced Python SVG policy全体の再検証を主張しない。最終SVGは`role="img"`、`aria-labelledby`、`aria-describedby`と、検証済みmodelに由来するtext-onlyのtitle/descを持つ。表示用label、overlay、分析結果label、SVGはcaller-controlled sensitive outputであり、package自身は外部へ送信しない。`run_analysis_table(..., include_context=True)`と`analyze --format csv|text --include-context`はSpec・分析文書全体を添付する。詳細は[表出力](table-export.md)を参照する。
 
 ## Compatibility
 

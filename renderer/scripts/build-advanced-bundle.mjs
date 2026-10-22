@@ -162,9 +162,9 @@ async function advancedValidatorsSource() {
 export async function buildAdvancedBundle(args = []) {
   const { stageOnly, destination } = parseArguments(args);
   const outputRoot = resolve(destination, "renderer");
-  assert(process.version === "v22.19.0" &&
+  assert(process.version === "v22.23.4" &&
     (process.arch === "x64" || (process.platform === "darwin" && process.arch === "arm64")),
-    "Requires Node 22.19.0 (x64 or macOS arm64)");
+    "Requires Node 22.23.4 (x64 or macOS arm64)");
   const { build } = await import("vite");
   const [pkg, lock, template] = await Promise.all([
     readFile(resolve(root, "package.json"), "utf8").then(JSON.parse),

@@ -1,9 +1,9 @@
 {
-  "bootstrap_sha256": "529e4cc35bd1d6e2bdcc42d62a33f6308b7a50cb37f2803d1450cf6101ea42e6",
+  "bootstrap_sha256": "190e4f246407d8839416586027c5983ce0fcf95ca00a95e449c358e6899a8569",
   "build_tool_id": "patent-analysis.renderer-bundler",
   "build_tool_version": "1.0.0",
   "echarts_version": "6.1.0",
   "renderer_build_manifest_version": "1.0.0",
-  "renderer_bundle_sha256": "8f8f2cdedff327241500ab2a59027c4c3e04bd1c076e369bc7066ddb0e53f169",
+  "renderer_bundle_sha256": "b34e506ae66973d9da2e537d2be206df3be86e7bfdac28656e15977e608ffd4f",
   "renderer_protocol_version": "1.0.0"
 }

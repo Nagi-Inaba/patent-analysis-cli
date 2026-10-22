@@ -36,7 +36,7 @@
       ],
       "properties": {
         "node_version": {
-          "const": "22.19.0"
+          "const": "22.23.4"
         },
         "echarts_version": {
           "const": "6.1.0"

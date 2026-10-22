@@ -26,7 +26,7 @@ function requestFixture() {
 
 function runtimeFixture() {
   return {
-    node_version: "22.19.0",
+    node_version: "22.23.4",
     echarts_version: "6.1.0",
     renderer_build_digest: SHA256,
     render_profile_id: "ranking-svg-ja-jp-node22-echarts6.v1"
@@ -112,7 +112,7 @@ describe("renderer protocol contract", () => {
     expect(validateSuccess({
       protocol_version: "1.0.0",
       ok: true,
-      runtime: { ...runtimeFixture(), node_version: "v22.19.0" },
+      runtime: { ...runtimeFixture(), node_version: "v22.23.4" },
       svg_b64: "PHN2Zy8+"
     })).toBe(false);
     expect(validateSuccess({

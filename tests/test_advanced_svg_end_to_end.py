@@ -46,13 +46,13 @@ def _exact_renderer_node() -> str | None:
     except (OSError, subprocess.TimeoutExpired):
         return None
     return node if probe.returncode == 0 and probe.stdout.strip() == (
-        "22.19.0/arm64" if platform.machine().lower() == "arm64" else "22.19.0/x64"
+        "22.23.4/arm64" if platform.machine().lower() == "arm64" else "22.23.4/x64"
     ) else None
 
 
 requires_renderer_node = pytest.mark.skipif(
     _exact_renderer_node() is None or ADVANCED_BUILD is None,
-    reason="requires a built advanced bundle, Windows x64 or macOS and exact Node22.19.0",
+    reason="requires a built advanced bundle, Windows x64 or macOS and exact Node22.23.4",
 )
 
 

@@ -183,7 +183,7 @@ return errors === 0;
 validate20.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
 const validateRendererRuntimeRaw = validate21;
-const schema32 = {"$id":"urn:patent-analysis:points-renderer-runtime:1.0.0","type":"object","additionalProperties":false,"required":["node_version","echarts_version","renderer_build_digest","render_profile_id"],"properties":{"node_version":{"const":"22.19.0"},"echarts_version":{"const":"6.1.0"},"renderer_build_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"render_profile_id":{"const":"points-svg-ja-jp-node22-echarts6.v1"}}};
+const schema32 = {"$id":"urn:patent-analysis:points-renderer-runtime:1.0.0","type":"object","additionalProperties":false,"required":["node_version","echarts_version","renderer_build_digest","render_profile_id"],"properties":{"node_version":{"const":"22.23.4"},"echarts_version":{"const":"6.1.0"},"renderer_build_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"render_profile_id":{"const":"points-svg-ja-jp-node22-echarts6.v1"}}};
 
 function validate21(data, {instancePath="", parentData, parentDataProperty, rootData=data, dynamicAnchors={}}={}){
 /*# sourceURL="urn:patent-analysis:points-renderer-runtime:1.0.0" */;
@@ -215,8 +215,8 @@ break;
 if(_errs1 === errors){
 if(data.node_version !== undefined){
 const _errs2 = errors;
-if("22.19.0" !== data.node_version){
-validate21.errors = [{instancePath:instancePath+"/node_version",schemaPath:"#/properties/node_version/const",keyword:"const",params:{allowedValue: "22.19.0"},message:"must be equal to constant"}];
+if("22.23.4" !== data.node_version){
+validate21.errors = [{instancePath:instancePath+"/node_version",schemaPath:"#/properties/node_version/const",keyword:"const",params:{allowedValue: "22.23.4"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs2 === errors;

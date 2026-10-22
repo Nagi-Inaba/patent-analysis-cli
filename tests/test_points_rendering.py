@@ -59,7 +59,7 @@ def test_points_resources_are_independently_pinned() -> None:
 
     resources = load_verified_points_renderer_resources()
     assert resources.runtime.render_profile_id == "points-svg-ja-jp-node22-echarts6.v1"
-    assert resources.runtime.node_version == "22.19.0"
+    assert resources.runtime.node_version == "22.23.4"
     assert resources.runtime.echarts_version == "6.1.0"
     assert resources.bundle_bytes
     assert resources.bootstrap_bytes

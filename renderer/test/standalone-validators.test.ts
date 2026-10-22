@@ -36,7 +36,7 @@ function requestFixture() {
 
 function runtimeFixture() {
   return {
-    node_version: "22.19.0",
+    node_version: "22.23.4",
     echarts_version: "6.1.0",
     renderer_build_digest: SHA256,
     render_profile_id: "ranking-svg-ja-jp-node22-echarts6.v1"
