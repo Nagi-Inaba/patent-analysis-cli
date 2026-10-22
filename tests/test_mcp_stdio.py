@@ -8,6 +8,7 @@ from pathlib import Path
 
 import anyio
 import pytest
+from anyio.streams.buffered import BufferedByteReceiveStream
 from mcp.client.session import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
@@ -194,16 +195,46 @@ def test_real_stdio_rejects_ambiguous_frames_and_redacts_protocol_errors(tmp_pat
         b'{"jsonrpc":"2.0","id":5,"method":"PRIVATE_SENTINEL"}',
         b'{"jsonrpc":"2.0","id":6,"method":"ping"}',
     ]
-    completed = subprocess.run(
-        [parameters.command, *parameters.args], cwd=parameters.cwd,
-        input=b"\n".join(frames) + b"\n", capture_output=True, check=False, timeout=20,
-    )
-    assert completed.returncode == 0
-    assert b"PRIVATE_SENTINEL" not in completed.stdout + completed.stderr
-    replies = [json.loads(line) for line in completed.stdout.splitlines()]
+    async def scenario() -> tuple[bytes, bytes]:
+        stdout = bytearray()
+        stderr = bytearray()
+
+        async def drain_stderr(stream: anyio.abc.ByteReceiveStream) -> None:
+            async for chunk in stream:
+                stderr.extend(chunk)
+
+        with anyio.fail_after(20):
+            async with await anyio.open_process(
+                [parameters.command, *parameters.args], cwd=parameters.cwd,
+            ) as process:
+                assert process.stdin is not None
+                assert process.stdout is not None
+                assert process.stderr is not None
+                async with anyio.create_task_group() as group:
+                    group.start_soon(drain_stderr, process.stderr)
+                    stream = BufferedByteReceiveStream(process.stdout)
+                    await process.stdin.send(frames[0] + b"\n")
+                    initialized = await stream.receive_until(b"\n", 256 * 1024 + 1)
+                    assert json.loads(initialized)["id"] == 1
+                    stdout.extend(initialized + b"\n")
+                    await process.stdin.send(b"\n".join(frames[1:]) + b"\n")
+                    # EOF may cancel in-flight SDK requests: keep the session open
+                    # until both the protocol error and the final ping arrive.
+                    for _ in range(2):
+                        stdout.extend(await stream.receive_until(b"\n", 256 * 1024 + 1))
+                        stdout.extend(b"\n")
+                    await process.stdin.aclose()
+                    async for chunk in stream:
+                        stdout.extend(chunk)
+                    assert await process.wait() == 0
+        return bytes(stdout), bytes(stderr)
+
+    stdout, stderr = anyio.run(scenario)
+    assert b"PRIVATE_SENTINEL" not in stdout + stderr
+    replies = [json.loads(line) for line in stdout.splitlines()]
     assert {reply["id"] for reply in replies} == {1, 5, 6}
     failure = next(reply for reply in replies if reply["id"] == 5)
     assert failure["error"] == {"code": -32601, "message": "Method not found"}
     assert next(reply for reply in replies if reply["id"] == 6)["result"] == {}
-    assert all(len(line) <= 256 * 1024 for line in completed.stdout.splitlines())
+    assert all(len(line) <= 256 * 1024 for line in stdout.splitlines())
     assert list(output_root.iterdir()) == []
