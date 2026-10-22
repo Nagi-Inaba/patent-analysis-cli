@@ -2,11 +2,11 @@
 from __future__ import annotations
 
 ADVANCED_BUILD: dict[str, str | list[str]] | None = {
-    "archive_sha256": "6bee6e26974207ab9eea201a3ac095247f142eef71c096f375900b385a233f8e",
-    "manifest_sha256": "88950c6196c26029db9a59b9f8801846990165e757c7c30dc3c6e833d865a837",
-    "bootstrap_sha256": "6d05d994143f961ab9631b433a438593a46abc52ab6afd93a186c3853a1b167c",
-    "bundle_sha256": "9e528e948de41d1bce70a3bdb151a3901464c06aeea6290e47c11f5e70b62880",
-    "build_digest": "09007f718758655c0279665bbc4e20c10aeaf90f773c4f77da1dd5399b94a901",
+    "archive_sha256": "eb019a6a53fa4a95bace9e9dcf4ebc87614dd0ae0321fdb7ba67e0a4429d0c30",
+    "manifest_sha256": "01f408bf7ce3ed5b97c0a8c8151e25365f7e5963fd97e3f6d34630600a1f65be",
+    "bootstrap_sha256": "a3aa775f6231b71f36ad7ec5950c369c40d76bc5340e478d064fbc1b0db12b22",
+    "bundle_sha256": "6d58bc8a6cb0f2d3c20680557ce878b339b4b23a8e719bd92d2bbfa3977918c8",
+    "build_digest": "11f6aa23ec90db565674a59a7c4dcb19a45366cadaec331772be5dc2c359a97e",
     "built_marks": [
         "growth-quadrant-svg.v1",
         "entry-exit-svg.v1",

@@ -2,8 +2,8 @@
   "render_contract_version": "1.0.0",
   "ok": true,
   "status": "created",
-  "artifact_id": "f8b78d16ca526c12e5ae9e5295d6e0e9ecaa5d9d4fa58f3bc654212a32378ded",
-  "svg": "ranking-svg-f8b78d16ca526c12e5ae9e5295d6e0e9ecaa5d9d4fa58f3bc654212a32378ded.svg",
+  "artifact_id": "d05e8b7f38462c387aa46018bdfce0c12fa29e8573b59f78ae49fc5d9970317b",
+  "svg": "ranking-svg-d05e8b7f38462c387aa46018bdfce0c12fa29e8573b59f78ae49fc5d9970317b.svg",
   "svg_sha256": "a751edf90c2e760e5c3dc2566bd6060d3c842656b935b056fc8bc81082a7b6b4",
-  "renderer_build_digest": "49ef33df4ffa9e61e1507f2f8bb8db98ac27ba52b3b88d26f5eee5217bcbebb7"
+  "renderer_build_digest": "7148882cf54591e805ec941907834c395e3283c8de64aabfbddadca44d4dbcb3"
 }
