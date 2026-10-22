@@ -19,9 +19,9 @@ const EXPECTED_DEVELOPMENT_DEPENDENCIES = Object.freeze({
   typescript: "5.9.3",
   "typescript-eslint": "8.67.0",
   vite: "8.3.4",
-  vitest: "4.1.11"
+  vitest: "4.1.12"
 });
-const EXPECTED_TRANSITIVE_INVENTORY_SHA256 = "5c96a9ecc5dc25f12d0edc6d0815fda7d7d4f6525d56d10732d2b4f4eeac4460";
+const EXPECTED_TRANSITIVE_INVENTORY_SHA256 = "7bd447f779b5749adc6a74d558ee5d5d29bf1ea0c4836d44ff983cfb7b40f10d";
 const EXPECTED_LOCK_INSTALL_SCRIPT_PACKAGES = Object.freeze({ fsevents: "2.3.3" });
 const SHA512_BASE64_PATTERN = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 

@@ -57,7 +57,7 @@ describe("renderer protocol contract", () => {
       typescript: "5.9.3",
       "typescript-eslint": "8.67.0",
       vite: "8.3.4",
-      vitest: "4.1.11"
+      vitest: "4.1.12"
     });
     expect(packageJson.dependencies).toEqual({
       "@xmldom/xmldom": "0.9.12",
