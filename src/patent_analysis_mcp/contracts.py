@@ -8,11 +8,17 @@ from collections.abc import Mapping
 from types import MappingProxyType
 from typing import Any
 
+from patent_analysis._json_preflight import JsonPreflightError, preflight_json_bytes
 from patent_analysis.analysis_budgets import MAX_MCP_SERIALIZED_RESPONSE_BYTES
-from patent_analysis.canonical_v2 import CanonicalizationError, canonical_json_bytes
+from patent_analysis.canonical_v2 import (
+    CanonicalizationError,
+    canonical_json_bytes,
+    parse_strict_json_bytes,
+)
 
 MAX_TOOL_ARGUMENT_BYTES = 1024 * 1024
 MAX_STDIO_MESSAGE_BYTES = 2 * 1024 * 1024
+MAX_REQUEST_ID_BYTES = 1024
 MAX_TOOL_RESPONSE_BYTES = MAX_MCP_SERIALIZED_RESPONSE_BYTES - 16 * 1024
 MAX_JSON_DEPTH = 64
 MAX_JSON_NODES = 250_000
@@ -179,6 +185,34 @@ def _canonical_clone(
     if not isinstance(cloned, dict):
         raise McpContractError(invalid_code)
     return cloned
+
+
+def decode_stdio_message(raw: bytes) -> dict[str, Any]:
+    """Reject ambiguous or over-budget wire JSON before the SDK can interpret it."""
+    if type(raw) is not bytes or len(raw) > MAX_STDIO_MESSAGE_BYTES:
+        raise McpContractError("input.invalid")
+    try:
+        preflight_json_bytes(raw)
+        value = parse_strict_json_bytes(raw)
+    except (JsonPreflightError, CanonicalizationError):
+        raise McpContractError("input.invalid") from None
+    if not isinstance(value, dict):
+        raise McpContractError("input.invalid")
+    _validate_json_value(
+        value,
+        depth=0,
+        seen=set(),
+        counters=[0, 0],
+        reject_unsafe_keys=False,
+        failure_code="input.invalid",
+    )
+    request_id = value.get("id")
+    if request_id is not None and (
+        type(request_id) not in (str, int)
+        or (isinstance(request_id, str) and len(request_id.encode("utf-8")) > MAX_REQUEST_ID_BYTES)
+    ):
+        raise McpContractError("input.invalid")
+    return value
 
 
 def decode_tool_arguments(

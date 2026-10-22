@@ -49,6 +49,8 @@
 
 ### Security
 
+- MCPの通信JSON全体をSDKの解釈前に検証し、重複キー、過剰な入れ子、不正な数値・Unicodeを拒否。request IDをUTF-8で1,024 bytesまでに制限し、JSON-RPC envelope込みの最終応答へ256 KiB上限を適用。protocol errorから要求文字列と内部error dataを除去。
+
 - file-backed入力を承認済みroot配下のverified regular fileへ制限。
 - JSONのduplicate key、NaN／Infinity、不正UTF-8、過剰なdepth・node・string・file sizeを拒否。
 - CLI、MCP、rendererの入力・応答・実行時間へ固定上限を適用。

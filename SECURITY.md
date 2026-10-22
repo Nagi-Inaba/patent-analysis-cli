@@ -29,6 +29,8 @@ WindowsではUNC/device/NT namespace/ADS、remoteまたはmapped drive、SUBST�
 
 ## Privacy And Result Disclosure
 
+MCPのwire JSONはSDKによる解釈前にdepth・token・文字列・数値の上限、duplicate key、不正UTF-8・surrogate・NUL・非有限数を検証する。string request IDはUTF-8で1,024 bytesまでとし、tool引数以外のmetadataも検証対象に含める。不正frameはtoolを実行せず破棄し、後続の正常frameは処理できる。送信時にもJSON-RPC envelopeを含めて256 KiBへ制限し、SDKのprotocol errorのmessageを固定し、`error.data`を除く。bounded request IDは対応付けのため応答に含む。具体的な上限は[docs/contracts.md](docs/contracts.md)を参照する。
+
 package自身はmodel、network、cloud、外部API、外部の特許DB・特許データAPI、インターネット検索を呼ばない。`inspect` はcell valueを含まないbounded manifest metadataだけを返す。`analyze` はデータ由来のdimension label、集計値、count、shareを返し、unique labelがsource cell文字列と一致する場合もある。結果を外部AIやserviceへ送るかどうかはcaller policyであり、本packageの責務外である。
 
 `LabelOverlayPack`、表示用label、`AnalysisResult`のlabelとその他のresult fieldsはcaller-controlled sensitive output（callerが管理する機微な出力）であり、package自身が外部へ送信することはない。package自身はnetwork、cloud、外部APIを呼ばない。`build_ranking_chart_model`と`build_ranking_render_spec`はローカルの契約検証・生成だけを行う。

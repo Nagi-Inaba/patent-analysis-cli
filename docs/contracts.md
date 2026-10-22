@@ -111,7 +111,11 @@ adapterのbyte境界は次のとおりである。
 - canonical tool arguments: 最大1 MiB。
 - serialized MCP final response: 最大256 KiB。
 
-失敗はcaller-controlled textを含めない固定safe envelopeにする。公開されるcode/messageは次のallow-listに限定する。
+SDKへ渡す前にwire JSON全体を検証し、duplicate key（Unicode escapeで同じkeyになる場合を含む）、NaN/Infinity、非有限数へのoverflow、不正UTF-8、lone surrogate、NUL、depth 64超・token 250,000超・数値lexeme 128 bytes超を拒否する。decoded string合計は1,000,000 code points、単一stringは512 KiB、配列は100,000 itemsまでとする。stringのrequest IDはUTF-8で1,024 bytesまで、数値IDはsafe integerとする。不正frameは固定のparse-failure frameへ置き換え、toolを実行せず、後続の正常frameを処理できる。oversized lineは改行またはEOFまで破棄する。
+
+256 KiBの応答上限はJSON-RPCのID・envelopeを含む最終serialized messageにも適用する（改行delimiterを除く）。上限超過は固定のprotocol errorへ置き換える。SDKのprotocol errorはcodeとbounded IDを保ち、messageを固定し、caller由来のmethod・exception text・`error.data`を返さない。IDは要求との対応付けのため応答に含まれる。
+
+toolの失敗はcaller-controlled textを含めない固定safe envelopeにする。toolの公開code/messageは次のallow-listに限定する。
 
 | code | fixed message |
 | --- | --- |

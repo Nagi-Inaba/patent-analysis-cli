@@ -169,3 +169,41 @@ def test_stdio_malformed_or_oversized_input_exits_on_eof_without_echo(
     assert len(completed.stderr) <= 64 * 1024
     assert b"padding" not in completed.stdout
     assert b"padding" not in completed.stderr
+
+
+def test_real_stdio_rejects_ambiguous_frames_and_redacts_protocol_errors(tmp_path: Path) -> None:
+    input_root = tmp_path / "input"
+    output_root = tmp_path / "output"
+    input_root.mkdir()
+    output_root.mkdir()
+    parameters = _server_parameters(input_root, output_root)
+    initialize = {
+        "jsonrpc": "2.0", "id": 1, "method": "initialize",
+        "params": {"protocolVersion": "2025-11-25", "capabilities": {},
+                   "clientInfo": {"name": "security-regression", "version": "1"}},
+    }
+    frames = [
+        json.dumps(initialize).encode(),
+        b'{"jsonrpc":"2.0","method":"notifications/initialized"}',
+        b'{"jsonrpc":"2.0","id":2,"method":"tools/call","params":'
+        b'{"name":"PRIVATE_SENTINEL","name":"patent_analysis.capabilities","arguments":{}}}',
+        b'{"jsonrpc":"2.0","id":3,"method":"ping","params":{"value":NaN}}',
+        b'{"jsonrpc":"2.0","id":4,"method":"ping","params":{"value":'
+        + b'[' * 64 + b'0' + b']' * 64 + b'}}',
+        b'{"jsonrpc":"2.0","id":"' + b'x' * 300_000 + b'","method":"ping"}',
+        b'{"jsonrpc":"2.0","id":5,"method":"PRIVATE_SENTINEL"}',
+        b'{"jsonrpc":"2.0","id":6,"method":"ping"}',
+    ]
+    completed = subprocess.run(
+        [parameters.command, *parameters.args], cwd=parameters.cwd,
+        input=b"\n".join(frames) + b"\n", capture_output=True, check=False, timeout=20,
+    )
+    assert completed.returncode == 0
+    assert b"PRIVATE_SENTINEL" not in completed.stdout + completed.stderr
+    replies = [json.loads(line) for line in completed.stdout.splitlines()]
+    assert {reply["id"] for reply in replies} == {1, 5, 6}
+    failure = next(reply for reply in replies if reply["id"] == 5)
+    assert failure["error"] == {"code": -32601, "message": "Method not found"}
+    assert next(reply for reply in replies if reply["id"] == 6)["result"] == {}
+    assert all(len(line) <= 256 * 1024 for line in completed.stdout.splitlines())
+    assert list(output_root.iterdir()) == []
