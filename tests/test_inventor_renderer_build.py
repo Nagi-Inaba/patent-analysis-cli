@@ -28,15 +28,15 @@ BUILT_MARKS = [
 def pinned_node() -> str:
     node = shutil.which("node")
     if node is None:
-        pytest.skip("requires Node 22.23.4 (x64 or macOS arm64) in the build workspace")
+        pytest.skip("requires Node 24.22.1 (x64 or macOS arm64) in the build workspace")
     probe = subprocess.run(
         [node, "-p", "process.versions.node + '/' + process.arch"],
         capture_output=True, text=True, timeout=10, check=False,
     )
     if probe.returncode or probe.stdout.strip() not in (
-        {"22.23.4/x64", "22.23.4/arm64"} if sys.platform == "darwin" else {"22.23.4/x64"}
+        {"24.22.1/x64", "24.22.1/arm64"} if sys.platform == "darwin" else {"24.22.1/x64"}
     ):
-        pytest.skip("requires exact Node 22.23.4 (x64 or macOS arm64)")
+        pytest.skip("requires exact Node 24.22.1 (x64 or macOS arm64)")
     if not (ROOT / "renderer/node_modules/vite/package.json").is_file():
         pytest.skip("requires the already-installed locked renderer build dependencies")
     return node
@@ -242,7 +242,7 @@ def test_build_enforces_real_node_policy_before_any_output(
         cwd=ROOT, capture_output=True, text=True, timeout=120, check=False,
     )
     assert result.returncode != 0
-    assert "Requires Node 22.23.4 (x64 or macOS arm64)" in result.stderr
+    assert "Requires Node 24.22.1 (x64 or macOS arm64)" in result.stderr
     assert not output.exists()
     assert _checkout_snapshot() == before
 

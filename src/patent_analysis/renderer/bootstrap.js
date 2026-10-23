@@ -4,7 +4,7 @@
 (() => {
   "use strict";
 
-  const EXPECTED_BUNDLE_SHA256 = "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb";
+  const EXPECTED_BUNDLE_SHA256 = "f90a25664ce4ba931ddc04e43cfbc2f1c53360a379a3f03f279d44eb89c9a6f6";
   const MAX_BUNDLE_BYTES = 4 * 1024 * 1024;
   const MAX_REQUEST_BYTES = 3 * 1024 * 1024;
   const MAX_FRAME_BYTES = 7 * 1024 * 1024;
@@ -47,7 +47,7 @@
     node_version: process.versions.node,
     echarts_version: "6.1.0",
     renderer_build_digest: sha256(JSON.stringify(canonicalize(buildManifest))),
-    render_profile_id: "ranking-svg-ja-jp-node22-echarts6.v1"
+    render_profile_id: "ranking-svg-ja-jp-node24-echarts6.v1"
   });
   const failures = Object.freeze({
     protocol: { code: "protocol.invalid", message: "Renderer protocol is invalid" },

@@ -6,7 +6,7 @@ export default defineConfig({
     "process.env.NODE_ENV": JSON.stringify("production")
   },
   build: {
-    target: "node22",
+    target: "node24",
     write: false,
     sourcemap: false,
     minify: "oxc",

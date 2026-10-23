@@ -71,7 +71,7 @@ def load_verified_advanced_renderer_resources() -> RendererResources:
             if sha256_bytes(raw) != pins[name]:
                 raise ValueError("advanced schema binding")
         runtime = RendererRuntimeBinding(
-            node_version="22.23.4",
+            node_version="24.22.1",
             echarts_version="6.1.0",
             renderer_build_digest=digest,
             render_profile_id=ADVANCED_RENDER_PROFILE_ID,

@@ -498,7 +498,7 @@ def valid_render_spec() -> dict[str, object]:
         "animation": False,
         "axis_label_max_graphemes": 28,
         "echarts_version": "6.1.0",
-        "render_profile_id": "ranking-svg-ja-jp-node22-echarts6.v1",
+        "render_profile_id": "ranking-svg-ja-jp-node24-echarts6.v1",
     }
 
 

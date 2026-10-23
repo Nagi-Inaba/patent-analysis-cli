@@ -34,16 +34,16 @@ def test_python_trust_anchors_are_exact_reviewed_values() -> None:
     module = _resources_module()
 
     assert getattr(module, "PINNED_RENDERER_BUILD_MANIFEST_SHA256", None) == (
-        "e8d3ce622f2fd018c12f821eb8680c2bf6ca296b0c21ea97c78d4baa22d8fe41"
+        "682d16ff286965ff24732d2df19da93886cd8e1c2be3c1f1abdb59d131560f18"
     )
     assert getattr(module, "PINNED_RENDERER_BUILD_DIGEST", None) == (
-        "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
+        "dff4c6dcce7b636ed0345c663a119714f4511eedf65d3727917a4aa1b5dc0aeb"
     )
     assert getattr(module, "PINNED_RENDERER_BOOTSTRAP_SHA256", None) == (
-        "6dec5126cec4ab7f9792c17b3513825d093318a995b614de217ab5567b2b6c0f"
+        "9d0bd0a364c5c96c6224913ced51c1eb316774b0387c29de3fa8adc5f86b76aa"
     )
     assert getattr(module, "PINNED_RENDERER_BUNDLE_SHA256", None) == (
-        "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb"
+        "f90a25664ce4ba931ddc04e43cfbc2f1c53360a379a3f03f279d44eb89c9a6f6"
     )
 
 
@@ -57,7 +57,7 @@ def test_schema_trust_anchors_are_exact_and_discoverable() -> None:
         "cefcb2c0e7bfb295d99b9a284078917e2aa7234fd881ba725b69eef19a8ba0cd"
     )
     assert getattr(module, "RENDERER_RESPONSE_SCHEMA_SHA256", None) == (
-        "3d04889677d44d6c9a37af843f290281921931d59664b3bc5a0dd6bbb0a8102f"
+        "968a0ff43a1b5e84532cb2589c46cac8eea17a3f61ceadabba84d7c6d28e077e"
     )
 
 
@@ -67,24 +67,24 @@ def test_packaged_renderer_resources_have_exact_current_digests() -> None:
     resources = module.load_verified_renderer_resources()
 
     assert hashlib.sha256(resources.manifest_bytes).hexdigest() == (
-        "e8d3ce622f2fd018c12f821eb8680c2bf6ca296b0c21ea97c78d4baa22d8fe41"
+        "682d16ff286965ff24732d2df19da93886cd8e1c2be3c1f1abdb59d131560f18"
     )
     assert hashlib.sha256(resources.bootstrap_bytes).hexdigest() == (
-        "6dec5126cec4ab7f9792c17b3513825d093318a995b614de217ab5567b2b6c0f"
+        "9d0bd0a364c5c96c6224913ced51c1eb316774b0387c29de3fa8adc5f86b76aa"
     )
     assert hashlib.sha256(resources.bundle_bytes).hexdigest() == (
-        "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb"
+        "f90a25664ce4ba931ddc04e43cfbc2f1c53360a379a3f03f279d44eb89c9a6f6"
     )
     assert resources.renderer_build_digest == (
-        "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
+        "dff4c6dcce7b636ed0345c663a119714f4511eedf65d3727917a4aa1b5dc0aeb"
     )
     assert resources.runtime == module.RendererRuntimeBinding(
-        node_version="22.23.4",
+        node_version="24.22.1",
         echarts_version="6.1.0",
         renderer_build_digest=(
-            "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
+            "dff4c6dcce7b636ed0345c663a119714f4511eedf65d3727917a4aa1b5dc0aeb"
         ),
-        render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="ranking-svg-ja-jp-node24-echarts6.v1",
     )
     with pytest.raises(FrozenInstanceError):
         resources.bundle_bytes = b"changed"
@@ -207,7 +207,7 @@ def test_coordinated_manifest_bootstrap_bundle_substitution_fails_closed(
         ),
         (
             "renderer-response.schema.json",
-            "3d04889677d44d6c9a37af843f290281921931d59664b3bc5a0dd6bbb0a8102f",
+            "968a0ff43a1b5e84532cb2589c46cac8eea17a3f61ceadabba84d7c6d28e077e",
         ),
     ],
 )

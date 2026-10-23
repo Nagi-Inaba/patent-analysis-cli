@@ -6,7 +6,7 @@
 | --- | --- |
 | Python API / CLI | <!--var:analysis_count-->28<!--/var-->分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
 | local stdio MCP | <!--var:mcp_analysis_count-->28<!--/var-->分析・<!--var:mcp_tool_count-->6<!--/var-->ツール。[設定と呼び出し例](docs/mcp.md) |
-| SVG | 固定形式の<!--var:mark_count-->28<!--/var-->種類。[収録しているSVGグラフ](#収録しているsvgグラフ)と`capabilities --json`を参照。配色は4種から選択。Windows x64 / macOS arm64/x86_64、**Node.js 22.23.4（対応アーキテクチャ）** |
+| SVG | 固定形式の<!--var:mark_count-->28<!--/var-->種類。[収録しているSVGグラフ](#収録しているsvgグラフ)と`capabilities --json`を参照。配色は4種から選択。Windows x64 / macOS arm64/x86_64、**Node.js 24.22.1（対応アーキテクチャ）** |
 | 集計単位 | 既存<!--var:population_analysis_count-->17<!--/var-->種類のv2分析で`records` / `earliest`。新しい発明者分析は[専用仕様](docs/inventor-analysis.md)。旧Rankingはレコード単位のみ |
 
 Python 3.14で動作するローカル実行専用のパッケージです。入力・出力契約と安全性の境界は[SECURITY.md](SECURITY.md)、配布物の検証方法は[リリース手順](docs/release.md)を参照してください。
@@ -138,7 +138,7 @@ CSVはUTF-8でstdoutへ返し、`analysis_id`と`table`で分析・表種別を�
 
 ## WindowsでSVGを作る
 
-信頼できるローカルのNode 22.23.4 x64と、既存の絶対パスの出力ディレクトリが必要です。同梱済みの描画資産を使うため、利用時にnpm installやビルドは行いません。
+信頼できるローカルのNode 24.22.1 x64と、既存の絶対パスの出力ディレクトリが必要です。同梱済みの描画資産を使うため、利用時にnpm installやビルドは行いません。
 
 ```powershell
 $nodeExe = (Get-Command node.exe -ErrorAction Stop).Source
@@ -153,7 +153,7 @@ $result | & $pythonExe -m patent_analysis render --analysis - --mark ranking-svg
 
 ## macOSでSVGを作る
 
-Python 3.14がインストール済みで、SVGにはNode.js 22.23.4（実行するmacOSアーキテクチャに対応）が必要です。`node -p 'process.execPath'`でNodeの実体を解決するため、Homebrew・asdf・nvmのsymlinkを含む環境でも使用できます。入力・出力・Nodeのpathにsymlink componentがある場合は拒否されるため、出力先は`pwd -P`で物理pathへ正規化します。この例は既に作成した`.venv`を使い、global toolをインストールしません。
+Python 3.14がインストール済みで、SVGにはNode.js 24.22.1（実行するmacOSアーキテクチャに対応）が必要です。`node -p 'process.execPath'`でNodeの実体を解決するため、Homebrew・asdf・nvmのsymlinkを含む環境でも使用できます。入力・出力・Nodeのpathにsymlink componentがある場合は拒否されるため、出力先は`pwd -P`で物理pathへ正規化します。この例は既に作成した`.venv`を使い、global toolをインストールしません。
 
 ```bash
 nodeExe="$(node -p 'process.execPath')"
@@ -257,7 +257,7 @@ flowchart TB
     result --> model --> runtime --> svg --> use
 ```
 
-次はUMLシーケンス図です。分析結果を保存・再利用でき、SVG生成は必要なときだけ呼び出します。描画runtimeはWindows x64またはmacOS arm64/x86_64と、Node 22.23.4を使います。
+次はUMLシーケンス図です。分析結果を保存・再利用でき、SVG生成は必要なときだけ呼び出します。描画runtimeはWindows x64またはmacOS arm64/x86_64と、Node 24.22.1を使います。
 
 ```mermaid
 sequenceDiagram

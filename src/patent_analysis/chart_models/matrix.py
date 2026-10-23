@@ -16,7 +16,7 @@ from patent_analysis.v2_contracts import validate_analysis_result_v2
 MATRIX_BUBBLE_MARK = "matrix-bubble-svg.v1"
 MATRIX_HEATMAP_MARK = "matrix-heatmap-svg.v1"
 MATRIX_RENDER_MARKS = (MATRIX_BUBBLE_MARK, MATRIX_HEATMAP_MARK)
-MATRIX_RENDER_PROFILE_ID = "matrix-svg-ja-jp-node22-echarts6.v1"
+MATRIX_RENDER_PROFILE_ID = "matrix-svg-ja-jp-node24-echarts6.v1"
 
 
 def _schema(name: str) -> dict[str, Any]:

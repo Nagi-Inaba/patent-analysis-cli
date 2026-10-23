@@ -1,4 +1,4 @@
-export const RENDER_PROFILE_ID = "ranking-svg-ja-jp-node22-echarts6.v1";
+export const RENDER_PROFILE_ID = "ranking-svg-ja-jp-node24-echarts6.v1";
 
 const height = Object.freeze({
   minimum: 675,

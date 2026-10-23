@@ -27,7 +27,7 @@ def _load_module():
 def _trusted_renderer_node() -> Path:
     candidate = os.environ.get("PATENT_ANALYSIS_TEST_NODE") or shutil.which("node")
     if candidate is None:
-        pytest.skip("exact Node 22.23.4 installation is unavailable")
+        pytest.skip("exact Node 24.22.1 installation is unavailable")
     try:
         node = Path(candidate).resolve(strict=True)
         version = subprocess.run(
@@ -38,9 +38,9 @@ def _trusted_renderer_node() -> Path:
             timeout=5.0,
         )
     except (OSError, RuntimeError, subprocess.TimeoutExpired):
-        pytest.skip("exact Node 22.23.4 installation is unavailable")
-    if version.returncode != 0 or version.stdout.strip() != "v22.23.4":
-        pytest.skip("exact Node 22.23.4 installation is unavailable")
+        pytest.skip("exact Node 24.22.1 installation is unavailable")
+    if version.returncode != 0 or version.stdout.strip() != "v24.22.1":
+        pytest.skip("exact Node 24.22.1 installation is unavailable")
     return node
 
 

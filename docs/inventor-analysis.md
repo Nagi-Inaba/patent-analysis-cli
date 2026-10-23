@@ -21,7 +21,7 @@
 
 ## インストールと実行
 
-分析にはPython 3.14と `inventor` extraが必要です。MCPも利用する場合は `.[inventor,mcp]` を指定します。SVGの利用条件は従来と同じWindows x64／信頼するNode 22.23.4 x64です。JSONと表の分析にはNodeは不要です。
+分析にはPython 3.14と `inventor` extraが必要です。MCPも利用する場合は `.[inventor,mcp]` を指定します。SVGの利用条件は従来と同じWindows x64／信頼するNode 24.22.1 x64です。JSONと表の分析にはNodeは不要です。
 
 ```powershell
 # リポジトリルート。$pythonExe は利用するPython 3.14 venvの絶対パス。

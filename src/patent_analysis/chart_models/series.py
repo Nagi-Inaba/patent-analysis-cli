@@ -16,7 +16,7 @@ from patent_analysis.chart_models._common import (
 SERIES_LINE_MARK = "series-line-svg.v1"
 SERIES_STACKED_BAR_MARK = "series-stacked-bar-svg.v1"
 SERIES_RENDER_MARKS = (SERIES_LINE_MARK, SERIES_STACKED_BAR_MARK)
-CATEGORICAL_RENDER_PROFILE_ID = "categorical-svg-ja-jp-node22-echarts6.v1"
+CATEGORICAL_RENDER_PROFILE_ID = "categorical-svg-ja-jp-node24-echarts6.v1"
 SERIES_RENDER_PROFILE_ID = CATEGORICAL_RENDER_PROFILE_ID
 
 

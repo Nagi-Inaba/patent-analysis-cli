@@ -26,10 +26,10 @@ function requestFixture() {
 
 function runtimeFixture() {
   return {
-    node_version: "22.23.4",
+    node_version: "24.22.1",
     echarts_version: "6.1.0",
     renderer_build_digest: SHA256,
-    render_profile_id: "ranking-svg-ja-jp-node22-echarts6.v1"
+    render_profile_id: "ranking-svg-ja-jp-node24-echarts6.v1"
   };
 }
 
@@ -52,7 +52,7 @@ describe("renderer protocol contract", () => {
       ajv: "8.20.0",
       echarts: "6.1.0",
       "@eslint/js": "10.0.1",
-      "@types/node": "22.20.1",
+      "@types/node": "24.19.2",
       eslint: "10.8.1",
       typescript: "5.9.3",
       "typescript-eslint": "8.67.0",
@@ -112,7 +112,7 @@ describe("renderer protocol contract", () => {
     expect(validateSuccess({
       protocol_version: "1.0.0",
       ok: true,
-      runtime: { ...runtimeFixture(), node_version: "v22.23.4" },
+      runtime: { ...runtimeFixture(), node_version: "v24.22.1" },
       svg_b64: "PHN2Zy8+"
     })).toBe(false);
     expect(validateSuccess({

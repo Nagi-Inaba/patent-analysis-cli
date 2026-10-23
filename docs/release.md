@@ -6,7 +6,7 @@
 
 - release対象commitのCIが成功している
 - `CHANGELOG.md`、version、利用者向け文書が一致している
-- Python 3.14、Node.js 22.23.4、npmを使用する
+- Python 3.14、Node.js 24.22.1、npmを使用する
 - working treeがcleanである
 - Apache-2.0本体ライセンスと第三者通知が配布物へ含まれる
 - 公開repositoryではGitHub Private Vulnerability Reportingが有効である
@@ -23,7 +23,7 @@ python -m ruff check --no-cache src tests scripts
 python -m build
 ```
 
-rendererを変更した場合は、`renderer/package-lock.json`から`npm ci`を実行し、typecheck、lint、test、全bundleの再生成一致を確認します。Node.jsは22.23.4を使用します。
+rendererを変更した場合は、`renderer/package-lock.json`から`npm ci`を実行し、typecheck、lint、test、全bundleの再生成一致を確認します。Node.jsは24.22.1を使用します。
 
 ## 配布物の検証
 

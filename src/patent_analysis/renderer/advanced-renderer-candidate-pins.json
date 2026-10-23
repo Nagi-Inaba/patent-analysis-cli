@@ -1,9 +1,9 @@
 {
-  "archive_sha256": "29d0e950e42607e66a32979a67f540f8159a2f17fc05462eadf7f380c272b884",
-  "manifest_sha256": "672703b6fe56cfcc3403a68d50ae5309f98242691842f3e82fc386aba41c3d91",
-  "bootstrap_sha256": "710d07cc288be520fbf618e059eadf48999b502ba30a1169f3f50df1d3cee7e3",
-  "bundle_sha256": "5e8d2d5f2e76c9ebda9202699189b232710c137529ebad277b78fb1231108f96",
-  "build_digest": "6fd64c2271cd49ad58327c68e76eb1bf683e6bf6626b800a20fcc6698356ce5c",
+  "archive_sha256": "7c01ad8249b0fe84575b0f47863339c0559857ca2e993aefbcea0725d444d14c",
+  "manifest_sha256": "5d3c6e0e070371208896be2edd666bc2421d9ee96b81565bae7f3e7367809438",
+  "bootstrap_sha256": "7fb93d54145928904738b4c2e839158bc847fae4ee6d90c37820d4813a57e78a",
+  "bundle_sha256": "98d5971fced4e1e55634e4ee8bbe9ccf2168c22275494c75855220761a588d1a",
+  "build_digest": "3ae8d9a2b6d988fd8a848b743c07b86846df8a7783773d10dc0532c2531dbc4c",
   "built_marks": [
     "growth-quadrant-svg.v1",
     "entry-exit-svg.v1",
@@ -27,8 +27,8 @@
     "inventor-mobility-flow-svg.v1"
   ],
   "advanced-chart-model-v1.schema.json": "291478994d148cf34652c13f72514dbb2cdc53fb669cb427c690e728b36532c8",
-  "advanced-render-spec-v1.schema.json": "03f7e4fa4f518fe42909c19cecdda186fa63f67b6cc5db5a417928923a524ba3",
-  "advanced-renderer-response.schema.json": "edbc5ab7250792142321de799fa76aa4a139adf330c42b4a4f1beb29f109d1ed",
+  "advanced-render-spec-v1.schema.json": "57bf0da78ebebdb7b97b0c62698884e3cd87c6cd125fb84f0745db648be8cca8",
+  "advanced-renderer-response.schema.json": "e1fcc68329a9deb02b220fa472edf32acc1521e428e3b5030977a9126270bc18",
   "candidate_pin_version": "1.0.0",
-  "render_profile_id": "advanced-svg-ja-jp-node22-echarts6.v1"
+  "render_profile_id": "advanced-svg-ja-jp-node24-echarts6.v1"
 }

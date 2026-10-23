@@ -56,7 +56,7 @@ def test_matrix_renderer_resources_are_separate_from_ranking_resources() -> None
     ranking = load_verified_renderer_resources()
     matrix = load_verified_matrix_renderer_resources()
 
-    assert matrix.runtime.render_profile_id == "matrix-svg-ja-jp-node22-echarts6.v1"
+    assert matrix.runtime.render_profile_id == "matrix-svg-ja-jp-node24-echarts6.v1"
     assert matrix.runtime.renderer_build_digest != ranking.runtime.renderer_build_digest
     assert matrix.bootstrap_bytes != ranking.bootstrap_bytes
     assert matrix.bundle_bytes != ranking.bundle_bytes
@@ -74,8 +74,8 @@ def test_renderer_response_schemas_are_closed_per_profile() -> None:
     ranking_profile = ranking_schema["$defs"]["runtime"]["properties"]["render_profile_id"]
     matrix_profile = matrix_schema["$defs"]["runtime"]["properties"]["render_profile_id"]
 
-    assert ranking_profile == {"const": "ranking-svg-ja-jp-node22-echarts6.v1"}
-    assert matrix_profile == {"const": "matrix-svg-ja-jp-node22-echarts6.v1"}
+    assert ranking_profile == {"const": "ranking-svg-ja-jp-node24-echarts6.v1"}
+    assert matrix_profile == {"const": "matrix-svg-ja-jp-node24-echarts6.v1"}
 
 
 def test_render_analysis_svg_rejects_matrix_overlay_and_unknown_mark(
@@ -160,7 +160,7 @@ def test_render_rejects_value_labels_outside_the_matrix_bubble(
     assert list(tmp_path.iterdir()) == []
 
 
-# --- pie bubbles (real renders with the exact Node 22.23.4) -----------------------------------
+# --- pie bubbles (real renders with the exact Node 24.22.1) -----------------------------------
 
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
@@ -180,12 +180,12 @@ def _exact_renderer_node() -> str | None:
         check=False,
     )
     arch = "arm64" if platform.machine().lower() == "arm64" else "x64"
-    return node if probe.returncode == 0 and probe.stdout.strip() == f"22.23.4/{arch}" else None
+    return node if probe.returncode == 0 and probe.stdout.strip() == f"24.22.1/{arch}" else None
 
 
 requires_renderer_node = pytest.mark.skipif(
     _exact_renderer_node() is None,
-    reason="requires Windows x64 or macOS and the exact Node 22.23.4",
+    reason="requires Windows x64 or macOS and the exact Node 24.22.1",
 )
 
 

@@ -45,7 +45,7 @@ def test_native_result_builds_fixed_matching_chart_model(analysis_id):
     assert model["population"] == result["population"]
     assert api.get_public_schema("advanced-chart-model-v1.schema.json")["type"] == "object"
     assert (
-        build_advanced_render_spec()["render_profile_id"] == "advanced-svg-ja-jp-node22-echarts6.v1"
+        build_advanced_render_spec()["render_profile_id"] == "advanced-svg-ja-jp-node24-echarts6.v1"
     )
 
 

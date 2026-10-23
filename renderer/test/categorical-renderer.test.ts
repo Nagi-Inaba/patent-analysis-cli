@@ -87,7 +87,7 @@ const lineSpec = {
   animation: false,
   axis_label_max_graphemes: 28,
   echarts_version: "6.1.0",
-  render_profile_id: "categorical-svg-ja-jp-node22-echarts6.v1"
+  render_profile_id: "categorical-svg-ja-jp-node24-echarts6.v1"
 } as const;
 
 const stackedSpec = {
@@ -106,10 +106,10 @@ const pieSpec = {
 } as const;
 
 const runtime = {
-  node_version: "22.23.4",
+  node_version: "24.22.1",
   echarts_version: "6.1.0",
   renderer_build_digest: "c".repeat(64),
-  render_profile_id: "categorical-svg-ja-jp-node22-echarts6.v1"
+  render_profile_id: "categorical-svg-ja-jp-node24-echarts6.v1"
 } as const;
 
 function canonicalValue(value: unknown): unknown {

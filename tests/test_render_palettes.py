@@ -140,7 +140,7 @@ def test_render_rejects_an_unknown_palette_before_touching_the_output(tmp_path: 
     assert list(tmp_path.iterdir()) == []
 
 
-# --- real renders (trusted-local Windows x64 / macOS Node 22.23.4) -------------------------------
+# --- real renders (trusted-local Windows x64 / macOS Node 24.22.1) -------------------------------
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
@@ -172,7 +172,7 @@ def _exact_renderer_node() -> str | None:
         check=False,
     )
     return node if probe.returncode == 0 and probe.stdout.strip() == (
-        "22.23.4/arm64" if platform.machine().lower() == "arm64" else "22.23.4/x64"
+        "24.22.1/arm64" if platform.machine().lower() == "arm64" else "24.22.1/x64"
     ) else None
 
 
@@ -192,7 +192,7 @@ def _analysis_document(analysis_id: str) -> bytes:
 
 @pytest.mark.skipif(
     _exact_renderer_node() is None,
-    reason="requires Windows x64 or macOS and Node 22.23.4",
+    reason="requires Windows x64 or macOS and Node 24.22.1",
 )
 @pytest.mark.parametrize(("analysis_id", "mark"), RENDER_CASES)
 def test_every_palette_renders_each_family_and_changes_only_the_colours(

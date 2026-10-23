@@ -106,7 +106,7 @@ def test_real_node_categorical_marks_create_then_reuse(tmp_path: Path) -> None:
 
     node = shutil.which("node")
     assert node is not None
-    assert subprocess.check_output([node, "--version"], text=True).strip() == "v22.23.4"
+    assert subprocess.check_output([node, "--version"], text=True).strip() == "v24.22.1"
 
     artifact_ids: set[str] = set()
     forbidden = (

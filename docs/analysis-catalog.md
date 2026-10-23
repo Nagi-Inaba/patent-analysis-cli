@@ -83,6 +83,6 @@ Matrix Compositionは**選択1セル**の内訳です。全セルの構成比を
 
 ## SVG
 
-Windows x64 / Node 22.23.4 x64で、各分析の`render_marks`から選択します。複数markを持つのはMatrix、Timeline、Compositionです。異なる分析のmarkや任意のECharts設定は渡せません。生成結果の相対receiptとSVGのSHA-256は、配布確認artifactの`core.json`・`mcp.json`にも記録します。そこで確認する代表経路と全体CIの検証は[配布手順](release.md)で区別しています。
+Windows x64 / Node 24.22.1 x64で、各分析の`render_marks`から選択します。複数markを持つのはMatrix、Timeline、Compositionです。異なる分析のmarkや任意のECharts設定は渡せません。生成結果の相対receiptとSVGのSHA-256は、配布確認artifactの`core.json`・`mcp.json`にも記録します。そこで確認する代表経路と全体CIの検証は[配布手順](release.md)で区別しています。
 
 発明者追跡のクラスタは年内の共発明グラフの連結成分です。出願人の変化は同一人物の観測間の集合差であり、雇用・転職を判定しません。識別・欠損・上限・図の読み方は[発明者追跡](inventor-tracking.md)を参照してください。

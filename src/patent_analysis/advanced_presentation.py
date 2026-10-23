@@ -11,7 +11,7 @@ from types import MappingProxyType
 
 from patent_analysis.advanced_renderer_build import ADVANCED_BUILD
 
-ADVANCED_RENDER_PROFILE_ID = "advanced-svg-ja-jp-node22-echarts6.v1"
+ADVANCED_RENDER_PROFILE_ID = "advanced-svg-ja-jp-node24-echarts6.v1"
 MAX_ADVANCED_MODEL_BYTES = 256 * 1024
 
 # Older verified activation records predate a per-mark inventory. This frozen

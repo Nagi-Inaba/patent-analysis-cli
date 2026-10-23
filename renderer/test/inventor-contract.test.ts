@@ -186,8 +186,8 @@ describe("drawn geometry stays on the page", () => {
 
 describe("request transfer", () => {
   const runtime = JSON.stringify({
-    node_version: "22.23.4", echarts_version: "6.1.0", renderer_build_digest: "1".repeat(64),
-    render_profile_id: "advanced-svg-ja-jp-node22-echarts6.v1"
+    node_version: "24.22.1", echarts_version: "6.1.0", renderer_build_digest: "1".repeat(64),
+    render_profile_id: "advanced-svg-ja-jp-node24-echarts6.v1"
   });
   function transfer(model: unknown, overrides: { modelDigest?: string } = {}): string {
     const modelBytes = encodeUtf8(JSON.stringify(model)), specBytes = encodeUtf8(JSON.stringify(SPEC));

@@ -7,7 +7,7 @@ The calculation kernels, public API/CLI/MCP routes and supplied-result relations
 checks are connected. The package includes the verified gzip bundle, bootstrap,
 manifest and candidate pins, plus the generated `ADVANCED_BUILD` activation record.
 All eleven fixed advanced marks are enabled. The public renderer supports Windows x64
-and macOS arm64/x86_64 with exact Node.js 22.23.4 for the matching architecture.
+and macOS arm64/x86_64 with exact Node.js 24.22.1 for the matching architecture.
 Linux aggregation and JSON remain supported, while the public SVG route remains unsupported.
 
 Packaged resources and activation remain separate concepts. `--stage-only`
@@ -42,7 +42,7 @@ introduced.
 The complete four-resource set is tracked alongside its generated activation
 module. An explicit build reproduces those committed bytes.
 
-Use the renderer workspace's declared dependencies and exact Node.js 22.23.4 for the
+Use the renderer workspace's declared dependencies and exact Node.js 24.22.1 for the
 matching architecture.
 From `renderer/`, run:
 
@@ -83,7 +83,7 @@ Use that mode only in an isolated acceptance checkout before running the Windows
 public-entrypoint tests. Do not interpret local generated pins as permission to
 merge or release an unverified renderer.
 
-On Windows x64 or macOS arm64/x86_64 with exact Node.js 22.23.4 for the matching
+On Windows x64 or macOS arm64/x86_64 with exact Node.js 24.22.1 for the matching
 architecture and Python >=3.14,<3.15, run the normal suite from the repository root.
 It already includes the native SVG cases:
 
@@ -124,7 +124,7 @@ The family uses exact ECharts 6.1.0, the existing framed trusted-local launcher,
 SVG allow-list and content-addressed no-overwrite/reuse publication. The build
 starts from the hash-verified points bootstrap; it does not modify legacy assets.
 Public rendering supports Windows x64 and macOS arm64/x86_64 with matching exact
-Node.js 22.23.4; Linux public SVG remains unsupported.
+Node.js 24.22.1; Linux public SVG remains unsupported.
 
 Compressed and raw bundle hashes are verified. Expansion is bounded to 4 MiB;
 trailing/concatenated streams and invalid UTF-8 are rejected. Other existing limits

@@ -30,7 +30,7 @@
       ]
     },
     "render_profile_id": {
-      "const": "matrix-svg-ja-jp-node22-echarts6.v1"
+      "const": "matrix-svg-ja-jp-node24-echarts6.v1"
     },
     "render_spec_contract_version": {
       "const": "1.0.0"

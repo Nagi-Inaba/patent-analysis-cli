@@ -4,7 +4,7 @@
 (() => {
   "use strict";
 
-  const EXPECTED_BUNDLE_SHA256 = "b34e506ae66973d9da2e537d2be206df3be86e7bfdac28656e15977e608ffd4f";
+  const EXPECTED_BUNDLE_SHA256 = "2798df1e7feb5686b270d92772fb82e44fb375fc68f7ecf5a0074b8b465b6793";
   const MAX_BUNDLE_BYTES = 4 * 1024 * 1024;
   const MAX_REQUEST_BYTES = 3 * 1024 * 1024;
   const MAX_FRAME_BYTES = 7 * 1024 * 1024;
@@ -47,7 +47,7 @@
     node_version: process.versions.node,
     echarts_version: "6.1.0",
     renderer_build_digest: sha256(JSON.stringify(canonicalize(buildManifest))),
-    render_profile_id: "points-svg-ja-jp-node22-echarts6.v1"
+    render_profile_id: "points-svg-ja-jp-node24-echarts6.v1"
   });
   const failures = Object.freeze({
     protocol: {

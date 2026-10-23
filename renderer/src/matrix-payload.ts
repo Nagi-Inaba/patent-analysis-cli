@@ -19,10 +19,10 @@ const FAILURE_MESSAGES = Object.freeze({
 export type RendererFailureCode = keyof typeof FAILURE_MESSAGES;
 
 export type RuntimeBinding = {
-  node_version: "22.23.4";
+  node_version: "24.22.1";
   echarts_version: "6.1.0";
   renderer_build_digest: string;
-  render_profile_id: "matrix-svg-ja-jp-node22-echarts6.v1";
+  render_profile_id: "matrix-svg-ja-jp-node24-echarts6.v1";
 };
 
 export type MatrixCategory = {
@@ -94,7 +94,7 @@ export type MatrixRenderSpec = {
   animation: false;
   axis_label_max_graphemes: 28;
   echarts_version: "6.1.0";
-  render_profile_id: "matrix-svg-ja-jp-node22-echarts6.v1";
+  render_profile_id: "matrix-svg-ja-jp-node24-echarts6.v1";
   // Absent means "hidden"; only the bubble mark draws count labels.
   value_labels?: "hidden" | "shown";
   // Absent means "standard": each family keeps its own colours.
@@ -553,10 +553,10 @@ export function rendererFailure(runtime: RuntimeBinding, code: RendererFailureCo
 
 function fallbackRuntime(): RuntimeBinding {
   return {
-    node_version: "22.23.4",
+    node_version: "24.22.1",
     echarts_version: "6.1.0",
     renderer_build_digest: "0".repeat(64),
-    render_profile_id: "matrix-svg-ja-jp-node22-echarts6.v1"
+    render_profile_id: "matrix-svg-ja-jp-node24-echarts6.v1"
   };
 }
 

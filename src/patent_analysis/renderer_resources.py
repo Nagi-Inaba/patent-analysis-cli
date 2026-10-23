@@ -17,71 +17,71 @@ MAX_RENDERER_BUNDLE_BYTES = 4 * 1024 * 1024
 MAX_RENDERER_SCHEMA_BYTES = 16 * 1024
 
 PINNED_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "e8d3ce622f2fd018c12f821eb8680c2bf6ca296b0c21ea97c78d4baa22d8fe41"
+    "682d16ff286965ff24732d2df19da93886cd8e1c2be3c1f1abdb59d131560f18"
 )
-PINNED_RENDERER_BUILD_DIGEST = "bdc9904cb2cec503cdfdb7884f6f9cedb8c247f9778ffcd20aa0c9fb7f8ebb30"
+PINNED_RENDERER_BUILD_DIGEST = "dff4c6dcce7b636ed0345c663a119714f4511eedf65d3727917a4aa1b5dc0aeb"
 PINNED_RENDERER_BOOTSTRAP_SHA256 = (
-    "6dec5126cec4ab7f9792c17b3513825d093318a995b614de217ab5567b2b6c0f"
+    "9d0bd0a364c5c96c6224913ced51c1eb316774b0387c29de3fa8adc5f86b76aa"
 )
-PINNED_RENDERER_BUNDLE_SHA256 = "29f39e960291b7601533a63d6cde44f2f94aa6622adacbe85e3eca828eb1a3bb"
+PINNED_RENDERER_BUNDLE_SHA256 = "f90a25664ce4ba931ddc04e43cfbc2f1c53360a379a3f03f279d44eb89c9a6f6"
 PINNED_MATRIX_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "263c7585920b0b5b64c7bcd8160be98aaf6e13d03dc5f42919ebb622240c95dc"
+    "29add2352602c6676c2980075f87b720f3dd7390e5856713e75c194d60ca1c90"
 )
 PINNED_MATRIX_RENDERER_BUILD_DIGEST = (
-    "5b40d87ed38ada463bb6e180adc33f017bb782b0be1e02d6a1e15e9e75df7cc2"
+    "625703c76fe32b7b26b083d5185ad4effdfd71ae6565f2ab689a43f47ce8de9d"
 )
 PINNED_MATRIX_RENDERER_BOOTSTRAP_SHA256 = (
-    "eac2ce045474fafe87eff03c9ed807357a990d05b4ccfe738fcc613e96627cea"
+    "448d8250d45bb473b51b669310f37c147fe39e29d0a777daea12d34b6c093999"
 )
 PINNED_MATRIX_RENDERER_BUNDLE_SHA256 = (
-    "6606fe8683a6502c5b61867f988fbbdb79667ab4fafd8bb7c87b98aeb5655700"
+    "24cd8cfbfff86e926c08730037fb2e2eba15894027755efeac32a415adaba547"
 )
 PINNED_CATEGORICAL_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "5e9305b5e221eed623834a2ba6f96960ba4a668fa4e2d209207934c190a31aab"
+    "a3ac05b8e1fa531a46eef6eb5213acf9f302b1b76eb989a02a6b2bc500bf1a97"
 )
 PINNED_CATEGORICAL_RENDERER_BUILD_DIGEST = (
-    "0c0c0949e46a55bf0a349b4e8ca80c3acf5d379a38ca93671e1c309974ed25d6"
+    "8d854927dc22c40de22c0c9916d875adfca45ed9ee24dac363f86c2d50f330e3"
 )
 PINNED_CATEGORICAL_RENDERER_BOOTSTRAP_SHA256 = (
-    "71b57253de1c13b25ed9f027462173aef663045903bc88c1a5273eb1290f7ca2"
+    "933a0e1d6907111ee5962650846c5b8a37054856a7bf5134f198ca43be1a7c59"
 )
 PINNED_CATEGORICAL_RENDERER_BUNDLE_SHA256 = (
-    "8b86b969e8b176713dedbcac13912680e444f5859f9ee6d6dc5343d419f42571"
+    "433b4f894097bb616d12d25e8913b43b4aaa693b9de57e7bbfcdf9363ae40526"
 )
 PINNED_POINTS_RENDERER_BUILD_MANIFEST_SHA256 = (
-    "bfad40fd19b2d90ab2cfd9d2dae3758e5c818305b0fd9453a319d551718cd1a0"
+    "ab8a4aa1c5945084fc370441998fc7c4747eaf089052abb855ce38a7c41f69a8"
 )
 PINNED_POINTS_RENDERER_BUILD_DIGEST = (
-    "a7724a3aff9a213a2f7e3fc0655858e5205adb95489d5b3481020a5e8cf95ac6"
+    "2bf0108fd0e4dc40cc422e5ab05cb0ed8f63b34c4984ffe87e9193076a135719"
 )
 PINNED_POINTS_RENDERER_BOOTSTRAP_SHA256 = (
-    "190e4f246407d8839416586027c5983ce0fcf95ca00a95e449c358e6899a8569"
+    "69b86dbf693a2fbbd943fb3503a5698da4299248e1d939887176478adf26262e"
 )
 PINNED_POINTS_RENDERER_BUNDLE_SHA256 = (
-    "b34e506ae66973d9da2e537d2be206df3be86e7bfdac28656e15977e608ffd4f"
+    "2798df1e7feb5686b270d92772fb82e44fb375fc68f7ecf5a0074b8b465b6793"
 )
 RENDERER_BUILD_MANIFEST_SCHEMA_SHA256 = (
     "c9c0cf2581b5467fe5941672093ab26ebacf9f5d33d4c218c9ee0e61077f8b2b"
 )
 RENDERER_REQUEST_SCHEMA_SHA256 = "cefcb2c0e7bfb295d99b9a284078917e2aa7234fd881ba725b69eef19a8ba0cd"
-RENDERER_RESPONSE_SCHEMA_SHA256 = "3d04889677d44d6c9a37af843f290281921931d59664b3bc5a0dd6bbb0a8102f"
+RENDERER_RESPONSE_SCHEMA_SHA256 = "968a0ff43a1b5e84532cb2589c46cac8eea17a3f61ceadabba84d7c6d28e077e"
 MATRIX_RENDERER_RESPONSE_SCHEMA_SHA256 = (
-    "9dd7fdb8910638cca47d6640d038f2ebf6d7e9547858a6fd48651aca009ba0a7"
+    "7a16f681421fda129f62ae17f224a960352b499f994104716385d701c595452b"
 )
 PINNED_CATEGORICAL_RENDERER_RESPONSE_SCHEMA_SHA256 = (
-    "0b1f394e469799d0b5a68b5d351375f22875b1b6fdcebeae43e929a0fbe92245"
+    "77643677416f756f2f97ed8bb9cfe2e27b233d2f5baa76abaf310415a913954b"
 )
 PINNED_POINTS_RENDERER_RESPONSE_SCHEMA_SHA256 = (
-    "16df3f0755684690d2bdb2528962dae75844e8ff9ca81ddccb1f1c6b1c6d87b9"
+    "4d766ce0cbef4e568a112ff1c184a064b37df8db712f60300089f768b019e812"
 )
 
 _RENDER_PROFILE_IDS = frozenset(
     {
-        "ranking-svg-ja-jp-node22-echarts6.v1",
-        "matrix-svg-ja-jp-node22-echarts6.v1",
-        "categorical-svg-ja-jp-node22-echarts6.v1",
-        "points-svg-ja-jp-node22-echarts6.v1",
-        "advanced-svg-ja-jp-node22-echarts6.v1",
+        "ranking-svg-ja-jp-node24-echarts6.v1",
+        "matrix-svg-ja-jp-node24-echarts6.v1",
+        "categorical-svg-ja-jp-node24-echarts6.v1",
+        "points-svg-ja-jp-node24-echarts6.v1",
+        "advanced-svg-ja-jp-node24-echarts6.v1",
     }
 )
 
@@ -127,7 +127,7 @@ class RendererRuntimeBinding:
 
     def __post_init__(self) -> None:
         if (
-            self.node_version != "22.23.4"
+            self.node_version != "24.22.1"
             or self.echarts_version != "6.1.0"
             or _LOWER_SHA256.fullmatch(self.renderer_build_digest) is None
             or self.render_profile_id not in _RENDER_PROFILE_IDS
@@ -209,7 +209,7 @@ def _read_verified_resource(path: Path, limit: int) -> bytes:
 
 _SCHEMA_DIGESTS = {
     "advanced-renderer-response.schema.json": (
-        "edbc5ab7250792142321de799fa76aa4a139adf330c42b4a4f1beb29f109d1ed"
+        "e1fcc68329a9deb02b220fa472edf32acc1521e428e3b5030977a9126270bc18"
     ),
     "renderer-build-manifest.schema.json": RENDERER_BUILD_MANIFEST_SCHEMA_SHA256,
     "renderer-request.schema.json": RENDERER_REQUEST_SCHEMA_SHA256,
@@ -328,10 +328,10 @@ def _load_verified_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.23.4",
+        node_version="24.22.1",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
-        render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="ranking-svg-ja-jp-node24-echarts6.v1",
     )
     return RendererResources(
         manifest=manifest,
@@ -413,10 +413,10 @@ def _load_verified_matrix_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.23.4",
+        node_version="24.22.1",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
-        render_profile_id="matrix-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="matrix-svg-ja-jp-node24-echarts6.v1",
     )
     return RendererResources(
         manifest=manifest,
@@ -504,10 +504,10 @@ def _load_verified_categorical_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.23.4",
+        node_version="24.22.1",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
-        render_profile_id="categorical-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="categorical-svg-ja-jp-node24-echarts6.v1",
     )
     return RendererResources(
         manifest=manifest,
@@ -591,10 +591,10 @@ def _load_verified_points_renderer_resources_impl() -> RendererResources:
         raise _ResourceViolation
     build_digest = canonical_sha256(manifest_value)
     runtime = RendererRuntimeBinding(
-        node_version="22.23.4",
+        node_version="24.22.1",
         echarts_version="6.1.0",
         renderer_build_digest=build_digest,
-        render_profile_id="points-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="points-svg-ja-jp-node24-echarts6.v1",
     )
     return RendererResources(
         manifest=manifest,

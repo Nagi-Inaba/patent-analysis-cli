@@ -16,7 +16,7 @@ New-Item -ItemType Directory -Path $outputRoot | Out-Null
 
 stdio対応クライアントには、上記のPython絶対パスを`command`、`-m`以降を個別の`args`として設定します。単独起動後に通常のプロンプトが返らないのは、MCPメッセージをstdinで受け取るサーバーだからです。HTTPサーバーやremote MCPではありません。
 
-入力・出力は既存のローカルディレクトリで、IDも実パスも重複・包含させません。ツールへ渡す`path`・`output_path`は対応rootからの相対パスです。CLIの`PATENT_ANALYSIS_ALLOWED_ROOT`は、この起動設定の代わりにはなりません。SVGにはWindows x64またはmacOS arm64/x86_64と、対応アーキテクチャのNode.js 22.23.4 exactが必要です。Linuxでは集計・JSONを利用できますが、公開SVG経路は非対応です。信頼するNode絶対パスを`--node`で指定することもできます。
+入力・出力は既存のローカルディレクトリで、IDも実パスも重複・包含させません。ツールへ渡す`path`・`output_path`は対応rootからの相対パスです。CLIの`PATENT_ANALYSIS_ALLOWED_ROOT`は、この起動設定の代わりにはなりません。SVGにはWindows x64またはmacOS arm64/x86_64と、対応アーキテクチャのNode.js 24.22.1 exactが必要です。Linuxでは集計・JSONを利用できますが、公開SVG経路は非対応です。信頼するNode絶対パスを`--node`で指定することもできます。
 
 ## 発見 → 検証 → 分析 → 描画
 

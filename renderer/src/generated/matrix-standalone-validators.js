@@ -183,7 +183,7 @@ return errors === 0;
 validate20.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
 const validateRendererRuntimeRaw = validate21;
-const schema32 = {"$id":"urn:patent-analysis:matrix-renderer-runtime:1.0.0","type":"object","additionalProperties":false,"required":["node_version","echarts_version","renderer_build_digest","render_profile_id"],"properties":{"node_version":{"const":"22.23.4"},"echarts_version":{"const":"6.1.0"},"renderer_build_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"render_profile_id":{"const":"matrix-svg-ja-jp-node22-echarts6.v1"}}};
+const schema32 = {"$id":"urn:patent-analysis:matrix-renderer-runtime:1.0.0","type":"object","additionalProperties":false,"required":["node_version","echarts_version","renderer_build_digest","render_profile_id"],"properties":{"node_version":{"const":"24.22.1"},"echarts_version":{"const":"6.1.0"},"renderer_build_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"render_profile_id":{"const":"matrix-svg-ja-jp-node24-echarts6.v1"}}};
 
 function validate21(data, {instancePath="", parentData, parentDataProperty, rootData=data, dynamicAnchors={}}={}){
 /*# sourceURL="urn:patent-analysis:matrix-renderer-runtime:1.0.0" */;
@@ -215,8 +215,8 @@ break;
 if(_errs1 === errors){
 if(data.node_version !== undefined){
 const _errs2 = errors;
-if("22.23.4" !== data.node_version){
-validate21.errors = [{instancePath:instancePath+"/node_version",schemaPath:"#/properties/node_version/const",keyword:"const",params:{allowedValue: "22.23.4"},message:"must be equal to constant"}];
+if("24.22.1" !== data.node_version){
+validate21.errors = [{instancePath:instancePath+"/node_version",schemaPath:"#/properties/node_version/const",keyword:"const",params:{allowedValue: "24.22.1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs2 === errors;
@@ -260,8 +260,8 @@ var valid0 = true;
 if(valid0){
 if(data.render_profile_id !== undefined){
 const _errs6 = errors;
-if("matrix-svg-ja-jp-node22-echarts6.v1" !== data.render_profile_id){
-validate21.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "matrix-svg-ja-jp-node22-echarts6.v1"},message:"must be equal to constant"}];
+if("matrix-svg-ja-jp-node24-echarts6.v1" !== data.render_profile_id){
+validate21.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "matrix-svg-ja-jp-node24-echarts6.v1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs6 === errors;
@@ -1397,7 +1397,7 @@ return errors === 0;
 validate22.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
 const validateMatrixRenderSpecRaw = validate28;
-const schema39 = {"$id":"urn:patent-analysis:matrix-render-spec:1.0.0","additionalProperties":false,"properties":{"animation":{"const":false},"axis_label_max_graphemes":{"const":28},"echarts_version":{"const":"6.1.0"},"font_family":{"const":"Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},"height":{"const":675},"locale":{"const":"ja-JP"},"palette":{"enum":["standard","colorblind","monochrome","high-contrast"]},"render_profile_id":{"const":"matrix-svg-ja-jp-node22-echarts6.v1"},"render_spec_contract_version":{"const":"1.0.0"},"renderer_kind":{"enum":["matrix.bubble.svg","matrix.heatmap.svg"]},"timezone":{"const":"UTC"},"value_labels":{"enum":["hidden","shown"]},"width":{"const":1200}},"required":["render_spec_contract_version","renderer_kind","locale","timezone","width","height","font_family","animation","axis_label_max_graphemes","echarts_version","render_profile_id"],"type":"object"};
+const schema39 = {"$id":"urn:patent-analysis:matrix-render-spec:1.0.0","additionalProperties":false,"properties":{"animation":{"const":false},"axis_label_max_graphemes":{"const":28},"echarts_version":{"const":"6.1.0"},"font_family":{"const":"Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},"height":{"const":675},"locale":{"const":"ja-JP"},"palette":{"enum":["standard","colorblind","monochrome","high-contrast"]},"render_profile_id":{"const":"matrix-svg-ja-jp-node24-echarts6.v1"},"render_spec_contract_version":{"const":"1.0.0"},"renderer_kind":{"enum":["matrix.bubble.svg","matrix.heatmap.svg"]},"timezone":{"const":"UTC"},"value_labels":{"enum":["hidden","shown"]},"width":{"const":1200}},"required":["render_spec_contract_version","renderer_kind","locale","timezone","width","height","font_family","animation","axis_label_max_graphemes","echarts_version","render_profile_id"],"type":"object"};
 
 function validate28(data, {instancePath="", parentData, parentDataProperty, rootData=data, dynamicAnchors={}}={}){
 /*# sourceURL="urn:patent-analysis:matrix-render-spec:1.0.0" */;
@@ -1514,8 +1514,8 @@ var valid0 = true;
 if(valid0){
 if(data.render_profile_id !== undefined){
 const _errs9 = errors;
-if("matrix-svg-ja-jp-node22-echarts6.v1" !== data.render_profile_id){
-validate28.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "matrix-svg-ja-jp-node22-echarts6.v1"},message:"must be equal to constant"}];
+if("matrix-svg-ja-jp-node24-echarts6.v1" !== data.render_profile_id){
+validate28.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "matrix-svg-ja-jp-node24-echarts6.v1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs9 === errors;

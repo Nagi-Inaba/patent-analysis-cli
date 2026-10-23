@@ -187,7 +187,7 @@ return errors === 0;
 validate20.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
 const validateRendererRuntimeRaw = validate21;
-const schema32 = {"$id":"urn:patent-analysis:renderer-runtime:1.0.0","type":"object","additionalProperties":false,"required":["node_version","echarts_version","renderer_build_digest","render_profile_id"],"properties":{"node_version":{"const":"22.23.4"},"echarts_version":{"const":"6.1.0"},"renderer_build_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"render_profile_id":{"const":"ranking-svg-ja-jp-node22-echarts6.v1"}}};
+const schema32 = {"$id":"urn:patent-analysis:renderer-runtime:1.0.0","type":"object","additionalProperties":false,"required":["node_version","echarts_version","renderer_build_digest","render_profile_id"],"properties":{"node_version":{"const":"24.22.1"},"echarts_version":{"const":"6.1.0"},"renderer_build_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"render_profile_id":{"const":"ranking-svg-ja-jp-node24-echarts6.v1"}}};
 
 function validate21(data, {instancePath="", parentData, parentDataProperty, rootData=data, dynamicAnchors={}}={}){
 /*# sourceURL="urn:patent-analysis:renderer-runtime:1.0.0" */;
@@ -219,8 +219,8 @@ break;
 if(_errs1 === errors){
 if(data.node_version !== undefined){
 const _errs2 = errors;
-if("22.23.4" !== data.node_version){
-validate21.errors = [{instancePath:instancePath+"/node_version",schemaPath:"#/properties/node_version/const",keyword:"const",params:{allowedValue: "22.23.4"},message:"must be equal to constant"}];
+if("24.22.1" !== data.node_version){
+validate21.errors = [{instancePath:instancePath+"/node_version",schemaPath:"#/properties/node_version/const",keyword:"const",params:{allowedValue: "24.22.1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs2 === errors;
@@ -264,8 +264,8 @@ var valid0 = true;
 if(valid0){
 if(data.render_profile_id !== undefined){
 const _errs6 = errors;
-if("ranking-svg-ja-jp-node22-echarts6.v1" !== data.render_profile_id){
-validate21.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "ranking-svg-ja-jp-node22-echarts6.v1"},message:"must be equal to constant"}];
+if("ranking-svg-ja-jp-node24-echarts6.v1" !== data.render_profile_id){
+validate21.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "ranking-svg-ja-jp-node24-echarts6.v1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs6 === errors;
@@ -1255,7 +1255,7 @@ return errors === 0;
 validate22.evaluated = {"props":true,"dynamicProps":false,"dynamicItems":false};
 
 const validateRenderSpecRaw = validate23;
-const schema34 = {"$id":"urn:patent-analysis:render-spec:1.0.0","type":"object","additionalProperties":false,"required":["render_spec_contract_version","renderer_kind","locale","timezone","width","height","font_family","animation","axis_label_max_graphemes","echarts_version","render_profile_id"],"properties":{"render_spec_contract_version":{"const":"1.0.0"},"renderer_kind":{"const":"ranking.horizontal_bar.svg"},"locale":{"const":"ja-JP"},"palette":{"enum":["standard","colorblind","monochrome","high-contrast"]},"timezone":{"const":"UTC"},"width":{"const":1200},"height":{"type":"integer","minimum":675,"maximum":4096},"font_family":{"const":"Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},"animation":{"const":false},"axis_label_max_graphemes":{"const":28},"echarts_version":{"const":"6.1.0"},"render_profile_id":{"const":"ranking-svg-ja-jp-node22-echarts6.v1"}}};
+const schema34 = {"$id":"urn:patent-analysis:render-spec:1.0.0","type":"object","additionalProperties":false,"required":["render_spec_contract_version","renderer_kind","locale","timezone","width","height","font_family","animation","axis_label_max_graphemes","echarts_version","render_profile_id"],"properties":{"render_spec_contract_version":{"const":"1.0.0"},"renderer_kind":{"const":"ranking.horizontal_bar.svg"},"locale":{"const":"ja-JP"},"palette":{"enum":["standard","colorblind","monochrome","high-contrast"]},"timezone":{"const":"UTC"},"width":{"const":1200},"height":{"type":"integer","minimum":675,"maximum":4096},"font_family":{"const":"Yu Gothic UI, Yu Gothic, Meiryo, sans-serif"},"animation":{"const":false},"axis_label_max_graphemes":{"const":28},"echarts_version":{"const":"6.1.0"},"render_profile_id":{"const":"ranking-svg-ja-jp-node24-echarts6.v1"}}};
 
 function validate23(data, {instancePath="", parentData, parentDataProperty, rootData=data, dynamicAnchors={}}={}){
 /*# sourceURL="urn:patent-analysis:render-spec:1.0.0" */;
@@ -1435,8 +1435,8 @@ var valid0 = true;
 if(valid0){
 if(data.render_profile_id !== undefined){
 const _errs14 = errors;
-if("ranking-svg-ja-jp-node22-echarts6.v1" !== data.render_profile_id){
-validate23.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "ranking-svg-ja-jp-node22-echarts6.v1"},message:"must be equal to constant"}];
+if("ranking-svg-ja-jp-node24-echarts6.v1" !== data.render_profile_id){
+validate23.errors = [{instancePath:instancePath+"/render_profile_id",schemaPath:"#/properties/render_profile_id/const",keyword:"const",params:{allowedValue: "ranking-svg-ja-jp-node24-echarts6.v1"},message:"must be equal to constant"}];
 return false;
 }
 var valid0 = _errs14 === errors;

@@ -5,8 +5,8 @@ export const RENDERER_PROTOCOL_VERSION = "1.0.0";
 const SHA256_PATTERN = "^[0-9a-f]{64}(?![\\s\\S])";
 const CANONICAL_BASE64_PATTERN = "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?(?![\\s\\S])";
 const ECHARTS_VERSION = "6.1.0";
-const RENDER_PROFILE_ID = "ranking-svg-ja-jp-node22-echarts6.v1";
-const NODE_VERSION = "22.23.4";
+const RENDER_PROFILE_ID = "ranking-svg-ja-jp-node24-echarts6.v1";
+const NODE_VERSION = "24.22.1";
 
 function deepFreeze<T>(value: T, seen = new Set<object>()): T {
   if (value === null || typeof value !== "object" || seen.has(value)) return value;

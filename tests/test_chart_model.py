@@ -676,7 +676,7 @@ def test_render_spec_height_is_fixed(row_count: int, height: int) -> None:
         "animation": False,
         "axis_label_max_graphemes": 28,
         "echarts_version": "6.1.0",
-        "render_profile_id": "ranking-svg-ja-jp-node22-echarts6.v1",
+        "render_profile_id": "ranking-svg-ja-jp-node24-echarts6.v1",
     }
 
 

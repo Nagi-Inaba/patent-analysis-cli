@@ -42,7 +42,7 @@ def test_staged_candidate_pins_match_generated_resources() -> None:
         assert pins["built_marks"] == [*ADVANCED_MARKS, *INVENTOR_MARKS]
     assert set(pins) == expected_keys
     assert pins["candidate_pin_version"] == "1.0.0"
-    assert pins["render_profile_id"] == "advanced-svg-ja-jp-node22-echarts6.v1"
+    assert pins["render_profile_id"] == "advanced-svg-ja-jp-node24-echarts6.v1"
     assert pins["archive_sha256"] == _sha256(RENDERER / "advanced-renderer.bundle.js.gz")
     manifest = RENDERER / "advanced-renderer-build-manifest.json"
     assert pins["manifest_sha256"] == _sha256(manifest)

@@ -20,24 +20,24 @@ class RendererDefinition:
     resource_family: str
 
 
-_CATEGORICAL_PROFILE = "categorical-svg-ja-jp-node22-echarts6.v1"
+_CATEGORICAL_PROFILE = "categorical-svg-ja-jp-node24-echarts6.v1"
 _DEFINITIONS = (
     RendererDefinition(
         mark="ranking-svg.v1",
         result_variant="ranking",
-        render_profile_id="ranking-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="ranking-svg-ja-jp-node24-echarts6.v1",
         resource_family="ranking",
     ),
     RendererDefinition(
         mark="matrix-bubble-svg.v1",
         result_variant="matrix",
-        render_profile_id="matrix-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="matrix-svg-ja-jp-node24-echarts6.v1",
         resource_family="matrix",
     ),
     RendererDefinition(
         mark="matrix-heatmap-svg.v1",
         result_variant="matrix",
-        render_profile_id="matrix-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="matrix-svg-ja-jp-node24-echarts6.v1",
         resource_family="matrix",
     ),
     RendererDefinition(
@@ -67,7 +67,7 @@ _DEFINITIONS = (
     RendererDefinition(
         mark="points-bubble-svg.v1",
         result_variant="points",
-        render_profile_id="points-svg-ja-jp-node22-echarts6.v1",
+        render_profile_id="points-svg-ja-jp-node24-echarts6.v1",
         resource_family="points",
     ),
 )

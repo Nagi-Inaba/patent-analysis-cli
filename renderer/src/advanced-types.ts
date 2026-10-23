@@ -77,12 +77,12 @@ export type AdvancedSpec = {
   locale: "ja-JP"; timezone: "UTC"; width: 1200; height: 675;
   font_family: "Yu Gothic UI, Yu Gothic, Meiryo, sans-serif";
   animation: false; axis_label_max_graphemes: 28; echarts_version: "6.1.0";
-  render_profile_id: "advanced-svg-ja-jp-node22-echarts6.v1";
+  render_profile_id: "advanced-svg-ja-jp-node24-echarts6.v1";
   // Absent means "standard": each family keeps its own colours.
   palette?: PaletteId;
 };
 export type AdvancedRuntime = {
-  node_version: "22.23.4"; echarts_version: "6.1.0";
+  node_version: "24.22.1"; echarts_version: "6.1.0";
   renderer_build_digest: string;
-  render_profile_id: "advanced-svg-ja-jp-node22-echarts6.v1";
+  render_profile_id: "advanced-svg-ja-jp-node24-echarts6.v1";
 };

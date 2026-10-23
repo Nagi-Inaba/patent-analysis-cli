@@ -34,7 +34,7 @@ def test_categorical_renderer_resources_are_pinned_and_separate() -> None:
         PINNED_CATEGORICAL_RENDERER_BUILD_DIGEST
     )
     assert categorical.runtime.render_profile_id == (
-        "categorical-svg-ja-jp-node22-echarts6.v1"
+        "categorical-svg-ja-jp-node24-echarts6.v1"
     )
     assert categorical.runtime.renderer_build_digest not in {
         ranking.runtime.renderer_build_digest,
@@ -64,7 +64,7 @@ def test_categorical_response_schema_is_digest_pinned() -> None:
     )
     value = json.loads(raw)
     profile = value["$defs"]["runtime"]["properties"]["render_profile_id"]
-    assert profile == {"const": "categorical-svg-ja-jp-node22-echarts6.v1"}
+    assert profile == {"const": "categorical-svg-ja-jp-node24-echarts6.v1"}
 
 
 def test_renderer_protocol_selects_categorical_response_contract() -> None:

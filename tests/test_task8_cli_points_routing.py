@@ -81,7 +81,7 @@ def _exact_renderer_node() -> str | None:
     version = subprocess.run(
         [node, "--version"], capture_output=True, text=True, timeout=10, check=False
     )
-    return node if version.returncode == 0 and version.stdout.strip() == "v22.23.4" else None
+    return node if version.returncode == 0 and version.stdout.strip() == "v24.22.1" else None
 
 
 @pytest.mark.skipif(
@@ -96,7 +96,7 @@ def test_cli_real_native_points_created_then_reused(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     node = _exact_renderer_node()
-    assert node is not None, "Native renderer acceptance requires Node 22.23.4, not a skip"
+    assert node is not None, "Native renderer acceptance requires Node 24.22.1, not a skip"
     analysis = tmp_path / "analysis.json"
     analysis.write_bytes(_lifecycle_result(tmp_path))
     source_bytes = (tmp_path / "input.csv").read_bytes()

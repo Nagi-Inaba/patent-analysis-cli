@@ -41,15 +41,15 @@ def staged_runtime():
         pytest.skip("requires explicit advanced --stage-only build")
     node = shutil.which("node")
     if node is None:
-        pytest.skip("requires Node 22.23.4 x64 in the build workspace")
+        pytest.skip("requires Node 24.22.1 x64 in the build workspace")
     probe = subprocess.run(
         [node, "-p", "process.versions.node + '/' + process.arch"],
         capture_output=True, text=True, timeout=10, check=True,
     )
     if probe.stdout.strip() not in (
-        {"22.23.4/x64", "22.23.4/arm64"} if sys.platform == "darwin" else {"22.23.4/x64"}
+        {"24.22.1/x64", "24.22.1/arm64"} if sys.platform == "darwin" else {"24.22.1/x64"}
     ):
-        pytest.skip("requires exact Node 22.23.4 x64")
+        pytest.skip("requires exact Node 24.22.1 x64")
     pins = json.loads(candidate.read_bytes())
     bootstrap = (RESOURCES / "advanced-bootstrap.js").read_bytes()
     archive = (RESOURCES / "advanced-renderer.bundle.js.gz").read_bytes()
@@ -64,7 +64,7 @@ def staged_runtime():
     ]
     bundle = decode_advanced_bundle(archive, pins["bundle_sha256"])
     binding = RendererRuntimeBinding(
-        node_version="22.23.4", echarts_version="6.1.0",
+        node_version="24.22.1", echarts_version="6.1.0",
         renderer_build_digest=pins["build_digest"], render_profile_id=ADVANCED_RENDER_PROFILE_ID,
     )
     return node, bootstrap.decode("utf-8"), bundle, binding
@@ -122,7 +122,7 @@ def test_staged_bootstrap_rejects_changed_bundle(staged_runtime, tmp_path):
 def test_staged_renderer_rejects_incompatible_profile(staged_runtime, tmp_path):
     request = _request("citation.v1")
     spec = json.loads(base64.b64decode(request["render_spec_b64"]))
-    spec["render_profile_id"] = "points-svg-ja-jp-node22-echarts6.v1"
+    spec["render_profile_id"] = "points-svg-ja-jp-node24-echarts6.v1"
     raw = canonical_json_bytes(spec)
     request["render_spec_b64"] = base64.b64encode(raw).decode("ascii")
     request["render_spec_sha256"] = hashlib.sha256(raw).hexdigest()

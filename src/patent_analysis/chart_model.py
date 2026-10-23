@@ -427,7 +427,7 @@ def _build_ranking_render_spec_impl(
         "animation": False,
         "axis_label_max_graphemes": 28,
         "echarts_version": "6.1.0",
-        "render_profile_id": "ranking-svg-ja-jp-node22-echarts6.v1",
+        "render_profile_id": "ranking-svg-ja-jp-node24-echarts6.v1",
     }
     apply_render_palette(spec, palette)
     return validate_render_spec(spec, row_count=row_count)

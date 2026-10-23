@@ -36,10 +36,10 @@ function requestFixture() {
 
 function runtimeFixture() {
   return {
-    node_version: "22.23.4",
+    node_version: "24.22.1",
     echarts_version: "6.1.0",
     renderer_build_digest: SHA256,
-    render_profile_id: "ranking-svg-ja-jp-node22-echarts6.v1"
+    render_profile_id: "ranking-svg-ja-jp-node24-echarts6.v1"
   };
 }
 
@@ -97,7 +97,7 @@ function renderSpecFixture() {
     animation: false,
     axis_label_max_graphemes: 28,
     echarts_version: "6.1.0",
-    render_profile_id: "ranking-svg-ja-jp-node22-echarts6.v1"
+    render_profile_id: "ranking-svg-ja-jp-node24-echarts6.v1"
   };
 }
 

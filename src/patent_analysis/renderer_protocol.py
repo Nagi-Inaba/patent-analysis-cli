@@ -442,15 +442,15 @@ def _decode_renderer_response_impl(
     if not isinstance(expected_runtime, RendererRuntimeBinding):
         raise _ProtocolViolation
     profile = expected_runtime.render_profile_id
-    if profile == "ranking-svg-ja-jp-node22-echarts6.v1":
+    if profile == "ranking-svg-ja-jp-node24-echarts6.v1":
         schema_name = "renderer-response.schema.json"
-    elif profile == "matrix-svg-ja-jp-node22-echarts6.v1":
+    elif profile == "matrix-svg-ja-jp-node24-echarts6.v1":
         schema_name = "matrix-renderer-response.schema.json"
-    elif profile == "categorical-svg-ja-jp-node22-echarts6.v1":
+    elif profile == "categorical-svg-ja-jp-node24-echarts6.v1":
         schema_name = "categorical-renderer-response.schema.json"
-    elif profile == "points-svg-ja-jp-node22-echarts6.v1":
+    elif profile == "points-svg-ja-jp-node24-echarts6.v1":
         schema_name = "points-renderer-response.schema.json"
-    elif profile == "advanced-svg-ja-jp-node22-echarts6.v1":
+    elif profile == "advanced-svg-ja-jp-node24-echarts6.v1":
         schema_name = "advanced-renderer-response.schema.json"
     else:
         raise _ProtocolViolation

@@ -14,7 +14,7 @@ from patent_analysis.chart_models._common import (
 
 POINTS_BUBBLE_MARK = "points-bubble-svg.v1"
 POINTS_RENDER_MARKS = (POINTS_BUBBLE_MARK,)
-POINTS_RENDER_PROFILE_ID = "points-svg-ja-jp-node22-echarts6.v1"
+POINTS_RENDER_PROFILE_ID = "points-svg-ja-jp-node24-echarts6.v1"
 
 
 def build_points_chart_model(

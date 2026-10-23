@@ -115,7 +115,7 @@ def test_series_chart_models_share_one_categorical_profile() -> None:
     bar_spec = build_series_render_spec(
         mark="series-stacked-bar-svg.v1", x_count=2, series_count=1
     )
-    assert line_spec["render_profile_id"] == "categorical-svg-ja-jp-node22-echarts6.v1"
+    assert line_spec["render_profile_id"] == "categorical-svg-ja-jp-node24-echarts6.v1"
     assert bar_spec["render_profile_id"] == line_spec["render_profile_id"]
 
 
@@ -142,7 +142,7 @@ def test_composition_chart_models_preserve_declared_share_contract() -> None:
 
     pie_spec = build_composition_render_spec(mark="composition-pie-svg.v1", item_count=2)
     bar_spec = build_composition_render_spec(mark="composition-bar-svg.v1", item_count=2)
-    assert pie_spec["render_profile_id"] == "categorical-svg-ja-jp-node22-echarts6.v1"
+    assert pie_spec["render_profile_id"] == "categorical-svg-ja-jp-node24-echarts6.v1"
     assert bar_spec["render_profile_id"] == pie_spec["render_profile_id"]
 
 
@@ -194,7 +194,7 @@ def test_categorical_render_spec_is_family_bound_and_closed() -> None:
     spec = build_series_render_spec(mark="series-line-svg.v1", x_count=2, series_count=1)
     assert _valid(schema, spec)
     mutated = dict(spec)
-    mutated["render_profile_id"] = "series-svg-ja-jp-node22-echarts6.v1"
+    mutated["render_profile_id"] = "series-svg-ja-jp-node24-echarts6.v1"
     assert not _valid(schema, mutated)
 
 

@@ -76,7 +76,7 @@ def test_points_chart_model_is_closed_to_lifecycle_bubble() -> None:
 
     spec = build_points_render_spec(mark="points-bubble-svg.v1", point_count=1)
     assert spec["renderer_kind"] == "points.bubble.svg"
-    assert spec["render_profile_id"] == "points-svg-ja-jp-node22-echarts6.v1"
+    assert spec["render_profile_id"] == "points-svg-ja-jp-node24-echarts6.v1"
 
 
 def test_points_chart_model_and_render_spec_schemas_are_valid_and_exact() -> None:

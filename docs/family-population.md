@@ -46,4 +46,4 @@ patent-analysis analyze patents.csv --spec composition.json --json
 外側の`population`は従来の入力・分析・除外件数を維持します。したがって除外件数には
 フィルター、重複メンバー、分析対象列の欠損などが含まれます。代表選択の記録にはファミリーIDや元の行を
 含めません。API・CLI・MCPは同じ実装を使い、入力CSVを変更しません。
-SVGは従来のWindows x64 / exact Node 22.23.4の制約を維持し、新しい描画形式は追加しません。
+SVGは従来のWindows x64 / exact Node 24.22.1の制約を維持し、新しい描画形式は追加しません。

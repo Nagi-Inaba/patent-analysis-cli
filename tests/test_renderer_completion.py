@@ -191,7 +191,7 @@ def test_packaged_points_bootstrap_runs_in_cold_processes(tmp_path: Path, empty:
 
     node = shutil.which("node")
     assert node is not None
-    assert subprocess.check_output([node, "--version"], text=True).strip() == "v22.23.4"
+    assert subprocess.check_output([node, "--version"], text=True).strip() == "v24.22.1"
     label = '{a}<script>"&'
     rows = [] if empty else [("2020", label), ("2024", label), ("2024", label)]
     _csv(tmp_path / "input.csv", rows)

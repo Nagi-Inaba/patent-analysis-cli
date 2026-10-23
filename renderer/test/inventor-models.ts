@@ -5,7 +5,7 @@ export const SPEC: AdvancedSpec = {
   render_spec_contract_version: "1.0.0", renderer_kind: "advanced.svg", locale: "ja-JP", timezone: "UTC",
   width: 1200, height: 675, font_family: "Yu Gothic UI, Yu Gothic, Meiryo, sans-serif",
   animation: false, axis_label_max_graphemes: 28, echarts_version: "6.1.0",
-  render_profile_id: "advanced-svg-ja-jp-node22-echarts6.v1"
+  render_profile_id: "advanced-svg-ja-jp-node24-echarts6.v1"
 };
 export const ANALYSES = [
   { analysis_id: "inventor-network.v1", title: "共発明ネットワーク", kind: "inventor-network" },

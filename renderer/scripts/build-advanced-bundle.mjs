@@ -12,8 +12,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const packageRoot = resolve(root, "../src/patent_analysis");
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
-const PROFILE = "advanced-svg-ja-jp-node22-echarts6.v1";
-const TEMPLATE_SHA256 = "76ae2cf9164a6d7641cd9b44fc45edae818f025c0e7d403d4e198de52c9dbdef";
+const PROFILE = "advanced-svg-ja-jp-node24-echarts6.v1";
+const TEMPLATE_SHA256 = "904e42aec793f0862570abe585c0b0ec959e3562a5e1782bd9c61d269dae6ab0";
 // Reviewed source support, not the growing Python presentation registry. M10 is JSON-only.
 const BUILT_MARKS = Object.freeze([
   "growth-quadrant-svg.v1", "entry-exit-svg.v1", "citation-svg.v1",
@@ -162,9 +162,9 @@ async function advancedValidatorsSource() {
 export async function buildAdvancedBundle(args = []) {
   const { stageOnly, destination } = parseArguments(args);
   const outputRoot = resolve(destination, "renderer");
-  assert(process.version === "v22.23.4" &&
+  assert(process.version === "v24.22.1" &&
     (process.arch === "x64" || (process.platform === "darwin" && process.arch === "arm64")),
-    "Requires Node 22.23.4 (x64 or macOS arm64)");
+    "Requires Node 24.22.1 (x64 or macOS arm64)");
   const { build } = await import("vite");
   const [pkg, lock, template] = await Promise.all([
     readFile(resolve(root, "package.json"), "utf8").then(JSON.parse),
@@ -192,7 +192,7 @@ export async function buildAdvancedBundle(args = []) {
   let bootstrapText = template.toString("utf8");
   for (const [before, after] of [
     ["__RENDERER_BUNDLE_SHA256__", sha256(bundle)],
-    ["points-svg-ja-jp-node22-echarts6.v1", PROFILE],
+    ["points-svg-ja-jp-node24-echarts6.v1", PROFILE],
     ["patent-analysis-points-renderer", "patent-analysis-advanced-renderer"],
     ["points-renderer.bundle.js", "advanced-renderer.bundle.js"]
   ]) bootstrapText = replaceOnce(bootstrapText, before, after);

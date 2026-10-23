@@ -5,8 +5,8 @@ import { resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-const EXPECTED_NODE_VERSION = "v22.23.4";
-const EXPECTED_NPM_VERSION = "10.9.9";
+const EXPECTED_NODE_VERSION = "v24.22.1";
+const EXPECTED_NPM_VERSION = "11.19.1";
 const EXPECTED_PRODUCTION_DEPENDENCIES = Object.freeze({
   "@xmldom/xmldom": "0.9.12",
   ajv: "8.20.0",
@@ -14,14 +14,14 @@ const EXPECTED_PRODUCTION_DEPENDENCIES = Object.freeze({
 });
 const EXPECTED_DEVELOPMENT_DEPENDENCIES = Object.freeze({
   "@eslint/js": "10.0.1",
-  "@types/node": "22.20.1",
+  "@types/node": "24.19.2",
   eslint: "10.8.1",
   typescript: "5.9.3",
   "typescript-eslint": "8.67.0",
   vite: "8.3.5",
   vitest: "4.1.12"
 });
-const EXPECTED_TRANSITIVE_INVENTORY_SHA256 = "4830e014a666773f739c9d579f8dd042ae71682aa3315955de57fb24dd28d697";
+const EXPECTED_TRANSITIVE_INVENTORY_SHA256 = "2d88f3f9486b7d74a1c0793d9fe54dcf71b0b7a2d3c10eea93e6bcf54a6b117b";
 const EXPECTED_LOCK_INSTALL_SCRIPT_PACKAGES = Object.freeze({ fsevents: "2.3.3" });
 const SHA512_BASE64_PATTERN = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
@@ -152,9 +152,11 @@ export function validateLockData(packageJson, packageLock) {
 }
 
 async function npmVersion() {
-  const command = process.platform === "win32" ? "npm.cmd" : "npm";
+  // Keep Windows' fixed command in one string; shell + args is deprecated in Node 24.
+  const command = process.platform === "win32" ? "npm.cmd --version" : "npm";
+  const args = process.platform === "win32" ? [] : ["--version"];
   return new Promise((resolve, reject) => {
-    const child = spawn(command, ["--version"], {
+    const child = spawn(command, args, {
       shell: process.platform === "win32",
       stdio: ["ignore", "pipe", "pipe"]
     });

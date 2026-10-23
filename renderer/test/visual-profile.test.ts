@@ -16,7 +16,7 @@ describe("renderer visual profile", () => {
     expect(loaded).toEqual({
       loaded: true,
       module: expect.objectContaining({
-        RENDER_PROFILE_ID: "ranking-svg-ja-jp-node22-echarts6.v1",
+        RENDER_PROFILE_ID: "ranking-svg-ja-jp-node24-echarts6.v1",
         VISUAL_PROFILE: {
           width: 1200,
           height: {

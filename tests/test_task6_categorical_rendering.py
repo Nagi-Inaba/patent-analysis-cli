@@ -105,7 +105,7 @@ def test_prepare_categorical_render_closes_mark_and_profile(
     assert prepared.spec_bytes.startswith(b"{")
     assert canonical_json_bytes(document) != prepared.model_bytes
     assert renderer_kind.encode("ascii") in prepared.spec_bytes
-    assert b"categorical-svg-ja-jp-node22-echarts6.v1" in prepared.spec_bytes
+    assert b"categorical-svg-ja-jp-node24-echarts6.v1" in prepared.spec_bytes
 
 
 def test_render_categorical_svg_rejects_cross_family_and_unknown_marks(

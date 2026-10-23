@@ -51,15 +51,15 @@ def test_points_renderer_registry_uses_separate_closed_resource_family() -> None
     definition = get_renderer_definition("points-bubble-svg.v1")
     assert definition.result_variant == "points"
     assert definition.resource_family == "points"
-    assert definition.render_profile_id == "points-svg-ja-jp-node22-echarts6.v1"
+    assert definition.render_profile_id == "points-svg-ja-jp-node24-echarts6.v1"
 
 
 def test_points_resources_are_independently_pinned() -> None:
     from patent_analysis.renderer_resources import load_verified_points_renderer_resources
 
     resources = load_verified_points_renderer_resources()
-    assert resources.runtime.render_profile_id == "points-svg-ja-jp-node22-echarts6.v1"
-    assert resources.runtime.node_version == "22.23.4"
+    assert resources.runtime.render_profile_id == "points-svg-ja-jp-node24-echarts6.v1"
+    assert resources.runtime.node_version == "24.22.1"
     assert resources.runtime.echarts_version == "6.1.0"
     assert resources.bundle_bytes
     assert resources.bootstrap_bytes

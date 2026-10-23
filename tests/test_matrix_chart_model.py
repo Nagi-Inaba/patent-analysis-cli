@@ -137,7 +137,7 @@ def test_matrix_render_specs_are_closed_and_profile_bound() -> None:
     assert bubble["renderer_kind"] == "matrix.bubble.svg"
     assert heatmap["renderer_kind"] == "matrix.heatmap.svg"
     assert bubble["render_profile_id"] == heatmap["render_profile_id"]
-    assert bubble["render_profile_id"] == "matrix-svg-ja-jp-node22-echarts6.v1"
+    assert bubble["render_profile_id"] == "matrix-svg-ja-jp-node24-echarts6.v1"
     assert set(bubble) == set(heatmap)
 
     with pytest.raises(TypeError):

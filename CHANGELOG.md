@@ -24,8 +24,8 @@
 
 ### Changed
 
+- SVG描画用の固定Node.jsを24.22.1、npmを11.19.1へ更新。描画profileを`node24`へ変更し、描画資材・依存ロック・SBOMを同期。以前のSVGはそのまま残り、新しいprofileのSVGと再利用キーを生成する。
 - rendererのViteを8.3.5へ更新し、lock・依存一覧・SBOMを同期。
-
 - MCP SDKと`mcp-types`を2.2.0へ更新し、CVE-2026-59951を解消。ハッシュ付き依存ロックとCI・導入手順を同期。
 - MCPの`cryptography`を検証済みの50.0.1以上へ制限。Intel Macでも安全な版のwheelを必要に応じてビルドし、binary-only解決による旧版の選択を防止。
 - 形式中立の`run_analysis()`を公開し、`run_analysis_csv()`は互換APIとして維持。
