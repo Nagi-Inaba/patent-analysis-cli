@@ -4657,9 +4657,9 @@
     {
       "type": "library",
       "name": "fast-uri",
-      "version": "3.1.8",
-      "bom-ref": "pkg:npm/fast-uri@3.1.8",
-      "purl": "pkg:npm/fast-uri@3.1.8",
+      "version": "3.1.9",
+      "bom-ref": "pkg:npm/fast-uri@3.1.9",
+      "purl": "pkg:npm/fast-uri@3.1.9",
       "licenses": [
         {
           "license": {
@@ -4670,13 +4670,13 @@
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz"
+          "url": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.9.tgz"
         }
       ],
       "properties": [
         {
           "name": "npm:integrity",
-          "value": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg=="
+          "value": "sha512-hS/0Wt3Ya043oKXs0sIxrMpKQITXhMLIrVAKKXi4gozGC9v7YRWVnXIZzjNPTO02M9BdxLCWqK1yRXgNziVyJQ=="
         },
         {
           "name": "patent-analysis:direct",
