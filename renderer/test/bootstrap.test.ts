@@ -14,6 +14,8 @@ const manifestPath = join(packageRoot, "renderer-build-manifest.json");
 const MAX_BUNDLE_BYTES = 4 * 1024 * 1024;
 const MAX_REQUEST_BYTES = 3 * 1024 * 1024;
 const MAX_FRAME_BYTES = 7 * 1024 * 1024;
+// Each test spawns real Node processes; under a full parallel run they can exceed the 5s default.
+const CHILD_PROCESS_TEST_TIMEOUT_MS = 20_000;
 const EXACT_BOOTSTRAP_PREFIX = [
   "--permission",
   "--max-old-space-size=192",
@@ -169,7 +171,7 @@ var PatentAnalysisRenderer={renderRequest:function(_request,runtimeJson){
 }};`, "utf8");
 }
 
-describe("fixed renderer bootstrap", () => {
+describe("fixed renderer bootstrap", { timeout: CHILD_PROCESS_TEST_TIMEOUT_MS }, () => {
   it("has all bootstrap runtime artifacts before contract checks run", () => {
     const missing = [bootstrapPath, bundlePath, manifestPath].filter((path) => !existsSync(path));
 
