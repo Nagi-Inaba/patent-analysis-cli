@@ -4,7 +4,7 @@ import json
 import math
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, TypeVar
+from typing import Any
 
 from jsonschema.exceptions import SchemaError, ValidationError
 
@@ -31,8 +31,6 @@ from patent_analysis.analysis_contracts import (
     validate_analysis_result,
 )
 from patent_analysis.render_palettes import apply_render_palette
-
-T = TypeVar("T")
 
 _ENVELOPE_FIELDS = {"analysis_contract_version", "ok", "result", "receipt"}
 _RECEIPT_FIELDS = {
@@ -71,7 +69,7 @@ class _ValidatedChartInputs:
     label_overlay_sha256: str | None
 
 
-def _translate_contract_failure(operation: Callable[[], T]) -> T:
+def _translate_contract_failure[T](operation: Callable[[], T]) -> T:
     failed = False
     try:
         return operation()
