@@ -11,6 +11,8 @@
 
 Python 3.14で動作するローカル実行専用のパッケージです。入力・出力契約と安全性の境界は[SECURITY.md](SECURITY.md)、配布物の検証方法は[リリース手順](docs/release.md)を参照してください。
 
+仕様全体の入口は[現行仕様の見取り図](docs/specification.md)です。旧Ranking・共通v2・発明者分析の違い、処理順、各資料の適用範囲を確認できます。
+
 ## インストール
 
 **Python 3.14系（3.14以上・3.15未満）が必要**です。既存の文字処理はUnicode 16.0.0を要求するため、インストール条件も検証済みの3.14系に限定しています。SVGを使わなければNodeやnpmは不要です。依存の取得にはインストール時の通信が必要ですが、インストール後の分析処理は外部サービスを呼びません。
@@ -174,11 +176,11 @@ Linuxでは集計・JSONを利用できますが、公開SVG経路は引き続�
 
 ## 収録しているSVGグラフ
 
-`render --mark`に指定できるmarkは<!--var:mark_count-->28<!--/var-->種類です。分析ごとに描けるグラフは固定で、任意のEChartsオプションは渡せません。正本は`capabilities --json`の`render_marks`です。`series-line-svg.v1`はTimeline・Growth・Concentrationの3分析が共用し、`inventor-mobility-evidence.v1`はJSON・表のみでmarkがありません。発明者の`inventor-tracking`以外の9種には`.[inventor]`が必要です。
+`render --mark`に指定できるmarkは<!--var:mark_count-->28<!--/var-->種類です。分析ごとに描けるグラフは固定で、任意のEChartsオプションは渡せません。正本は`capabilities --json`の`render_marks`です。`series-line-svg.v1`はTimeline・Growth・Concentrationの3分析が共用し、`inventor-mobility-evidence.v1`はJSON・表のみでmarkがありません。下表の発明者グラフのうち`inventor-tracking`以外の9種類には`.[inventor]`が必要です。JSON・表専用の根拠一覧を含む新しい<!--var:inventor_analysis_count-->10<!--/var-->分析すべてが、このextraの対象です。
 
 | 分類 | グラフ | mark | 分析ID |
 | --- | --- | --- | --- |
-| 基本 | ランキング | `ranking-svg.v1` | `ranking.v1` |
+| 基本 | ランキング | `ranking-svg.v1` | `ranking.v1` / `ranking.v2` |
 | 基本 | マトリクス（バブル） | `matrix-bubble-svg.v1` | `matrix.v1` |
 | 基本 | マトリクス（ヒートマップ） | `matrix-heatmap-svg.v1` | `matrix.v1` |
 | 基本 | 折れ線 | `series-line-svg.v1` | `timeline.v1`・`growth.v1`・`concentration.v1` |

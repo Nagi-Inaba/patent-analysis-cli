@@ -4,6 +4,8 @@
 
 MCPはoptional extraです。通常の集計だけなら不要です。リポジトリからは`python -m pip install ".[mcp]"`、wheelからは`python -m pip install "./patent_analysis_cli-0.2.0-py3-none-any.whl[mcp]"`を使います。
 
+新しい発明者<!--var:inventor_analysis_count-->10<!--/var-->分析も使う場合は、リポジトリでは`python -m pip install ".[mcp,inventor]"`、wheelでは`python -m pip install "./patent_analysis_cli-0.2.0-py3-none-any.whl[mcp,inventor]"`を指定します。`inventor-tracking.v1`はこの追加extraの対象外です。詳細は[発明者分析](inventor-analysis.md)を参照してください。
+
 例では既存`examples`を入力root、新しい別ディレクトリを出力rootにします。PowerShellで、READMEのvenvを使用します。
 
 ```powershell
@@ -55,7 +57,7 @@ stdio対応クライアントには、上記のPython絶対パスを`command`、
 
 [例の一覧](../examples/analysis-catalog.json)で`mcp: true`の18例は、この呼び出しの`path`と`spec`を該当CSV・JSONへ置き換えて実行できます。[期待集計](../examples/expected-aggregates.json)を同じ分析IDで確認してください。Matrix・Timeline・Compositionも、同じ公開API経由で分析・描画できます。
 
-成功応答の`structured_content.content.render_handle`を、同じサーバープロセス内で使用します。クライアントのSDKによってフィールド名の表記は異なるため、wireでは返されたstructured contentを参照してください。
+対応markがある分析の成功応答には`structured_content.content.render_handle`が含まれ、同じサーバープロセス内で使用できます。`inventor-mobility-evidence.v1`など、対応markのない分析はhandleを発行しません。クライアントのSDKによってフィールド名の表記は異なるため、wireでは返されたstructured contentを参照してください。
 
 ```json
 {
@@ -69,11 +71,11 @@ stdio対応クライアントには、上記のPython絶対パスを`command`、
 }
 ```
 
-出力先の`network`ディレクトリは、承認済みoutput root内に事前に作成してください。receiptの`svg`はこの出力先からの相対名です。同一入力・出力先の再実行は`reused`になり、異なる内容を上書きしません。handleは最大4件のFIFOで、再起動後や後続の成功分析で失効します。分析の直後に描画するか、失効後は分析をやり直してください。
+承認するoutput root自体は既存ディレクトリでなければなりません。その配下の`output_path`（例では`network`）が存在しなければ、MCP adapterが安全性を確認して作成します。receiptの`svg`はこの出力先からの相対名です。同一入力・出力先の再実行は`reused`になり、異なる内容を上書きしません。handleは最大4件のFIFOで、5件目のhandle発行時に最古のものが失効し、再起動後は全件無効になります。markのない分析はhandleを発行せず、既存handleも退去させません。分析の直後に描画するか、失効後は分析をやり直してください。
 
 ## 外部AIへ渡す情報
 
-元CSV・JSONや任意ファイルを転送するツールではありません。`.json`は単一特許objectまたはobject配列を受け付け、変換規則と上限は[入力契約](contracts.md#json-input)に従います。ただし分析応答に出願人・分類等の入力由来ラベルは含まれます。機密情報を含む結果をAI・ログ・外部サービスへ渡すかどうかは呼び出し側の責任です。`analyze`応答はcoreのreceipt・安定SHA-256・絶対パスを除き、ランダムな`render_handle`を返します。`render`応答は指定した`output_path` directoryからの相対filenameに加え、再利用確認用の決定論的な`artifact_id`、`svg_sha256`、`renderer_build_digest`を返します。
+元CSV・JSONや任意ファイルを転送するツールではありません。`.json`は単一特許objectまたはobject配列を受け付け、変換規則と上限は[入力契約](contracts.md#json-input)に従います。ただし分析応答に出願人・分類等の入力由来ラベルは含まれます。機密情報を含む結果をAI・ログ・外部サービスへ渡すかどうかは呼び出し側の責任です。`analyze`応答はcoreのreceipt・安定SHA-256・絶対パスを除き、対応markがある場合だけランダムな`render_handle`を返します。`render`応答は指定した`output_path` directoryからの相対filenameに加え、再利用確認用の決定論的な`artifact_id`、`svg_sha256`、`renderer_build_digest`を返します。
 
 入力不備や非公開分析の拒否は、安全なerrorとして返ります。`is_error` / `ok`を確認し、失敗応答からhandleを取り出そうとしないでください。任意式、SQL、shell、HTTP transportは追加していません。
 

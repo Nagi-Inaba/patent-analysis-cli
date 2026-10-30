@@ -67,10 +67,10 @@ local CSV / JSON + AnalysisSpec
 | JSON dataset | `.json`拡張子。UTF-8、先頭BOM 1個を許容。単一objectまたは空でないobject配列。32 MiBまで |
 | 共通の入力上限 | 100,000行、1,000列、headerを含む2,000,000セル、1セル1,000,000文字。分析固有の上限でさらに狭まる |
 | JSONの列化 | 入れ子objectをドット区切り列へ展開。scalar配列は`\|`区切りへ変換。欠けた列は空文字 |
-| 拒否するJSON | 重複キー、非有限数、object/配列を含む配列（発明者IDの明示binding列を除く）、列名衝突、不正encoding等。詳細は[入力契約](contracts.md#json-input) |
+| 拒否するJSON | 重複キー、非有限数、object/配列を含む配列、列名衝突、不正encoding等。詳細は[入力契約](contracts.md#json-input) |
 | 新しい発明者IDのセル | 既定はJSON文字列配列を表す文字列セル。`parameters.id_array_format: "native"`で明示bindingしたID列のJSON配列も受理。[詳細](input-preflight-and-ranking-v2.md) |
 | `inspect` | メタデータだけ。セル値・サンプル行を公開しない |
-| `validate-spec` | Specの構造・実装済み条件を検査。`--dataset`で列対応・欠損・母集団の件数も診断 |
+| `validate-spec` | `--dataset`省略時はSpecの構造・実装済み条件を検査。`--dataset`指定時は列対応・欠損・共通母集団の事前診断。分析固有の適格性・集計は`analyze`、描画は`render`で確認 |
 
 `earliest`はフィルター通過後の同一IDから代表1行を選びます。ID空欄は個別に残し、代表以外の人物・出願人・分類を合算しません。両候補の日付が有効な場合だけ早い日を選び、同日や不正・欠損日付の比較は入力順で決めます。
 

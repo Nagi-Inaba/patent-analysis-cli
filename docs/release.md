@@ -38,7 +38,9 @@ CIは既存のWindowsとLinuxに加えて`macos-15`（arm64）と`macos-15-intel
 6. 別の新しいvenvへ同じwheelの`[inventor]`、続いて`[inventor,mcp]` extraを導入し、発明者分析10種類のPython API・console entrypoint・実stdio MCPを比較する。Windows x64またはmacOS arm64/x86_64では発明者SVG9種類と再利用も確認し、Linuxでは公開SVG経路を迂回しない。
 7. 検証前後で入力CSV・JSONとspecが変化していないことを確認する。
 
-`scripts/verify_installed_release.py`と発明者用の`scripts/verify_installed_inventor_release.py`はsource tree外から`-I`付きで実行し、検証結果をJSON reportへ保存します。
+`scripts/verify_installed_release.py`はsource tree外から`-I`付きで実行し、検証結果をJSON reportへ保存します。
+
+発明者分析には`scripts/verify_installed_inventor_release.py`を同じくsource tree外から`-I`付きで使います。`--examples`、`--report`、`--artifacts`を明示し、MCP経路では`--mcp`を追加します。CIは`dist/verification/`に`core.json`、`mcp.json`、`inventor.json`、`inventor-mcp.json`と発明者SVGを保存し、分析結果・SVGの一致を検査します。Linuxでは公開SVGを検証対象に含めません。正確な呼出しと検査対象は[CI定義](../.github/workflows/ci.yml)にあります。
 
 ## 依存・secret検査
 

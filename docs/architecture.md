@@ -8,10 +8,10 @@ Python API・CLI・local stdio MCPは同じ計算コアを利用する。`.json`
 
 ## Local stdio MCP
 
-local stdio MCPの統合済み実装は、MCP 2.0のoptional dependencyを使う薄いlocal stdio adapterである。入力rootと出力rootは起動時に承認し、互いにdisjointなrootとして固定する。adapterは分析・描画の意味処理を所有せず、公開Python APIへ渡す。
+local stdio MCPの統合済み実装は、Python SDK `mcp==2.2.0`のoptional dependencyを使う薄いlocal stdio adapterである。入力rootと出力rootは起動時に承認し、互いにdisjointなrootとして固定する。adapterは分析・描画の意味処理を所有せず、公開Python APIへ渡す。
 
 ```text
-MCP 2.0 stdio
+MCP SDK 2.2.0 / stdio
   -> bounded transport
   -> pure handlers
   -> public patent_analysis.api
@@ -20,7 +20,7 @@ MCP 2.0 stdio
 
 MCP adapterは `patent_analysis` の公開APIを直接呼び、CLIを呼ばず、CLI subprocessも起動しない。remote transport、network、hosted executionはこのadapterの範囲外である。<!--var:mcp_tool_count-->6<!--/var-->つのclosed toolの引数、公開analysis、rootおよびbyte境界は [contracts](contracts.md) に定める。
 
-`analyze`は公開coreのfull documentをprocess memoryへ最大4件保持する一方、分析responseではreceiptと安定SHA-256を除外し、ランダムな`render_handle`だけを付加する。`render`はこのhandleで同一process内の検証済みdocumentを参照する。描画responseには相対filenameと、artifact再利用を確認するための決定論的な`artifact_id`、`svg_sha256`、`renderer_build_digest`が含まれる。
+`analyze`は分析responseからreceiptと安定SHA-256を除外する。対応markがある分析だけ、公開coreのfull documentをprocess memoryへ最大4件保持し、ランダムな`render_handle`を付加する。markのない分析はhandleを発行せず、既存handleも退去させない。`render`はこのhandleで同一process内の検証済みdocumentを参照する。描画responseには相対filenameと、artifact再利用を確認するための決定論的な`artifact_id`、`svg_sha256`、`renderer_build_digest`が含まれる。
 
 ## 構成
 
@@ -108,7 +108,7 @@ Pythonは正規化済みSVGへ固定ARIA参照とtext-onlyのtitle/descを加え
 
 ## Access Control
 
-CLIの `inspect` / `analyze` / `render` とfile-backed `validate-plan` は、trusted launcherが絶対pathの既存ローカルdirectoryとして設定した `PATENT_ANALYSIS_ALLOWED_ROOT` とverified root/pathを必須とする。相対dataset/spec/plan/analysis/overlay pathはこのrootを基準に解決する。`--spec -`、`validate-plan -`、`render --analysis -`だけがfile-backed入力の例外である。
+CLIのfile-backed入力は、trusted launcherが絶対pathの既存ローカルdirectoryとして設定した `PATENT_ANALYSIS_ALLOWED_ROOT` とverified root/pathを必須とする。相対dataset/spec/plan/analysis/overlay pathはこのrootを基準に解決する。Spec、plan、analysis、overlayは`-`によるbounded stdin入力を使える。`validate-spec -`と`validate-plan -`はroot不要である。`analyze --spec -`でもdatasetのrootは必要であり、renderのanalysisとoverlayを同時にstdinにはできない。renderでfile-backed入力がなければ入力rootは不要だが、outputとNodeのpath検証は適用する。
 
 Python APIの `inspect_dataset(source, *, allowed_root)` と `run_analysis(source, spec_bytes, *, allowed_root)` も、絶対pathの既存local directoryをkeyword-onlyで受け取る。互換APIの`inspect_csv`、`analyze_csv`、`run_analysis_csv`は維持する。OperationPlanの `contract` と `validate-plan -` はこのrootを要求しないが、file-backed `validate-plan <file>` は要求する。OperationPlanとAnalysisSpecのJSON入力はfileまたはstdinのいずれもUTF-8 bytes（先頭のUTF-8 BOM 1個は許容）で最大2 MiBであり、超過は `input.invalid` / exit code 3となる。
 

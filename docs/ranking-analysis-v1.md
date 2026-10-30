@@ -1,5 +1,7 @@
 # Ranking Analysis v1
 
+この文書は旧`ranking.v1`の集計契約を定義します。製品全体の提供範囲は[現行仕様の見取り図](specification.md)、公開分析は[分析カタログ](analysis-catalog.md)を参照してください。
+
 ## 目的
 
 この仕様は、特許CSVのランキング集計を決定論的なPython APIとCLIから実行する最初の分析スライスを定義する。利用者は任意のローカルAIに自然言語で依頼し、AIはCSVのbounded manifestを確認して`AnalysisSpec`を作り、CLIを呼び出せる。package自身はmodel、network、cloud、外部APIを呼ばない。`inspect`はcell valueを含まないmetadataだけを返し、`analyze`はデータ由来のdimension label、集計値、count、shareを返すため、unique labelがsource cell文字列と一致する場合もある。結果を外部AIやserviceへ送るかどうかはcaller policyであり、本packageの責務外である。
@@ -8,9 +10,9 @@
 
 `patent_analysis`はCSV読込、入力上限、ranking集計、中立な`AnalysisResult`、`ExecutionReceipt`を所有する。CLIは公開Python APIを呼ぶだけのadapterとする。
 
-OperationPlanはversion付きの説明・検証契約であり、本packageは登録済みoperationを実行しない。`analyze` が実行する契約はAnalysisSpecであり、現行の実行対象は`ranking.v1`である。package自身はmodel、network、cloud、外部APIを呼ばない。
+OperationPlanはversion付きの説明・検証契約であり、本packageは登録済みoperationを実行しない。`analyze` が実行する契約はAnalysisSpecであり、この文書の対象は`ranking.v1`である。package自身はmodel、network、cloud、外部APIを呼ばない。
 
-次は実装しない。
+次はこのRanking集計契約の対象外である。製品共通のMCP・SVG、および他の分析は別の契約で提供する。
 
 - UI、FastAPI、ECharts、MCP、Agent Gateway。
 - 自然言語から`AnalysisSpec`を生成するmodel呼出し。
@@ -211,6 +213,6 @@ analyze success envelope
 package rootに追加された公開builderは`build_ranking_chart_model(analyze_success_envelope, *, overlay=None)`と`build_ranking_render_spec(*, row_count)`だけである。前者は`ChartModel`と`ChartModelBuildReceipt`を返し、後者は後続renderer向けの固定`RenderSpec`契約データを返す。`LabelOverlayPack`は全visible rowを覆う完全なprovider-neutral入力として検証される。
 
 
-## 将来拡張
+## 他の分析との関係
 
-2本目以降の分析は`AnalysisSpec.analysis_type`のvariantと専用result fieldsを追加する。CLI commandを分析ごとに増やさず、`analyze --spec`を共通入口として維持する。
+`ranking.v2`を含むv2分析は、`analysis_contract_version: "2.0.0"`と`analysis_id`を持つv2 Specで選択する。旧Rankingの`analysis_type`へvariantを追加する方式ではない。CLI commandを分析ごとに増やさず、`analyze --spec`を共通入口として維持する。版の振分けと結果の違いは[共通契約](contracts.md)を参照する。

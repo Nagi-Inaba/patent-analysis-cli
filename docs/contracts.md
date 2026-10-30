@@ -132,7 +132,7 @@ MCP公開対象はanalysis registryの `mcp_public=true` から導出し、現�
 
 rootはserver起動時の `--input-root <root_id>=<absolute-local-directory>` と `--output-root <root_id>=<absolute-local-directory>` で承認する。各rootは既存のlocal directoryで、reparse componentを含まず、input/outputのroot IDは異なり、directoryは互いにdisjoint（同一・包含なし）でなければならない。toolの `path` / `output_path` は相対pathだけを受け付け、`..`、drive/UNC/device path、絶対path、reparse pathを拒否する。入力はroot配下のverified regular file、出力はroot配下のdirectoryに限定する。
 
-`inspect` はraw rowやsampleを返さない。`analyze` はcore receiptと`*_sha256`を除いたaggregate結果に、process-localで推測困難な`render_handle`を付ける。serverはfull analysis documentを最大4件だけmemoryに保持し、5件目で最古のhandleを失効させる。`render`はcaller指定のanalysis objectを受け取らず、このhandleで同じprocess内の検証済みdocumentを参照する。handleは永続化せず、server再起動後は無効である。
+`inspect` はraw rowやsampleを返さない。`analyze` はcore receiptと`*_sha256`を除いたaggregate結果を返し、対応markがある場合だけ、process-localで推測困難な`render_handle`を付ける。serverは描画用のfull analysis documentを最大4件だけmemoryに保持し、5件目のhandle発行で最古のhandleを失効させる。`inventor-mobility-evidence.v1`など対応markのない分析はhandleを発行せず、既存handleを退去させない。`render`はcaller指定のanalysis objectを受け取らず、このhandleで同じprocess内の検証済みdocumentを参照する。handleは永続化せず、server再起動後は無効である。
 
 `analyze` とrender関連の結果にはsource由来labelや集計値が含まれ得るため、外部AI、logging、telemetry、serviceへどの結果を渡すかはcallerが管理する。
 
@@ -227,7 +227,7 @@ CSV入力の上限は次のとおりである。
 - scalarだけの配列は各要素を上記規則で文字列化し、`|`で連結する。空配列は空文字にする。objectまたは配列を要素に持つ配列は拒否する。
 - 展開後に列名が衝突するobject、空のtop-level object、duplicate key、NaN/Infinity、不正UTF-8、64階層超のobjectを拒否する。
 
-JSON入力の上限はfile size 32 MiB、columns 1,000、rows 100,000、展開後の矩形cells 2,000,000、cell length 1,000,000文字である。JSONは全体をbounded bytesとして読み、strict parse後に既存のimmutable `DatasetV2`へ変換する。`inspect_dataset`は列名・件数等のmetadataだけを返し、raw rowやcell valueを返さない。
+JSON入力の上限はfile size 32 MiB、columns 1,000、rows 100,000、header 1行を含む展開後の矩形cells 2,000,000、cell length 1,000,000文字である。JSONは全体をbounded bytesとして読み、strict parse後に既存のimmutable `DatasetV2`へ変換する。`inspect_dataset`は列名・件数等のmetadataだけを返し、raw rowやcell valueを返さない。
 
 ## Access Control
 

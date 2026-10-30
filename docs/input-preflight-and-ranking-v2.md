@@ -56,3 +56,5 @@ collapsed_rows = matched_rows - selected_rows
 Pythonは`api.diagnose_renderer(node_executable=...)`、MCPは`patent_analysis.capabilities`の`check_runtime: true`を使います。MCPの結果キーは`renderer_runtime`で、サーバー設定のNodeを検査します。実行ファイルのパスや標準出力・標準エラーの内容は公開しません。
 
 この診断はNodeの信頼性審査や実際のSVG生成の代替ではありません。`available: true`は環境と資産の検査通過を表します。別のNodeを自動インストールしたり、PATHを書き換えたりしません。
+
+`node.version_mismatch`なら、信頼する対応版Nodeを`--node`で明示してください。診断通過後も対象データで実際のSVG生成を確認します。問題を共有する場合は固定コードと必要版・検出版で切り分け、生のstdout/stderrや実行ファイルの絶対パスを共有する必要はありません。

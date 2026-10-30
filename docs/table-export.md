@@ -44,3 +44,21 @@ textには`[context]`節を追加し、PointerとJSON値を1行ずつ表示す�
 - 完成出力はUTF-8で16 MiBまで。超過は`analysis.invalid`／終了コード2とし、途中までの表をstdoutへ出さない。既存の入力・分析上限も適用する。CLIの表モードの診断はstderrへ出し、`--json`との併用は引数エラーとする。
 
 `inventor-tracking.v1`は`inventors`、`observations`、`co_inventions`、`affiliations`、`clusters`、`cluster_links`、`affiliation_changes`の7表を出力する。配列のメンバー・出願人をJSONセルとして保持し、意味と列は[発明者追跡](inventor-tracking.md)を参照する。
+
+## 新しい発明者分析の表
+
+人物IDを扱う<!--var:inventor_analysis_count-->10<!--/var-->分析もCSV・textに対応する。各分析の`data.statistics`から次の固定表を出力し、全分析に`identity_evidence`を付加する。`inventor-impact.v1`には`citation_evidence`も付加する。意味と入力条件は[発明者分析](inventor-analysis.md)を参照する。
+
+| 分析ID | table |
+| --- | --- |
+| `inventor-network.v1` | `nodes`、`edges`、`unplottable` |
+| `inventor-ego-network.v1` | `nodes`、`edges`、`unplottable`、`hop_membership`、`partners` |
+| `inventor-technology.v1` | `profiles`、`cells`、`classifications` |
+| `inventor-activity.v1` | `people`、`calendar`、`observations` |
+| `inventor-cluster-flow.v1` | `nodes`、`links`、`unplottable` |
+| `inventor-similarity.v1` | `features`、`similarities`、`co_inventor_edges` |
+| `inventor-impact.v1` | `people`、`units`、`cohorts` |
+| `inventor-mobility.v1` / `inventor-mobility-evidence.v1` | `candidates`、`associations`、`episodes`、`unbound_reviews`、`corporate_changes` |
+| `inventor-mobility-flow.v1` | 上記の関係変化5表と`flows`、`unallocated` |
+
+固定列は[実装の表定義](../src/patent_analysis/analyses/_inventor_common.py)で管理する。ここでも`--include-context`で分析文書全体を添付できる。既定の表は統計・根拠の選択した項目を表すため、分析文書の全fieldが自動で列になるわけではない。
