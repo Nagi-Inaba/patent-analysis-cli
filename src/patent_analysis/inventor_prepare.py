@@ -28,7 +28,17 @@ class InventorExecutionInputs:
     full_observations: tuple[PatentObservation, ...]
 
 
-def prepare_execution(source, spec, parameters, *, allowed_root):
+def read_inventor_dataset(source, spec, parameters, *, allowed_root):
+    """Preserve only explicitly bound raw-ID arrays when the caller opts in."""
+    if parameters.get("id_array_format", "encoded") == "native":
+        bindings = spec["resolution"]["bindings"]
+        columns = frozenset(bindings[role] for role in
+                            ("inventor_ids", "applicant_ids", "source_ids") if role in bindings)
+        return read_dataset_v2(source, allowed_root=allowed_root, json_array_columns=columns)
+    return read_dataset_v2(source, allowed_root=allowed_root)
+
+
+def prepare_execution(source, spec, parameters, *, allowed_root, dataset=None):
     if spec["population"].get("family_mode") != "records":
         raise DatasetInputError("input is invalid")
     population, _ = records_population_spec(spec["population"])
@@ -43,7 +53,8 @@ def prepare_execution(source, spec, parameters, *, allowed_root):
                 ntpath.isreserved(part) for part in PurePosixPath(relative.replace("\\", "/")).parts
             ):
                 raise DatasetInputError("input path is not permitted")
-    dataset = read_dataset_v2(source, allowed_root=allowed_root)
+    if dataset is None:
+        dataset = read_inventor_dataset(source, spec, parameters, allowed_root=allowed_root)
     kwargs = dict(
         bindings=spec["resolution"]["bindings"],
         date_kind=parameters.get("date_kind", "filing"),

@@ -4,10 +4,10 @@
 
 | 入口 | 現在の範囲 |
 | --- | --- |
-| Python API / CLI | <!--var:analysis_count-->28<!--/var-->分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
-| local stdio MCP | <!--var:mcp_analysis_count-->28<!--/var-->分析・<!--var:mcp_tool_count-->6<!--/var-->ツール。[設定と呼び出し例](docs/mcp.md) |
+| Python API / CLI | <!--var:analysis_count-->29<!--/var-->分析。分析の選び方は[分析カタログ](docs/analysis-catalog.md) |
+| local stdio MCP | <!--var:mcp_analysis_count-->29<!--/var-->分析・<!--var:mcp_tool_count-->6<!--/var-->ツール。[設定と呼び出し例](docs/mcp.md) |
 | SVG | 固定形式の<!--var:mark_count-->28<!--/var-->種類。[収録しているSVGグラフ](#収録しているsvgグラフ)と`capabilities --json`を参照。配色は4種から選択。Windows x64 / macOS arm64/x86_64、**Node.js 24.22.1（対応アーキテクチャ）** |
-| 集計単位 | 既存<!--var:population_analysis_count-->17<!--/var-->種類のv2分析で`records` / `earliest`。新しい発明者分析は[専用仕様](docs/inventor-analysis.md)。旧Rankingはレコード単位のみ |
+| 集計単位 | 既存<!--var:population_analysis_count-->18<!--/var-->種類のv2分析で`records` / `earliest`。新しい発明者分析は[専用仕様](docs/inventor-analysis.md)。旧Rankingはレコード単位のみ |
 
 Python 3.14で動作するローカル実行専用のパッケージです。入力・出力契約と安全性の境界は[SECURITY.md](SECURITY.md)、配布物の検証方法は[リリース手順](docs/release.md)を参照してください。
 
@@ -49,7 +49,7 @@ Intel MacでMCPを導入する場合、`cryptography`のソースビルドが必
 
 ## 最初の集計
 
-すべて合成データです。既存<!--var:shared_example_count-->17<!--/var-->分析は`examples/advanced/patents.csv`を共用し、発明者追跡は専用の合成CSVを使います。[例の一覧](examples/analysis-catalog.json)がCSV・spec・期待結果との対応を管理します。
+すべて合成データです。既存<!--var:shared_example_count-->18<!--/var-->分析は`examples/advanced/patents.csv`を共用し、発明者追跡は専用の合成CSVを使います。[例の一覧](examples/analysis-catalog.json)がCSV・spec・期待結果との対応を管理します。
 
 ```powershell
 $env:PATENT_ANALYSIS_ALLOWED_ROOT = (Resolve-Path examples).Path
@@ -106,7 +106,7 @@ SVGには`inventor-tracking-svg.v1`を指定します。横軸は年、縦軸は
 
 ## Specを事前検証する
 
-分析前にSpecだけを検証する場合は、`validate-spec`を使います。CSVを読まず、Schemaと実装済み条件を検証します。列が実データに存在するか、実データが集計上限に収まるかは`analyze`で確認します。
+分析前にSpecだけを検証する場合は、`validate-spec`を使います。CSVを読まず、Schemaと実装済み条件を検証します。`--dataset`を指定すると列対応・欠損・母集団の件数も診断できます。分析固有の適格性・集計上限は`analyze`で確認します。
 
 ```powershell
 & $pythonExe -m patent_analysis validate-spec basic/growth.json --json
@@ -114,6 +114,8 @@ SVGには`inventor-tracking-svg.v1`を指定します。横軸は年、縦軸は
 ```
 
 `validate-spec -`は標準入力に対応します。ファイル入力は`PATENT_ANALYSIS_ALLOWED_ROOT`配下が必要です。標準入力と`schema`にはroot設定は不要です。Schema名は`capabilities --json`にあるパスのファイル名を指定します。
+
+入力事前診断、発明者IDのJSON配列、`ranking.v2`、`capabilities --check-runtime`の使い方は[入力診断とRanking v2](docs/input-preflight-and-ranking-v2.md)を参照してください。
 
 ## ファミリー代表単位で集計する
 
@@ -127,7 +129,7 @@ SVGには`inventor-tracking-svg.v1`を指定します。横軸は年、縦軸は
 
 ## CSV・テキストの集計表を出力する
 
-<!--var:analysis_count-->28<!--/var-->分析すべてで`--format csv`または`--format text`を使えます。Nodeは不要です。
+<!--var:analysis_count-->29<!--/var-->分析すべてで`--format csv`または`--format text`を使えます。Nodeは不要です。
 
 ```powershell
 & $pythonExe -m patent_analysis analyze advanced/patents.csv --spec basic/timeline.json --format csv

@@ -2,7 +2,7 @@
 
 ## Product Boundary
 
-`patent-analysis-cli` は、移植可能なOperationPlan・AnalysisSpec契約、ローカルCSV・JSON入力、<!--var:analysis_count-->28<!--/var-->分析、Python API、CLI adapter、およびoptionalなlocal stdio MCP adapterを所有する。
+`patent-analysis-cli` は、移植可能なOperationPlan・AnalysisSpec契約、ローカルCSV・JSON入力、<!--var:analysis_count-->29<!--/var-->分析、Python API、CLI adapter、およびoptionalなlocal stdio MCP adapterを所有する。
 
 Python API・CLI・local stdio MCPは同じ計算コアを利用する。`.json`入力は単一objectまたはobject配列を決定論的に文字列行へ射影し、CSVと同じimmutable `DatasetV2`、列対応、正規化、母集団処理、分析コアへ渡す。静的SVG rendererは固定bundleを信頼したローカルNode processで実行する。
 
@@ -24,7 +24,7 @@ MCP adapterは `patent_analysis` の公開APIを直接呼び、CLIを呼ばず�
 
 ## 構成
 
-現在の実装は、OperationPlan契約、boundedなローカルCSV・JSON検査、<!--var:analysis_count-->28<!--/var-->分析、<!--var:population_analysis_count-->17<!--/var--> native v2分析のファミリー代表選択、および<!--var:mark_count-->28<!--/var-->固定renderer markを含む。以下の構成図は旧Ranking経路の代表例であり、全module一覧ではない。OperationPlanはversion付きの説明・検証契約であり、本packageは登録済み<!--var:operation_count-->15<!--/var--> operationを実行しない。`analyze` が実行する契約はAnalysisSpecである。
+現在の実装は、OperationPlan契約、boundedなローカルCSV・JSON検査、<!--var:analysis_count-->29<!--/var-->分析、<!--var:population_analysis_count-->18<!--/var--> native v2分析のファミリー代表選択、および<!--var:mark_count-->28<!--/var-->固定renderer markを含む。以下の構成図は旧Ranking経路の代表例であり、全module一覧ではない。OperationPlanはversion付きの説明・検証契約であり、本packageは登録済み<!--var:operation_count-->15<!--/var--> operationを実行しない。`analyze` が実行する契約はAnalysisSpecである。
 
 ```text
 src/patent_analysis/
@@ -128,7 +128,7 @@ comma区切りCSVは`UTF-8`、`UTF-8 with BOM`、`UTF-16 LE/BE with BOM`を受�
 
 ## 提供範囲
 
-現在は<!--var:analysis_count-->28<!--/var-->分析、v2の<!--var:population_analysis_count-->17<!--/var-->分析に対する明示的ファミリー代表選択、<!--var:mcp_analysis_count-->28<!--/var-->分析のlocal MCP、<!--var:mark_count-->28<!--/var-->固定SVG markを提供する。列対応・正規化 → フィルター → 任意の代表選択 → 集計という共通経路をAPI/CLI/MCPで使う。`verify`、`report`という新しい公開コマンド、remote MCP、遠隔実行は追加しない。CLIは`analyze --spec`を共通入口として維持する。
+現在は<!--var:analysis_count-->29<!--/var-->分析、v2の<!--var:population_analysis_count-->18<!--/var-->分析に対する明示的ファミリー代表選択、<!--var:mcp_analysis_count-->29<!--/var-->分析のlocal MCP、<!--var:mark_count-->28<!--/var-->固定SVG markを提供する。列対応・正規化 → フィルター → 任意の代表選択 → 集計という共通経路をAPI/CLI/MCPで使う。`verify`、`report`という新しい公開コマンド、remote MCP、遠隔実行は追加しない。CLIは`analyze --spec`を共通入口として維持する。
 
 分析と対応範囲は[分析カタログ](analysis-catalog.md)、母集団は[ファミリー仕様](family-population.md)、配布されたwheelの境界確認は[配布手順](release.md)を参照する。
 

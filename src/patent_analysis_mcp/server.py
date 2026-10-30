@@ -25,7 +25,7 @@ _INPUT_SCHEMAS: Mapping[str, dict[str, Any]] = {
     "patent_analysis.capabilities": {
         "type": "object",
         "additionalProperties": False,
-        "properties": {},
+        "properties": {"check_runtime": {"type": "boolean", "default": False}},
     },
     "patent_analysis.schema": {
         "type": "object",
@@ -45,8 +45,13 @@ _INPUT_SCHEMAS: Mapping[str, dict[str, Any]] = {
     "patent_analysis.validate_spec": {
         "type": "object",
         "additionalProperties": False,
-        "properties": {"spec": {"type": "object"}},
+        "properties": {
+            "spec": {"type": "object"},
+            "input_root_id": {"type": "string", "minLength": 1},
+            "path": {"type": "string", "minLength": 1},
+        },
         "required": ["spec"],
+        "dependentRequired": {"input_root_id": ["path"], "path": ["input_root_id"]},
     },
     "patent_analysis.analyze": {
         "type": "object",
@@ -76,12 +81,17 @@ _INPUT_SCHEMAS: Mapping[str, dict[str, Any]] = {
 
 def _tool_descriptions() -> Mapping[str, str]:
     return {
-        "patent_analysis.capabilities": "List local MCP-approved analyses and schemas.",
+        "patent_analysis.capabilities": (
+            "List local MCP-approved analyses and schemas; optionally check the renderer runtime."
+        ),
         "patent_analysis.schema": "Return one MCP-approved public JSON Schema.",
         "patent_analysis.inspect": (
             "Inspect local CSV or JSON metadata without raw rows or samples."
         ),
-        "patent_analysis.validate_spec": "Validate one closed analysis spec without execution.",
+        "patent_analysis.validate_spec": (
+            "Validate one closed analysis spec; optionally preflight approved input metadata "
+            "without running the analysis."
+        ),
         "patent_analysis.analyze": "Run one MCP-approved local aggregate analysis.",
         "patent_analysis.render": "Render one approved analysis to a relative local receipt.",
     }

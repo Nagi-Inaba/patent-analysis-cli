@@ -17,6 +17,7 @@ MAX_TABLE_BYTES = 16 * 1024 * 1024
 # Explicit columns preserve order and headers even when the population is empty.
 _TABLES = {
     "ranking.v1": {"rows": "row_kind label value count share"},
+    "ranking.v2": {"rows": "row_kind label value count share"},
     "matrix.v1": {"cells": "x_index y_index x_label y_label value row_count"},
     "timeline.v1": {"series": "label is_other year value row_count"},
     "composition.v1": {"items": "label is_other value row_count share share_basis"},

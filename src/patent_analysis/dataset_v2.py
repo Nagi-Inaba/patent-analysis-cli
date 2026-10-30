@@ -143,7 +143,9 @@ def _json_scalar(value: object) -> str:
     raise DatasetInputError("input is invalid")
 
 
-def _flatten_json_record(record: Mapping[str, object]) -> dict[str, str]:
+def _flatten_json_record(
+    record: Mapping[str, object], *, json_array_columns: frozenset[str] = frozenset()
+) -> dict[str, str]:
     flattened: dict[str, str] = {}
 
     def add(name: str, value: object, depth: int) -> None:
@@ -162,6 +164,17 @@ def _flatten_json_record(record: Mapping[str, object]) -> dict[str, str]:
                 add(f"{name}.{key}" if name else key, child, depth + 1)
             return
         if isinstance(value, list):
+            if name in json_array_columns:
+                if len(value) > 64 or not all(isinstance(item, str) for item in value):
+                    raise DatasetInputError("input is invalid")
+                try:
+                    candidate = canonical_json_bytes(value).decode("utf-8")
+                except (CanonicalizationError, UnicodeError):
+                    raise DatasetInputError("input is invalid") from None
+                if name in flattened or len(candidate) > MAX_CSV_CELL_CHARACTERS:
+                    raise DatasetInputError("input is invalid")
+                flattened[name] = candidate
+                return
             parts: list[str] = []
             cell_characters = 0
             for item in value:
@@ -186,7 +199,9 @@ def _flatten_json_record(record: Mapping[str, object]) -> dict[str, str]:
     return flattened
 
 
-def _read_json_records(raw: bytes) -> tuple[list[str], list[DatasetRow]]:
+def _read_json_records(
+    raw: bytes, *, json_array_columns: frozenset[str] = frozenset()
+) -> tuple[list[str], list[DatasetRow]]:
     try:
         document = parse_strict_json_bytes(raw, allow_bom=True)
     except CanonicalizationError:
@@ -201,7 +216,7 @@ def _read_json_records(raw: bytes) -> tuple[list[str], list[DatasetRow]]:
     header: list[str] = []
     seen: set[str] = set()
     for raw_record in raw_records:
-        flattened = _flatten_json_record(raw_record)
+        flattened = _flatten_json_record(raw_record, json_array_columns=json_array_columns)
         if not flattened:
             raise DatasetInputError("dataset header is invalid")
         flattened_records.append(flattened)
@@ -225,7 +240,12 @@ def read_dataset_v2(
     source: str | Path,
     *,
     allowed_root: str | Path,
+    json_array_columns: frozenset[str] = frozenset(),
 ) -> DatasetV2:
+    if (not isinstance(json_array_columns, frozenset) or len(json_array_columns) > 64
+            or any(not isinstance(name, str) or not name or len(name) > 16384
+                   for name in json_array_columns)):
+        raise DatasetInputError("input is invalid")
     is_json = Path(source).suffix.casefold() == ".json"
     raw = read_verified_bytes(
         source,
@@ -234,7 +254,7 @@ def read_dataset_v2(
     )
     if is_json:
         encoding = "utf-8-sig" if raw.startswith(b"\xef\xbb\xbf") else "utf-8"
-        header, data_rows = _read_json_records(raw)
+        header, data_rows = _read_json_records(raw, json_array_columns=json_array_columns)
         preamble = None
     else:
         encoding = _detect_encoding(raw)

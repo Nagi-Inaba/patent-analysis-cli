@@ -33,8 +33,8 @@ CIは既存のWindowsとLinuxに加えて`macos-15`（arm64）と`macos-15-intel
 2. sdistにbuildへ必要なPython／renderer source、lock、test fixture、文書、例が含まれる。
 3. system site-packagesを継承しない新しいvenvへwheelを非editable installする。この検証では公開metadataのversion範囲から現在の依存を新規解決し、lock環境とは別に互換性を確認する。
    依存のwheelは`pip wheel`で準備する。Intel macOSなどで安全な版の完成済みwheelがない場合は、ソースからwheelを作成してからoffline installを検証する。binary-only制限を満たすために古い版へ戻さない。
-4. coreだけの環境でconsole entrypoint、<!--var:catalog_case_count-->18<!--/var-->分析、Windows x64またはmacOS arm64/x86_64の対応SVGと再利用を検証する。
-5. 同じwheelへ`[mcp]` extraを導入し、実stdio経由の<!--var:catalog_case_count-->18<!--/var-->分析、未知分析の拒否、Windows x64またはmacOS arm64/x86_64の対応SVGと再利用を検証する。
+4. coreだけの環境でconsole entrypoint、<!--var:catalog_case_count-->19<!--/var-->分析、Windows x64またはmacOS arm64/x86_64の対応SVGと再利用を検証する。
+5. 同じwheelへ`[mcp]` extraを導入し、実stdio経由の<!--var:catalog_case_count-->19<!--/var-->分析、未知分析の拒否、Windows x64またはmacOS arm64/x86_64の対応SVGと再利用を検証する。
 6. 別の新しいvenvへ同じwheelの`[inventor]`、続いて`[inventor,mcp]` extraを導入し、発明者分析10種類のPython API・console entrypoint・実stdio MCPを比較する。Windows x64またはmacOS arm64/x86_64では発明者SVG9種類と再利用も確認し、Linuxでは公開SVG経路を迂回しない。
 7. 検証前後で入力CSV・JSONとspecが変化していないことを確認する。
 

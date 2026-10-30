@@ -5,6 +5,7 @@ include docs/advanced-json-slices.md docs/advanced-rendering.md
 include docs/table-export.md
 include docs/inventor-tracking.md docs/images/inventor-tracking.svg
 include docs/inventor-analysis.md
+include docs/input-preflight-and-ranking-v2.md docs/specification.md
 include docs/performance.md docs/performance-sample.json
 recursive-include examples *.csv *.json
 recursive-include tests *.py *.csv *.json

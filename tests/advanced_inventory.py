@@ -52,6 +52,7 @@ ANALYSIS_IDS = (
     "lifecycle.v1",
     *ADVANCED_IDS,
     *INVENTOR_IDS,
+    "ranking.v2",
 )
 MCP_IDS = ANALYSIS_IDS
 MCP_MARKS = (

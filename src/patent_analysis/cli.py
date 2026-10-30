@@ -15,7 +15,9 @@ from patent_analysis.analysis_contracts import (
     AnalysisContractError,
 )
 from patent_analysis.api import (
+    diagnose_renderer,
     get_public_schema,
+    preflight_analysis,
     render_analysis_svg,
     run_analysis_csv,
     run_analysis_table,
@@ -142,6 +144,8 @@ def _build_parser() -> argparse.ArgumentParser:
         allow_abbrev=False,
     )
     capabilities_parser.add_argument("--json", action="store_true", dest="as_json")
+    capabilities_parser.add_argument("--check-runtime", action="store_true")
+    capabilities_parser.add_argument("--node", dest="node_executable")
 
     validate_parser = subparsers.add_parser(
         "validate-plan",
@@ -157,6 +161,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     spec_parser.add_argument("source", help="AnalysisSpec JSON file path, or - for stdin")
     spec_parser.add_argument("--json", action="store_true", dest="as_json")
+    spec_parser.add_argument("--dataset", help="Check this allowed-root dataset against the Spec")
     schema_parser = subparsers.add_parser(
         "schema", help="Read a named packaged public JSON Schema", allow_abbrev=False,
     )
@@ -382,7 +387,7 @@ def _write_analysis_failure(payload: dict[str, Any], *, as_json: bool) -> None:
         print(payload["error"]["message"], file=sys.stderr)
 
 
-def _run_validate_spec(source: str, *, as_json: bool) -> int:
+def _run_validate_spec(source: str, *, as_json: bool, dataset: str | None = None) -> int:
     try:
         raw = _read_analysis_spec_bytes(
             source, allowed_root=os.environ.get("PATENT_ANALYSIS_ALLOWED_ROOT")
@@ -394,7 +399,17 @@ def _run_validate_spec(source: str, *, as_json: bool) -> int:
         )
         return EXIT_INPUT_ERROR
     try:
-        result = validate_analysis_spec_bytes(raw)
+        result = (
+            validate_analysis_spec_bytes(raw) if dataset is None else
+            preflight_analysis(dataset, raw,
+                               allowed_root=os.environ.get("PATENT_ANALYSIS_ALLOWED_ROOT"))
+        )
+    except DatasetInputError:
+        _write_analysis_failure(
+            _analysis_input_error_payload("Dataset input could not be read or parsed"),
+            as_json=as_json,
+        )
+        return EXIT_INPUT_ERROR
     except AnalysisContractError as error:
         malformed = error.safe_message == "analysis spec is not legacy JSON"
         payload = (
@@ -403,11 +418,11 @@ def _run_validate_spec(source: str, *, as_json: bool) -> int:
         )
         _write_analysis_failure(payload, as_json=as_json)
         return EXIT_INPUT_ERROR if malformed else EXIT_INVALID_OPERATION_PLAN
-    if as_json:
+    if as_json or dataset is not None:
         _write_json(result)
     else:
         print(f"AnalysisSpec is valid: {result['analysis_id']}")
-    return EXIT_OK
+    return EXIT_INPUT_ERROR if dataset is not None and not result["checks_passed"] else EXIT_OK
 
 
 def _run_schema(name: str, *, as_json: bool) -> int:
@@ -557,7 +572,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_OK
 
     if args.command == "capabilities":
+        if args.node_executable is not None and not args.check_runtime:
+            return _write_usage_error(args.as_json)
         capabilities = describe_capabilities()
+        if args.check_runtime:
+            capabilities["runtime"] = diagnose_renderer(node_executable=args.node_executable)
+            _write_json(capabilities)
+            return EXIT_OK if capabilities["runtime"]["available"] else EXIT_RENDERER_UNAVAILABLE
         if args.as_json:
             _write_json(capabilities)
         else:
@@ -566,7 +587,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_OK
 
     if args.command == "validate-spec":
-        return _run_validate_spec(args.source, as_json=args.as_json)
+        return _run_validate_spec(args.source, as_json=args.as_json, dataset=args.dataset)
 
     if args.command == "schema":
         return _run_schema(args.schema_name, as_json=args.as_json)

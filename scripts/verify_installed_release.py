@@ -22,12 +22,12 @@ from io import StringIO
 from pathlib import Path
 from xml.etree import ElementTree
 
-LEGACY_IDS = (
+CATALOG_IDS = (
     "ranking.v1", "matrix.v1", "timeline.v1", "composition.v1", "growth.v1",
     "concentration.v1", "lifecycle.v1", "growth-quadrant.v1", "entry-exit.v1",
     "citation.v1", "matrix-composition.v1", "new-entrants.v1", "compara.v1",
     "cooccurrence.v1", "collaboration-network.v1", "uniqueness.v1",
-    "shared-involvement.v1", "inventor-tracking.v1",
+    "shared-involvement.v1", "inventor-tracking.v1", "ranking.v2",
 )
 INVENTOR_IDS = (
     "inventor-network.v1", "inventor-ego-network.v1", "inventor-technology.v1",
@@ -38,21 +38,21 @@ INVENTOR_IDS = (
 
 
 def verify_capability_inventory(caps: dict, cases: list[dict]) -> None:
-    """Keep all 18 golden cases while independently requiring the ten native IDs."""
+    """Keep the 19 golden cases while independently requiring the ten native IDs."""
     legacy = [case["analysis_id"] for case in cases]
-    assert len(legacy) == len(LEGACY_IDS) and set(legacy) == set(LEGACY_IDS)
+    assert len(legacy) == len(CATALOG_IDS) and set(legacy) == set(CATALOG_IDS)
     actual = [item["analysis_id"] for item in caps["analyses"]]
-    assert len(actual) == len(LEGACY_IDS) + len(INVENTOR_IDS)
-    assert set(actual) == set(LEGACY_IDS + INVENTOR_IDS)
+    assert len(actual) == len(CATALOG_IDS) + len(INVENTOR_IDS)
+    assert set(actual) == set(CATALOG_IDS + INVENTOR_IDS)
 
 
 SVG_CASES = frozenset({
     "ranking.v1", "matrix.v1", "timeline.v1", "composition.v1", "collaboration-network.v1",
-    "inventor-tracking.v1",
+    "inventor-tracking.v1", "ranking.v2",
 })
 MCP_SVG_CASES = frozenset({
     "ranking.v1", "matrix.v1", "timeline.v1", "composition.v1", "collaboration-network.v1",
-    "inventor-tracking.v1",
+    "inventor-tracking.v1", "ranking.v2",
 })
 MCP_TOOLS = {
     "patent_analysis.capabilities",

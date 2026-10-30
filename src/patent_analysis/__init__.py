@@ -12,8 +12,10 @@ from patent_analysis.analysis_contracts import (
 )
 from patent_analysis.api import (
     describe_capabilities,
+    diagnose_renderer,
     get_public_schema,
     inspect_dataset,
+    preflight_analysis,
     render_analysis_svg,
     run_analysis,
     run_analysis_csv,
@@ -37,6 +39,8 @@ from patent_analysis.render_errors import RenderError
 from patent_analysis.rendering import render_ranking_svg
 
 __all__ = [
+    "diagnose_renderer",
+    "preflight_analysis",
     "CONTRACT_VERSION",
     "OperationContractError",
     "describe_contract",

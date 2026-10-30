@@ -12,6 +12,11 @@
 
 ### Added
 
+- `validate-spec --dataset`とPython/MCPの入力事前診断。列対応・欠損・日付・数値・ID配列と共通母集団の件数を、セル値を公開せずに確認。
+- 発明者分析の`id_array_format: "native"`で、明示bindingしたID列のJSON文字列配列を直接入力可能に変更。既定の文字列セル形式を維持。
+- 共通フィルター・ファミリー代表選択を使う`ranking.v2`。JSON・表・既存ランキングSVGに対応。
+- `capabilities --check-runtime`とPython/MCPの描画環境診断。OS・同梱資産・Nodeのバージョン／アーキテクチャを確認。
+
 - `matrix.v1`に任意の`pie_role`（`pie_limit`、`pie_classification_level`）を追加。`matrix-bubble-svg.v1`のバブルの中を、その項目の構成比の円グラフにして、右に凡例を表示する。指定しない場合は結果もSVGも変わらない。例は`examples/basic/matrix-pie.json`。
 - 全markで選べる配色パレット`palette`（`standard`／`colorblind`／`monochrome`／`high-contrast`）を追加。CLIは`render --palette`、MCPのrenderは`palette`。既定の`standard`は出力が変わらない。
 - CSVに加え、UTF-8（先頭のUTF-8 BOM 1個は許容）の特許JSONをdataset入力として追加。単一objectとobject配列、入れ子objectのドット区切り列、scalar配列のmulti-value cell変換に対応。

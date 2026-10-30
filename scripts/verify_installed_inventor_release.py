@@ -189,7 +189,7 @@ def verify_native(input_root: Path, output_root: Path, *, render_svg: bool) -> d
     from patent_analysis import api
 
     caps = api.describe_capabilities()
-    release.verify_capability_inventory(caps, [{"analysis_id": a} for a in release.LEGACY_IDS])
+    release.verify_capability_inventory(caps, [{"analysis_id": a} for a in release.CATALOG_IDS])
     native_caps = {
         c["analysis_id"]: c for c in caps["analyses"] if c["analysis_id"] in INVENTOR_IDS
     }
@@ -426,7 +426,7 @@ async def verify_native_mcp(input_root: Path, output_root: Path, render_svg: boo
                 assert not caps.is_error
                 release.verify_capability_inventory(
                     caps.structured_content["content"],
-                    [{"analysis_id": aid} for aid in release.LEGACY_IDS],
+                    [{"analysis_id": aid} for aid in release.CATALOG_IDS],
                 )
                 m10 = next(
                     c

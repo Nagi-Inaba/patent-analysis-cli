@@ -24,7 +24,7 @@ stdio対応クライアントには、上記のPython絶対パスを`command`、
 
 | ツール | 役割 |
 | --- | --- |
-| `patent_analysis.capabilities` | 利用できる<!--var:mcp_analysis_count-->28<!--/var-->分析・mark・schema名 |
+| `patent_analysis.capabilities` | 利用できる<!--var:mcp_analysis_count-->29<!--/var-->分析・mark・schema名 |
 | `patent_analysis.schema` | 許可されたschema名からJSON Schemaを取得 |
 | `patent_analysis.inspect` | CSV・JSONのメタデータ検査。サンプル行は返さない |
 | `patent_analysis.validate_spec` | JSONオブジェクトとして渡したspecを検証 |
@@ -76,3 +76,7 @@ stdio対応クライアントには、上記のPython絶対パスを`command`、
 元CSV・JSONや任意ファイルを転送するツールではありません。`.json`は単一特許objectまたはobject配列を受け付け、変換規則と上限は[入力契約](contracts.md#json-input)に従います。ただし分析応答に出願人・分類等の入力由来ラベルは含まれます。機密情報を含む結果をAI・ログ・外部サービスへ渡すかどうかは呼び出し側の責任です。`analyze`応答はcoreのreceipt・安定SHA-256・絶対パスを除き、ランダムな`render_handle`を返します。`render`応答は指定した`output_path` directoryからの相対filenameに加え、再利用確認用の決定論的な`artifact_id`、`svg_sha256`、`renderer_build_digest`を返します。
 
 入力不備や非公開分析の拒否は、安全なerrorとして返ります。`is_error` / `ok`を確認し、失敗応答からhandleを取り出そうとしないでください。任意式、SQL、shell、HTTP transportは追加していません。
+
+## 入力と描画環境の事前診断
+
+`validate_spec`のデータ照合、発明者ID配列、`ranking.v2`、描画runtime診断の契約と例は[入力診断とRanking v2](input-preflight-and-ranking-v2.md)を参照してください。

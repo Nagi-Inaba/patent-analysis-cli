@@ -173,6 +173,20 @@ def test_capabilities_exactly_project_the_implemented_registry() -> None:
             },
             *expected_advanced_capabilities(),
             *expected_inventor_capabilities(),
+            {
+                "analysis_id": "ranking.v2",
+                "algorithm_version": "1.0.0",
+                "description": "Ranking over shared v2 filters and family representatives.",
+                "required_roles": [], "optional_roles": [],
+                "resolution_profiles": ["column-alias.v2"], "normalization_profiles": [],
+                "result_variant": "ranking", "render_marks": ["ranking-svg.v1"],
+                "limits": {"max_dimension_tokens_per_cell": 1000,
+                           "max_expanded_contributions": 500000,
+                           "max_distinct_buckets": 100000, "max_top_n": 100},
+                "mcp_public": True,
+                "spec_schema": "schemas/ranking-parameters-v2.schema.json",
+                "result_schema": "schemas/ranking-result-v2.schema.json",
+            },
         ],
     }
 

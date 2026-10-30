@@ -39,7 +39,7 @@ def variables() -> dict[str, int]:
     return {
         "analysis_count": len(definitions),
         "v2_analysis_count": len(v2),
-        # Family-representative selection and shared filters exclude Ranking and the
+        # Family-representative selection excludes legacy ranking.v1 and the
         # native inventor analyses, which accept only family_mode "records".
         "population_analysis_count": sum(d.analysis_id not in MODULE_BY_ID for d in v2),
         "inventor_analysis_count": len(MODULE_BY_ID),

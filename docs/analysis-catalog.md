@@ -7,6 +7,7 @@
 | 分析ID | 調べたいこと | spec（examples/からの相対パス） | local MCP |
 | --- | --- | --- | --- |
 | `ranking.v1` | 項目別の件数・数値の順位 | `basic/ranking.json` | 対応 |
+| `ranking.v2` | 共通フィルター・ファミリー代表選択後の順位 | `basic/ranking-v2.json` | 対応 |
 | `matrix.v1` | 2軸の組み合わせ件数（`pie_role`でバブル内に構成比） | `basic/matrix.json`、円グラフ入りは`basic/matrix-pie.json` | 対応 |
 | `timeline.v1` | 年ごとの系列推移 | `basic/timeline.json` | 対応 |
 | `composition.v1` | 項目別の構成比 | `basic/composition.json` | 対応 |
@@ -25,7 +26,7 @@
 | `shared-involvement.v1` | グループ間で共有される項目への関与 | `advanced/shared-involvement.json` | 対応 |
 | `inventor-tracking.v1` | 共発明クラスタと出願人の年次変化 | `inventor-tracking/spec.json` | 対応 |
 
-既存<!--var:shared_example_count-->17<!--/var-->例は同じ10行の`examples/advanced/patents.csv`を利用します。発明者追跡は専用の12行の`examples/inventor-tracking/patents.csv`を使います。実データや外部DBへの接続は不要です。[analysis-catalog.json](../examples/analysis-catalog.json)にはCSV・spec・mark・MCP対応・入力hash、[expected-aggregates.json](../examples/expected-aggregates.json)には期待する集計JSON本体があります。
+既存<!--var:shared_example_count-->18<!--/var-->例は同じ10行の`examples/advanced/patents.csv`を利用します。発明者追跡は専用の12行の`examples/inventor-tracking/patents.csv`を使います。実データや外部DBへの接続は不要です。[analysis-catalog.json](../examples/analysis-catalog.json)にはCSV・spec・mark・MCP対応・入力hash、[expected-aggregates.json](../examples/expected-aggregates.json)には期待する集計JSON本体があります。
 
 ```bash
 # リポジトリルート。利用するvenvを有効化済みの場合。
@@ -56,7 +57,7 @@ MCPの呼び出しには[共通手順](mcp.md)で該当specのJSONオブジェ�
 
 ## 結果を読むときの注意
 
-Rankingは契約v1、その他はv2です。前者の集計本体は応答の`result`、後者は`data`です。既存<!--var:population_analysis_count-->17<!--/var-->種類のv2分析の外側の`population`は元入力の件数、`data.population`はフィルター・代表選択後の母集団を表すため、同じ意味の件数とは限りません。新しい発明者分析は上記の専用出力契約を使います。
+`ranking.v1`は契約v1、`ranking.v2`を含むその他はv2です。前者の集計本体は応答の`result`、後者は`data`です。既存<!--var:population_analysis_count-->18<!--/var-->種類のv2分析の外側の`population`は元入力の件数、`data.population`はフィルター・代表選択後の母集団を表すため、同じ意味の件数とは限りません。新しい発明者分析は上記の専用出力契約を使います。
 
 複数値の項目は1レコードから複数の所属・組み合わせを生む場合があります。レコード数、所属件数、ペア件数、構成比の分母を混同しないでください。成長の基準年や窓はspecで明示します。ゼロ分母・欠損・上位外の扱いは各閉じた分析仕様に従います。
 
@@ -79,7 +80,7 @@ Rankingは契約v1、その他はv2です。前者の集計本体は応答の`re
 
 Matrix Compositionは**選択1セル**の内訳です。全セルの構成比を一度に見るには、`matrix.v1`の`pie_role`を使います。Comparaは**count-only**です。被引用数は外部サービスから取得せず、CSVに記録された値だけを使います。
 
-既存v2の<!--var:population_analysis_count-->17<!--/var-->分析は[ファミリー代表単位](family-population.md)を選べます。代表以外の出願人・分類・引用数を合算しないため、「ファミリー全構成員の属性集合」とは別の結果です。Rankingは従来のレコード単位を維持します。
+既存v2の<!--var:population_analysis_count-->18<!--/var-->分析は[ファミリー代表単位](family-population.md)を選べます。代表以外の出願人・分類・引用数を合算しないため、「ファミリー全構成員の属性集合」とは別の結果です。`ranking.v1`は従来のレコード単位を維持します。`ranking.v2`は共通の代表選択に対応します。
 
 ## SVG
 

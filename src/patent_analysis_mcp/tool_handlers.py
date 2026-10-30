@@ -47,8 +47,10 @@ _ARGUMENT_KEYS = {
         {"output_root_id", "output_path", "analysis_handle", "mark"}
     ),
 }
-# Optional keys are display choices; omitting them keeps the default rendering.
+# Optional keys leave the existing default responses and rendering unchanged.
 _OPTIONAL_ARGUMENT_KEYS = {
+    "patent_analysis.capabilities": frozenset({"check_runtime"}),
+    "patent_analysis.validate_spec": frozenset({"input_root_id", "path"}),
     "patent_analysis.render": frozenset({"value_labels", "palette"}),
 }
 _VALUE_LABEL_CHOICES = ("hidden", "shown")
@@ -148,7 +150,7 @@ class ToolHandlers:
 
     def _dispatch(self, tool_name: str, arguments: Mapping[str, Any]) -> object:
         if tool_name == "patent_analysis.capabilities":
-            return describe_mcp_capabilities()
+            return self._capabilities(arguments)
         if tool_name == "patent_analysis.schema":
             schema_name = require_visible_schema(self._required_string(arguments, "schema_name"))
             return {
@@ -158,12 +160,26 @@ class ToolHandlers:
         if tool_name == "patent_analysis.inspect":
             return self._inspect(arguments)
         if tool_name == "patent_analysis.validate_spec":
-            return self._validated_spec(arguments)[1]
+            return self._validate_spec(arguments)
         if tool_name == "patent_analysis.analyze":
             return self._analyze(arguments)
         if tool_name == "patent_analysis.render":
             return self._render(arguments)
         raise McpContractError("input.invalid")
+
+    def _capabilities(self, arguments: Mapping[str, Any]) -> object:
+        check_runtime = arguments.get("check_runtime", False)
+        if type(check_runtime) is not bool:
+            raise McpContractError("input.invalid")
+        capabilities = describe_mcp_capabilities()
+        if check_runtime:
+            report = self._api_callable("diagnose_renderer")(
+                node_executable=self.node_executable,
+            )
+            if not isinstance(report, Mapping):
+                raise RuntimeError("public renderer diagnostics result is invalid")
+            capabilities["renderer_runtime"] = report
+        return capabilities
 
     def _input_reference(self, arguments: Mapping[str, Any]) -> tuple[Path, str]:
         root_id = self._required_string(arguments, "input_root_id")
@@ -194,6 +210,21 @@ class ToolHandlers:
             raise RuntimeError("public validation result is invalid")
         require_visible_analysis(validation.get("analysis_id"))
         return spec_bytes, validation
+
+    def _validate_spec(self, arguments: Mapping[str, Any]) -> object:
+        has_root = "input_root_id" in arguments
+        has_path = "path" in arguments
+        if has_root != has_path:
+            raise McpContractError("input.invalid")
+        spec_bytes, validation = self._validated_spec(arguments)
+        if not has_root:
+            return validation
+        allowed_root, relative = self._input_reference(arguments)
+        return self._api_callable("preflight_analysis")(
+            relative,
+            spec_bytes,
+            allowed_root=allowed_root,
+        )
 
     def _analyze(self, arguments: Mapping[str, Any]) -> object:
         allowed_root, relative = self._input_reference(arguments)

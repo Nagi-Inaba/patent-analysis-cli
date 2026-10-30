@@ -20,6 +20,7 @@ from patent_analysis.analyses.concentration import required_roles as concentrati
 from patent_analysis.analyses.growth import required_roles as growth_required_roles
 from patent_analysis.analyses.lifecycle import required_roles as lifecycle_required_roles
 from patent_analysis.analyses.matrix import _validate_parameters as validate_matrix_parameters
+from patent_analysis.analyses.ranking import required_roles as ranking_required_roles
 from patent_analysis.analyses.timeline import required_roles as timeline_required_roles
 from patent_analysis.analysis_budgets import (
     MAX_ANALYSIS_SPEC_BYTES,
@@ -136,6 +137,7 @@ def _validate_definition_specific_spec(
     except ValueError as error:
         _raise_invalid(str(error))
     validators = {
+        "ranking.v2": ranking_required_roles,
         "matrix.v1": validate_matrix_parameters,
         "timeline.v1": timeline_required_roles,
         "composition.v1": composition_required_roles,

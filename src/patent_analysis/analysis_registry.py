@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from types import MappingProxyType
 
 from patent_analysis.analyses._advanced_registration import definitions as _advanced_definitions
@@ -47,6 +47,7 @@ from patent_analysis.analyses.matrix import (
     MAX_EXPANDED_CONTRIBUTIONS as MAX_MATRIX_EXPANDED_CONTRIBUTIONS,
 )
 from patent_analysis.analyses.matrix import MAX_VISIBLE_CELLS, analyze_matrix_csv
+from patent_analysis.analyses.ranking import analyze_ranking_csv
 from patent_analysis.analyses.timeline import (
     MAX_EXPANDED_CONTRIBUTIONS as MAX_TIMELINE_EXPANDED_CONTRIBUTIONS,
 )
@@ -157,6 +158,20 @@ _RANKING_V1 = AnalysisDefinition(
     incremental_budget_guard=_guard_ranking_budget,
     preflight_estimator_if_superlinear=None,
     mcp_public=True,
+)
+
+_RANKING_V2 = replace(
+    _RANKING_V1,
+    analysis_id="ranking.v2",
+    public_description="Ranking over shared v2 filters and family representatives.",
+    spec_schema="schemas/ranking-parameters-v2.schema.json",
+    result_schema="schemas/ranking-result-v2.schema.json",
+    required_roles=(),
+    optional_roles=(),
+    allowed_resolution_profiles=(COLUMN_ALIAS_PROFILE,),
+    implementation=analyze_ranking_csv,
+    fixture_set=(),
+    operation_budget=MappingProxyType({**_RANKING_V1.operation_budget, "max_top_n": 100}),
 )
 
 _MATRIX_V1 = AnalysisDefinition(
@@ -516,6 +531,7 @@ _REGISTRY = build_registry(
         _LIFECYCLE_V1,
         *_advanced_definitions(AnalysisDefinition, SourceProvenance, COLUMN_ALIAS_PROFILE),
         *_inventor_definitions(AnalysisDefinition, SourceProvenance),
+        _RANKING_V2,
     )
 )
 

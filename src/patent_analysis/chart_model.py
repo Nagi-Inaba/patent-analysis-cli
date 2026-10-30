@@ -30,6 +30,7 @@ from patent_analysis.analysis_contracts import (
     StrictDraft202012Validator,
     validate_analysis_result,
 )
+from patent_analysis.chart_models._common import coerce_analysis_result
 from patent_analysis.render_palettes import apply_render_palette
 
 _ENVELOPE_FIELDS = {"analysis_contract_version", "ok", "result", "receipt"}
@@ -207,6 +208,21 @@ def _preflight_render_boundary(value: Any) -> None:
 
 def _validate_envelope(analyze_success_envelope: Any) -> tuple[dict[str, Any], str]:
     _preflight_analyze_envelope(analyze_success_envelope)
+    if isinstance(analyze_success_envelope, dict) and (
+        analyze_success_envelope.get("analysis_id") == "ranking.v2"
+    ):
+        document = coerce_analysis_result(
+            analyze_success_envelope, analysis_id="ranking.v2", result_variant="ranking",
+            result_schema="ranking-result-v2.schema.json",
+        )
+        if document["algorithm_version"] != "1.0.0":
+            raise ValueError
+        result = validate_analysis_result(document["data"])
+        if result["population"]["input_rows"] != document["population"]["analyzed_rows"]:
+            raise ValueError
+        _preflight_render_boundary({"result": result})
+        # Bind the chart and any overlay to the full v2 population evidence.
+        return result, sha256_bytes(canonical_json_bytes(document))
     _preflight_render_boundary(analyze_success_envelope)
     if (
         not isinstance(analyze_success_envelope, dict)

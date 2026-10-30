@@ -50,6 +50,8 @@ print(result["data"]["statistics"])
 
 ## 入力と集計単位
 
+JSONで自然なID配列を使う場合は`parameters.id_array_format: "native"`を指定します。`inventor_ids`／`applicant_ids`／`source_ids`にbindingした列だけが対象です。既定の文字列セル形式も維持しています。[入力診断と配列の例](input-preflight-and-ranking-v2.md)を参照してください。
+
 Specの `resolution.bindings` で `record_id` と、`inventor_ids` または `inventor_names` のどちらか一方を指定します。IDと氏名の配列順から対応を推定しません。`date`、`classification`、`applicant_ids` 等の追加必須bindingは、分析のparameter schemaで確認できます。
 
 この分析群は通常のmulti-value正規化とは異なるraw入力契約です。合成例の人物・法人列は `"[\"SAMPLE-A\",\"SAMPLE-B\"]"` のようにJSON文字列配列を表すセルです。この契約は`inventor_ids`／`applicant_ids`／`source_ids`に適用します。氏名だけの`inventor_names`は従来の氏名用区切り規則を使います。区切り文字を含むIDを勝手に分割せず、IDの空白除去・NFKC統一もしません。CSVでも同じセル内容を用い、CSVとして必要な引用符のエスケープをしてください。表示ラベルの短縮や表示用正規化は、元の人物識別子や統計を変更しません。

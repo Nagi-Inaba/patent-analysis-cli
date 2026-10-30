@@ -162,6 +162,15 @@
       "mark": "inventor-tracking-svg.v1",
       "csv_sha256": "2de682b4cef435b410d9e8ad3608d0ac167cb90065a847c23dfed5534dcd1fba",
       "spec_sha256": "51b3653b16ca245b691203eacfe8a5975bf099ae6c60b3d2b68435909ecea5b9"
+    },
+    {
+      "analysis_id": "ranking.v2",
+      "csv": "advanced/patents.csv",
+      "spec": "basic/ranking-v2.json",
+      "mcp": true,
+      "mark": "ranking-svg.v1",
+      "csv_sha256": "c82f36477a9127a9204e6dd4422cd50e0d3e9a8a0686007c05f1684755f5a1a4",
+      "spec_sha256": "ff1ecad4ee53339b89b63d200cb4facdc14002a5de6e410b297bce67ef945230"
     }
   ]
 }

@@ -15,6 +15,7 @@ CATALOG = json.loads((EXAMPLES / "analysis-catalog.json").read_bytes())["cases"]
 FIRST_ROWS = {
     "inventor-tracking.v1": ("inventors", "inventor", "A", "count", "5"),
     "ranking.v1": ("rows", "label", "A", "value", "3"),
+    "ranking.v2": ("rows", "label", "A", "value", "3"),
     "matrix.v1": ("cells", "x_label", "X", "value", "5"),
     "timeline.v1": ("series", "year", "2018", "value", "0"),
     "composition.v1": ("items", "label", "A", "value", "3"),

@@ -14,6 +14,7 @@ from patent_analysis.analyses.concentration import ConcentrationBudgetError
 from patent_analysis.analyses.growth import GrowthBudgetError
 from patent_analysis.analyses.lifecycle import LifecycleBudgetError
 from patent_analysis.analyses.matrix import MatrixBudgetError
+from patent_analysis.analyses.ranking import RankingBudgetError
 from patent_analysis.analyses.timeline import TimelineBudgetError
 from patent_analysis.analysis import analyze_csv
 from patent_analysis.analysis_contracts import AnalysisContractError, StrictDraft202012Validator
@@ -72,7 +73,7 @@ def _run_registered_v2(
         raise DatasetInputError("input is invalid") from None
     except (
         CompositionBudgetError, ConcentrationBudgetError, GrowthBudgetError,
-        LifecycleBudgetError, MatrixBudgetError, TimelineBudgetError,
+        LifecycleBudgetError, MatrixBudgetError, RankingBudgetError, TimelineBudgetError,
     ):
         _raise_invalid("analysis exceeds published limits")
     if not isinstance(result, Mapping):

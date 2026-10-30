@@ -186,6 +186,10 @@
           ],
           "default": "full"
         },
+        "id_array_format": {
+          "enum": ["encoded", "native"],
+          "default": "encoded"
+        },
         "auxiliary": {
           "oneOf": [
             {

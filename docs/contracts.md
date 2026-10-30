@@ -2,7 +2,7 @@
 
 ## Version
 
-package versionは `0.2.0`、OperationPlan契約versionは `1.0.0` である。AnalysisSpecは旧Rankingの `1.0.0` と、他の<!--var:v2_analysis_count-->27<!--/var-->分析の `2.0.0` を区別する。分析契約versionはOperationPlan契約versionとは別に管理する。OperationPlanはversion付きの説明・検証契約であり、本packageは登録済み<!--var:operation_count-->15<!--/var--> operationを実行しない。`analyze` が実行する契約はAnalysisSpecであり、現行の実行対象は<!--var:analysis_count-->28<!--/var-->分析である。
+package versionは `0.2.0`、OperationPlan契約versionは `1.0.0` である。AnalysisSpecは旧Rankingの `1.0.0` と、他の<!--var:v2_analysis_count-->28<!--/var-->分析の `2.0.0` を区別する。分析契約versionはOperationPlan契約versionとは別に管理する。OperationPlanはversion付きの説明・検証契約であり、本packageは登録済み<!--var:operation_count-->15<!--/var--> operationを実行しない。`analyze` が実行する契約はAnalysisSpecであり、現行の実行対象は<!--var:analysis_count-->29<!--/var-->分析である。
 
 Schema IDは `urn:patent-analysis:operation-plan:1.0.0` とする。OperationPlan v1本体へversion fieldは追加しない。
 
@@ -128,7 +128,7 @@ toolの失敗はcaller-controlled textを含めない固定safe envelopeにす�
 | `output.conflict` | `Render output conflicts with an existing artifact` |
 | `internal.failed` | `Internal MCP adapter failure` |
 
-MCP公開対象はanalysis registryの `mcp_public=true` から導出し、現在は<!--var:mcp_analysis_count-->28<!--/var-->分析と対応する固定mark・公開schemaだけである。詳細な一覧は[分析カタログ](analysis-catalog.md)に記載する。非公開analysisは実行前に `analysis.unknown` として拒否する。
+MCP公開対象はanalysis registryの `mcp_public=true` から導出し、現在は<!--var:mcp_analysis_count-->29<!--/var-->分析と対応する固定mark・公開schemaだけである。詳細な一覧は[分析カタログ](analysis-catalog.md)に記載する。非公開analysisは実行前に `analysis.unknown` として拒否する。
 
 rootはserver起動時の `--input-root <root_id>=<absolute-local-directory>` と `--output-root <root_id>=<absolute-local-directory>` で承認する。各rootは既存のlocal directoryで、reparse componentを含まず、input/outputのroot IDは異なり、directoryは互いにdisjoint（同一・包含なし）でなければならない。toolの `path` / `output_path` は相対pathだけを受け付け、`..`、drive/UNC/device path、絶対path、reparse pathを拒否する。入力はroot配下のverified regular file、出力はroot配下のdirectoryに限定する。
 
@@ -294,11 +294,11 @@ JSON modeのstdoutにはJSON以外を出力しない。human modeは短い要約
 
 source CSVはローカルに留まり、read-onlyで扱う。package自身はmodel、network、cloud、外部特許DB、外部API、インターネット検索、任意Python、任意SQL、任意shellを呼ばない。`inspect` はcell valueを含まないmetadataだけを返す。`analyze` はデータ由来のdimension label、集計値、count、shareを返し、unique labelがsource cell文字列と一致する場合もある。結果を外部AIやserviceへ送るかどうかはcaller policyであり、本packageの責務外である。UI、remote MCP、遠隔実行はこのpackageの提供範囲外である。local stdio adapterはoptionalなthin adapterとしてこの契約に従う。
 
-AnalysisSpec 1.0.0は旧Rankingを維持し、AnalysisSpec 2.0.0は他の<!--var:v2_analysis_count-->27<!--/var-->分析を提供する。利用可能なID・schema・markは`capabilities --json`と[分析カタログ](analysis-catalog.md)を参照する。
+AnalysisSpec 1.0.0は旧Rankingを維持し、AnalysisSpec 2.0.0は他の<!--var:v2_analysis_count-->28<!--/var-->分析を提供する。利用可能なID・schema・markは`capabilities --json`と[分析カタログ](analysis-catalog.md)を参照する。
 
 `validate-spec <file|-> --json`は公開Python APIの`validate_analysis_spec_bytes()`を使い、CSVを開かずにSchemaと実行条件を検証する。成功応答は`valid`、`analysis_id`、`spec_variant`を持つ。年範囲の逆転、必要な列割り当ての欠落・重複、同一roleを許さない分析パラメータを実行前に拒否する。Schemaの語彙だけでは実行可能性を保証しない。実データの列の存在・集計上限は`analyze`時に検査する。契約違反は`analysis.invalid`／終了コード2、読込・parse失敗は`input.invalid`／終了コード3。ファイル入力はtrusted root配下、標準入力はroot不要で、2 MiB上限は共通。
 
-<!--var:population_analysis_count-->17<!--/var--> native v2分析の`population.filters`は`exact`、`one_of`、`year`、`year_range`、`outside_year_range`に対応する。年は1800〜2199の整数、範囲は両端を含む。正規化後の4桁の十進年を判定し、単年は同じ始年・終年の範囲と等価となる。`outside_year_range`は範囲内判定の否定なので、欠損年・無効年も含む。各filterの`effect: exclude`はその判定を反転する。
+<!--var:population_analysis_count-->18<!--/var--> native v2分析の`population.filters`は`exact`、`one_of`、`year`、`year_range`、`outside_year_range`に対応する。年は1800〜2199の整数、範囲は両端を含む。正規化後の4桁の十進年を判定し、単年は同じ始年・終年の範囲と等価となる。`outside_year_range`は範囲内判定の否定なので、欠損年・無効年も含む。各filterの`effect: exclude`はその判定を反転する。
 
 `selection_sets`は`dimension_role`の値が`values`のいずれかに一致する行を選ぶ。`source_date_role`・`start_year`・`end_year`を併記した場合は、その行の年範囲も満たす必要がある。これは行の条件であり、期間内に登場する主体の全期間の行を選ぶ指定ではない。`mode: exclude`は値と任意の年範囲を合わせた条件全体を反転する。値の集合内はOR、filtersとselection_setsの間はAND。同じdimensionの選択集合を重複させない。全条件で絞り込んだ後に`earliest`の代表行を選ぶ。
 
@@ -314,9 +314,9 @@ filtersとselection_setsの合計は64件以下、各値集合は空でない異
 
 Matrix・Timeline・Composition・Growth・Concentration・Lifecycleの分析固有の上限超過は、内部例外を露出せず`analysis.invalid`／終了コード2を返す。CSV自体の入力上限と既存Rankingの上限は従来どおり`input.invalid`を返す。
 
-v2の母集団は`family_mode=records|earliest`を選択できる。`earliest`は`family_role`が必須、`date_role`は任意。フィルター後の明示IDから代表を選び、family結果だけに`family_selection`を付加する。元入力件数と選択後件数を混同しない。詳細は[ファミリー仕様](family-population.md)に記載する。既存records結果にはこのフィールドを追加しない。
+既存の<!--var:population_analysis_count-->18<!--/var-->種類のv2分析では、母集団の`family_mode=records|earliest`を選択できる。`earliest`は`family_role`が必須、`date_role`は任意。フィルター後の明示IDから代表を選び、family結果だけに`family_selection`を付加する。元入力件数と選択後件数を混同しない。詳細は[ファミリー仕様](family-population.md)に記載する。既存records結果にはこのフィールドを追加しない。新しい発明者<!--var:inventor_analysis_count-->10<!--/var-->分析は共通`family_mode`を`records`に限定し、別の集計単位・根拠保持規則を使う。[発明者分析](inventor-analysis.md#入力と集計単位)を参照する。
 
-local MCPはregistryの公開対象<!--var:mcp_analysis_count-->28<!--/var-->分析を扱う。起動と呼び出し形式は[MCPガイド](mcp.md)を参照する。`verify`・`report`という新しい公開コマンドは追加しない。
+local MCPはregistryの公開対象<!--var:mcp_analysis_count-->29<!--/var-->分析を扱う。起動と呼び出し形式は[MCPガイド](mcp.md)を参照する。`verify`・`report`という新しい公開コマンドは追加しない。
 
 trusted-local v1はWindows x64またはmacOS arm64/x86_64で、callerが選択した対応アーキテクチャのNode.js 24.22.1 exactを完全に信頼する。Linuxでは集計・JSONを利用できるが、公開SVG経路は提供しない。sandbox、Authenticode、AppContainer、Job Object、private namespace、WCAG適合、advanced Python SVG policy全体の再検証を主張しない。最終SVGは`role="img"`、`aria-labelledby`、`aria-describedby`と、検証済みmodelに由来するtext-onlyのtitle/descを持つ。表示用label、overlay、分析結果label、SVGはcaller-controlled sensitive outputであり、package自身は外部へ送信しない。`run_analysis_table(..., include_context=True)`と`analyze --format csv|text --include-context`はSpec・分析文書全体を添付する。詳細は[表出力](table-export.md)を参照する。
 
@@ -327,3 +327,7 @@ patch releaseではaccepted payload、rejected payload、error codeを変えな�
 minor releaseではoptional fieldまたはcapabilityで判別できるoperationを追加できる。AnalysisSpecのvariantを追加する場合も、OperationPlan契約versionの意味を変更しない。
 
 必須field、既存型、既存operationの削除、既存error codeの変更はmajor releaseとする。
+
+## 入力と描画環境の事前診断
+
+`validate_spec`のデータ照合、発明者ID配列、`ranking.v2`、描画runtime診断の契約と例は[入力診断とRanking v2](input-preflight-and-ranking-v2.md)を参照してください。

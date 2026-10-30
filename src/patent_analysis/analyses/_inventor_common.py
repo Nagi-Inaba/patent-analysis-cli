@@ -39,7 +39,7 @@ def validate_parameters(value, *, choices=GRAPH_CHOICES, extras=None, required=(
     extras = extras or {}
     if (
         not isinstance(value, Mapping)
-        or set(value) - (set(choices) | extras.keys() | {"auxiliary"})
+        or set(value) - (set(choices) | extras.keys() | {"auxiliary", "id_array_format"})
         or not set(required) <= value.keys()
     ):
         raise ValueError("invalid inventor parameters")
@@ -53,6 +53,10 @@ def validate_parameters(value, *, choices=GRAPH_CHOICES, extras=None, required=(
         result[key] = item
     if "auxiliary" in value:
         result["auxiliary"] = value["auxiliary"]
+    if "id_array_format" in value:
+        if value["id_array_format"] not in ("encoded", "native"):
+            raise ValueError("invalid inventor parameters")
+        result["id_array_format"] = value["id_array_format"]
     return result
 
 

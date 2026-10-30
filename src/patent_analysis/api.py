@@ -22,6 +22,7 @@ from patent_analysis.analysis_dispatch import (
     ValidatedV1Spec,
     dispatch_and_validate_spec_bytes,
 )
+from patent_analysis.analysis_preflight import preflight_analysis
 from patent_analysis.analysis_runner import run_analysis, run_analysis_csv
 from patent_analysis.analysis_tables import run_analysis_table as _legacy_analysis_table
 from patent_analysis.capabilities import describe_capabilities
@@ -31,12 +32,15 @@ from patent_analysis.dataset_v2 import (
     manifest_to_public_dict,
     read_dataset_v2,
 )
+from patent_analysis.runtime_diagnostics import diagnose_renderer
 
 _PUBLIC_SCHEMA_NAMES = (
     frozenset(
         {
             "analysis-spec.schema.json",
             "analysis-result.schema.json",
+            "ranking-parameters-v2.schema.json",
+            "ranking-result-v2.schema.json",
             "analysis-spec-v2.schema.json",
             "analysis-result-v2.schema.json",
             "analysis-error-v2.schema.json",
@@ -205,6 +209,8 @@ def validate_analysis_spec_bytes(spec_bytes: bytes) -> dict[str, object]:
 
 
 __all__ = (
+    "preflight_analysis",
+    "diagnose_renderer",
     "describe_capabilities",
     "get_public_schema",
     "inspect_dataset",

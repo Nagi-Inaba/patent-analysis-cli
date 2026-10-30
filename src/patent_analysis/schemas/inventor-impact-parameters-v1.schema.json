@@ -213,6 +213,10 @@
           "minimum": 1,
           "maximum": 9999
         },
+        "id_array_format": {
+          "enum": ["encoded", "native"],
+          "default": "encoded"
+        },
         "auxiliary": {
           "oneOf": [
             {

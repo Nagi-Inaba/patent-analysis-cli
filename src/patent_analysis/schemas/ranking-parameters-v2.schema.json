@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:patent-analysis:ranking-parameters:2.0.0",
+  "title": "ranking.v2 AnalysisSpec",
+  "type": "object",
+  "required": [
+    "analysis_contract_version", "analysis_id", "resolution", "normalization",
+    "population", "parameters"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_contract_version": {"const": "2.0.0"},
+    "analysis_id": {"const": "ranking.v2"},
+    "resolution": {"type": "object"},
+    "normalization": {
+      "type": "object",
+      "required": ["profiles"],
+      "additionalProperties": false,
+      "properties": {"profiles": {"type": "array", "maxItems": 0}}
+    },
+    "population": {"type": "object"},
+    "parameters": {"$ref": "#/$defs/parameters"}
+  },
+  "$defs": {
+    "parameters": {
+      "type": "object",
+      "required": ["role"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "\\S"},
+        "measure": {"enum": ["count", "sum", "average", "max", "min"], "default": "count"},
+        "measure_role": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "\\S"},
+        "top_n": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+        "include_other": {"type": "boolean", "default": true},
+        "multi_value_mode": {"enum": ["all", "first"], "default": "all"}
+      },
+      "dependentSchemas": {
+        "measure_role": {
+          "required": ["measure"],
+          "properties": {"measure": {"enum": ["sum", "average", "max", "min"]}}
+        }
+      },
+      "allOf": [{
+        "if": {
+          "required": ["measure"],
+          "properties": {"measure": {"enum": ["sum", "average", "max", "min"]}}
+        },
+        "then": {"required": ["measure_role"]}
+      }]
+    }
+  }
+}

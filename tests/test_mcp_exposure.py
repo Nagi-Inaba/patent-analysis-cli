@@ -49,6 +49,8 @@ def test_mcp_exposure_is_derived_only_from_completed_public_registry_entries() -
     assert set(capabilities["schemas"]) == {
         "analysis-result.schema.json",
         "analysis-spec.schema.json",
+        "ranking-parameters-v2.schema.json",
+        "ranking-result-v2.schema.json",
         *(
             f"{name}-{kind}-v1.schema.json"
             for name in ("matrix", "timeline", "composition")

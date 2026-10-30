@@ -50,7 +50,7 @@ def test_legacy_verifier_accepts_native_public_capabilities_without_expanding_go
     check = getattr(release, "verify_capability_inventory", None)
     assert callable(check), "installed verifier needs a finite legacy/native capability check"
     check(api.describe_capabilities(), cases)
-    assert len(cases) == 18
+    assert len(cases) == 19
 
 
 def test_sdist_manifest_includes_public_inventor_usage_guide(monkeypatch):
