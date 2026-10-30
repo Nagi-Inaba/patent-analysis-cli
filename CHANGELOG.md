@@ -6,6 +6,7 @@
 
 ### Security
 
+- CIの依存監査は、hash固定した`pip-audit`とその依存を専用venvで使用し、再現可能に実行できる。
 - MCP依存の`opentelemetry-api`を1.45.1以降に制限し、hash固定lockも更新。`tracestate`解析の過剰なCPU消費を修正した版を使用する（CVE-2026-114603 / GHSA-xcq7-p3pf-p88h）。
 - rendererの依存`ajv`が使う`fast-uri`を3.1.9へ更新し、依存lock・依存一覧・SBOMを同期。URIのscheme・host・path正規化の不備を修正した版を使用する（GHSA-w74x-v6f9-j3xg、GHSA-xhq7-xmqj-769h、GHSA-wjr9-j795-jxcr、GHSA-333x-w4r6-6crp）。描画bundleには含まれないため、生成SVGと描画資材は変わらない。
 

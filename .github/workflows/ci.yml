@@ -287,13 +287,19 @@ jobs:
           import json, os, shutil, subprocess, sys
           from pathlib import Path
           reports = Path("dist/verification")
-          subprocess.run([sys.executable, "-m", "pip", "install", "pip-audit==2.10.1"], check=True)
+          audit_venv = Path(os.environ["RUNNER_TEMP"]) / "pip-audit-venv"
+          subprocess.run([sys.executable, "-m", "venv", str(audit_venv)], check=True)
+          audit_python = audit_venv / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+          subprocess.run([
+              str(audit_python), "-m", "pip", "install", "--require-hashes",
+              "-r", "requirements/pip-audit-2.10.1.lock",
+          ], check=True)
           for source, output in (
               (Path("requirements/mcp-2.2.0.lock"), reports / "python-lock-audit.json"),
               (reports / "dependencies.txt", reports / "python-audit.json"),
           ):
               subprocess.run([
-                  sys.executable, "-m", "pip_audit", "--no-deps", "--disable-pip",
+                  str(audit_python), "-m", "pip_audit", "--no-deps", "--disable-pip",
                   "-r", str(source), "--format", "json", "--output", str(output),
               ], check=True, timeout=180)
           npm = [str(Path(os.environ["SystemRoot"]) / "System32/cmd.exe"), "/d", "/c", "npm.cmd"] if sys.platform == "win32" else [shutil.which("npm")]

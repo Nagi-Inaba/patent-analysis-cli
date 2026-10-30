@@ -8,6 +8,7 @@ include docs/inventor-analysis.md
 include docs/performance.md docs/performance-sample.json
 recursive-include examples *.csv *.json
 recursive-include tests *.py *.csv *.json
+include requirements/pip-audit.in
 recursive-include requirements *.lock
 
 graft renderer

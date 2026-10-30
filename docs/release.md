@@ -42,12 +42,15 @@ CIは既存のWindowsとLinuxに加えて`macos-15`（arm64）と`macos-15-intel
 
 ## 依存・secret検査
 
-hash固定した`requirements/mcp-2.2.0.lock`と、配布wheelから新規解決した実際の依存を`pip-audit==2.10.1`で検査します。renderer lockは`npm audit --json`で検査します。lockはsource testの再現性、新規解決は公開時点のinstall互換性をそれぞれ確認するもので、両方に既知脆弱性がないことを要求します。
+hash固定した`requirements/mcp-2.2.0.lock`と、配布wheelから新規解決した実際の依存を、専用venvへ`requirements/pip-audit-2.10.1.lock`から全依存をhash固定して導入した`pip-audit`で検査します。renderer lockは`npm audit --json`で検査します。lockはsource testの再現性、新規解決は公開時点のinstall互換性をそれぞれ確認するもので、両方に既知脆弱性がないことを要求します。
 
 Gitleaks 8.30.1でrelease対象commitまでのGit履歴と、wheel・sdistを含む`dist`を検査します。配布物は3階層まで展開し、reportはredactします。
 
 ```text
-pip-audit --no-deps --disable-pip -r dist/verification/dependencies.txt --format json
+python -m venv .venv-pip-audit
+# Windowsは.venv-pip-audit/Scripts/python.exe、それ以外は.venv-pip-audit/bin/pythonを使用
+.venv-pip-audit/Scripts/python.exe -m pip install --require-hashes -r requirements/pip-audit-2.10.1.lock
+.venv-pip-audit/Scripts/python.exe -m pip_audit --no-deps --disable-pip -r dist/verification/dependencies.txt --format json
 npm --prefix renderer audit --json
 gitleaks git . --log-opts=HEAD --redact --no-banner
 gitleaks dir dist --max-archive-depth=3 --redact --no-banner
