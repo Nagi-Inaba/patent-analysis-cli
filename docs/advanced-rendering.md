@@ -105,11 +105,9 @@ Windows-specific tests in `tests/test_access.py`; all native SVG tests execute.
 The exact checkout, resource verification,
 regenerated-byte equality and wheel-content checks remain in CI.
 
-The native Windows/macOS suite compares API/CLI SVGs with omitted CLI marks for
-every analysis in its `ANALYSIS_IDS` inventory, including the inventor SVG analyses.
-The explicit CLI mark path is checked with the representative growth-quadrant case;
-it is not repeated for every analysis. The suite also compares MCP-handler output
-with the public API for every inventory entry. It checks created/reused receipts, exact
+The native Windows/macOS suite compares API/CLI SVGs with both explicit and omitted
+CLI marks for every analysis in its `ANALYSES` inventory. It also compares
+MCP-handler output with the public API for every inventory entry. It checks created/reused receipts, exact
 SVG bytes and artifact identity, absence of extra artifacts, and unchanged input
 CSV/specification bytes. The MCP cases exercise the real handlers and renderer,
 not the full SDK/stdio transport.
