@@ -19,6 +19,31 @@ from patent_analysis.inventor_models import PatentObservation, parse_observation
 from patent_analysis.inventor_sidecars import TABLE_IDS, SidecarSnapshot, read_inventor_sidecar
 
 
+def _patch_mobility(monkeypatch, name, value):
+    from importlib import import_module
+
+    modules = (
+        "patent_analysis.inventor_mobility",
+        "patent_analysis._inventor_mobility_common",
+        "patent_analysis._inventor_mobility_candidates",
+        "patent_analysis._inventor_mobility_evidence",
+        "patent_analysis._inventor_mobility_verification",
+        "patent_analysis._inventor_mobility_flows",
+    )
+    patched = False
+    for module_name in modules:
+        try:
+            module = import_module(module_name)
+        except ModuleNotFoundError as exc:
+            if exc.name != module_name:
+                raise
+            continue
+        if hasattr(module, name):
+            monkeypatch.setattr(module, name, value)
+            patched = True
+    assert patched, f"No mobility module binds {name}"
+
+
 def obs(record, when, applicants=("A",), person="i", **kwargs):
     identity = IdentityResolver().resolve(inventor_id=person)
     return PatentObservation(
@@ -110,15 +135,13 @@ def test_fractional_group_partial_same_group_keeps_excluded_quarter_mass():
 
 
 def test_fractional_byte_budget_preflights_before_cartesian_generator(monkeypatch):
-    import patent_analysis.inventor_mobility as module
-
     rows = (
         obs("r1", "2020", tuple(f"A{i}" for i in range(64))),
         obs("r2", "2021", tuple(f"B{i}" for i in range(64))),
     )
     mobility = build_mobility(rows)
-    monkeypatch.setattr(
-        module, "_fractional_pairs", lambda *args: pytest.fail("Cartesian expansion started")
+    _patch_mobility(
+        monkeypatch, "_fractional_pairs", lambda *args: pytest.fail("Cartesian expansion started")
     )
     with pytest.raises(DatasetInputError, match="limits"):
         organization_flows(mobility, rows, None, allocation="fractional_flows")
@@ -370,12 +393,12 @@ def test_adapter_preserves_explicit_bindings_thresholds_and_input_permutation():
 
 @pytest.mark.parametrize("limit", ["MAX_ROWS", "MAX_COMPARISONS"])
 def test_fractional_row_and_operation_preflight_precedes_expansion(monkeypatch, limit):
-    import patent_analysis.inventor_mobility as module
-
     rows = (obs("r1", "2020", ("A", "B")), obs("r2", "2021", ("C", "D")))
     mobility = build_mobility(rows)
-    monkeypatch.setattr(module, limit, 3)
-    monkeypatch.setattr(module, "_fractional_pairs", lambda *args: pytest.fail("expansion started"))
+    _patch_mobility(monkeypatch, limit, 3)
+    _patch_mobility(
+        monkeypatch, "_fractional_pairs", lambda *args: pytest.fail("expansion started")
+    )
     with pytest.raises(DatasetInputError, match="limits"):
         organization_flows(mobility, rows, None, allocation="fractional_flows")
 
@@ -397,11 +420,9 @@ def test_verified_adapter_preserves_long_explicit_supersession_component():
 
 
 def test_adapter_verification_preserves_safe_budget_error(monkeypatch):
-    import patent_analysis.inventor_mobility as module
-
     rows = change_rows()
     mobility = build_mobility(rows)
-    monkeypatch.setattr(module, "MAX_ROWS", 1)
+    _patch_mobility(monkeypatch, "MAX_ROWS", 1)
     with pytest.raises(DatasetInputError, match="dataset input exceeds published limits"):
         organization_flows(mobility, rows, None)
 
@@ -776,12 +797,10 @@ def test_minimum_observations_counts_contiguous_known_same_set_on_each_side():
 
 
 def test_evidence_comparison_budget_rejects_before_candidate_or_event_matching(monkeypatch):
-    import patent_analysis.inventor_mobility as module
-
     rows = tuple(obs(f"r{i}", f"{1000 + i}", ("A" if i % 2 == 0 else "B",)) for i in range(500))
     s = job_snapshot(evidences=[evidence(evidence_id=f"p{i}") for i in range(500)], reviews=[])
-    monkeypatch.setattr(
-        module,
+    _patch_mobility(
+        monkeypatch,
         "match_corporate_events",
         lambda *args: pytest.fail("superlinear comparison started"),
     )
@@ -802,12 +821,10 @@ def test_m10_is_same_candidate_audit_set_with_explicit_default_flow_adoption():
 
 
 def test_output_budget_rejects_during_rows_before_event_comparison(monkeypatch):
-    import patent_analysis.inventor_mobility as module
-
     applicants = tuple(str(i) + "x" * 512 for i in range(64))
     rows = tuple(obs(f"r{i}", f"{2000 + i}", applicants) for i in range(10))
-    monkeypatch.setattr(
-        module,
+    _patch_mobility(
+        monkeypatch,
         "match_corporate_events",
         lambda *args: pytest.fail("comparison after excessive output allocation"),
     )
